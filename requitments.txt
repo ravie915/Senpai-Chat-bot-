@@ -1,0 +1,9 @@
+streamlit
+pandas
+openpyxl
+groq
+langchain-community
+langchain-huggingface
+chromadb
+pypdf
+sentence-transformers

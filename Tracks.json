@@ -1,0 +1,114 @@
+{
+  "university": "E-JUST",
+  "curriculum": {
+    "PHASE_1_FOUNDATION": {
+      "semester_1":
+       [
+        {"code": "MTE 111", "name": "Mechanics (Statics + Dynamics)", "prereq": null, "Type" :"Core", "credit hours":"3"},
+        {"code": "IME 111", "name": "Engineering Drawings", "prereq": null, "Type" :"Core", "credit hours":"2"},
+        {"code": "PHY 111", "name": "Physics (1)", "prereq": null, "Type" :"Core", "credit hours":"3"},
+        {"code": "CHM 111", "name": "Chemistry (1)", "prereq": null, "Type" :"Core", "credit hours":"1"},
+        {"code": "PHY 112", "name": "Physics Lab (1)", "prereq": "PHY 111", "Type" :"Core", "credit hours":"1"},
+        {"code": "MTH 111", "name": "Mathematics (1) (Calculus + Linear Algebra)", "prereq": null, "Type" :"Core", "credit hours":"3"},
+        {"code": "LRA 111", "name": "Japanese Language (1)", "prereq": null, "Type" :"elective", "credit hours":"1"}
+   
+      ],
+      "semester_2": [
+        {"code": "MTH 121", "name": "Mathematics (2) (Calculus + Linear Algebra)", "prereq": "MTH 111", "Type" :"Core", "credit hours":"3"},
+        {"code": "MTH 121", "name": "Japanese Language (2)", "prereq": "LRA 111", "Type" :"elective", "credit hours":"1"},
+        
+    ],
+      "semester_3": [{"code": "ECE 211", "name": "Electrical Engineering Fundamentals", "prereq": "PHY 121"}]
+    },
+    "PHASE_2_SCHOOLS": {
+      "ECCE": {
+        "name": "Electronics, Communications, and Computers Engineering",
+        "semester_4_core": [
+          {"code": "ECE 221", "name": "Digital Logic Design", "prereq": "ECE 211"}
+        ],
+        "departments": {
+          
+            "CSE": {
+            "name": "Computer Engineering",
+            "semesters": {
+              "semester_5": [{"code": "CSE 311", "name": "Data Structures", "prereq": "CSE 111"}],
+              "semester_6": [{"code": "CSE 321", "name": "Operating Systems", "prereq": "CSE 311"}],
+              "semester_7": [{"code": "CSE 411", "name": "Computer Architecture", "prereq": "ECE 221"}],
+              "semester_8": [{"code": "CSE 499", "name": "Graduation Project II", "prereq": "CSE 498"}]
+            }
+          },  
+          "CSE": {
+            "name": "Computer Engineering",
+            "semesters": {
+              "semester_5": [{"code": "CSE 311", "name": "Data Structures", "prereq": "CSE 111"}],
+              "semester_6": [{"code": "CSE 321", "name": "Operating Systems", "prereq": "CSE 311"}],
+              "semester_7": [{"code": "CSE 411", "name": "Computer Architecture", "prereq": "ECE 221"}],
+              "semester_8": [{"code": "CSE 499", "name": "Graduation Project II", "prereq": "CSE 498"}]
+            }
+          },
+          "CSE": {
+            "name": "Computer Engineering",
+            "semesters": {
+              "semester_5": [{"code": "CSE 311", "name": "Data Structures", "prereq": "CSE 111"}],
+              "semester_6": [{"code": "CSE 321", "name": "Operating Systems", "prereq": "CSE 311"}],
+              "semester_7": [{"code": "CSE 411", "name": "Computer Architecture", "prereq": "ECE 221"}],
+              "semester_8": [{"code": "CSE 499", "name": "Graduation Project II", "prereq": "CSE 498"}]
+            }
+          },
+          "CSE": {
+            "name": "Computer Engineering",
+            "semesters": {
+              "semester_5": [{"code": "CSE 311", "name": "Data Structures", "prereq": "CSE 111"}],
+              "semester_6": [{"code": "CSE 321", "name": "Operating Systems", "prereq": "CSE 311"}],
+              "semester_7": [{"code": "CSE 411", "name": "Computer Architecture", "prereq": "ECE 221"}],
+              "semester_8": [{"code": "CSE 499", "name": "Graduation Project II", "prereq": "CSE 498"}]
+            }
+          },
+          "ECE": {
+            "name": "Electronics and Communications Engineering",
+            "semesters": {
+              "semester_5": [{"code": "ECE 311", "name": "Electromagnetic Waves", "prereq": "MTH 211"}],
+              "semester_6": [{"code": "ECE 322", "name": "Communication Systems", "prereq": "ECE 223"}],
+              "semester_7": [{"code": "ECE 412", "name": "Antenna Engineering", "prereq": "ECE 311"}],
+              "semester_8": [{"code": "ECE 422", "name": "Wireless Communications", "prereq": "ECE 322"}]
+            }
+          }
+        }
+      },
+      "IDE": {
+        "name": "Innovative Design Engineering",
+        "semester_4_core": [
+          {"code": "MTR 221", "name": "Kinematics of Machinery", "prereq": "MTR 111"}
+        ],
+        "departments": {
+          "MTR": {
+            "name": "Mechatronics Engineering",
+            "semesters": {
+              "semester_5": [{"code": "MTR 311", "name": "Sensors and Actuators", "prereq": "ECE 211"}],
+              "semester_6": [{"code": "MTR 321", "name": "Control Systems", "prereq": "MTH 211"}],
+              "semester_7": [{"code": "MTR 411", "name": "Robotics", "prereq": "MTR 221"}],
+              "semester_8": [{"code": "MTR 422", "name": "Mechatronics System Design", "prereq": "MTR 411"}]
+            }
+          }
+        }
+      },
+      "EECE": {
+        "name": "Energy, Environmental, Chemical and Petrochemical Engineering",
+        "semester_4_core": [
+          {"code": "CPE 221", "name": "Thermodynamics", "prereq": "PHY 111"}
+        ],
+        "departments": {
+          "CPE": {
+            "name": "Chemical and Petrochemical Engineering",
+            "semesters": {
+              "semester_5": [{"code": "CPE 311", "name": "Mass Transfer", "prereq": "CPE 221"}],
+              "semester_6": [{"code": "CPE 321", "name": "Chemical Reaction Engineering", "prereq": "CPE 311"}],
+              "semester_7": [{"code": "CPE 411", "name": "Plant Design", "prereq": "CPE 321"}],
+              "semester_8": [{"code": "CPE 421", "name": "Petrochemical Technology", "prereq": "CPE 411"}]
+            }
+          }
+        }
+      }
+    }
+  }
+}
