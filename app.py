@@ -157,6 +157,25 @@ if prompt := st.chat_input("Ask Senpai ..."):
                 if any(part in q_low for part in p_name.split() if len(part) > 2):
                     prof_context = f"Professor: {row.get('Name')}\nRating: {row.get('Rating (1-5)', 'N/A')}\nReview: {row.get('Review', 'No summary')}"
                     break
+        status_name, max_credits = get_student_status(user_cgpa)
+
+# 2. Detect Semester and Track
+sem_match = re.search(r"(?:semester|sem)\s*(\d)", prompt.lower())
+track_keywords = ["power", "communications", "data", "software", "robotics"]
+target_track = next((k for k in track_keywords if k in prompt.lower()), None)
+
+json_context = ""
+if sem_match:
+    sem_num = sem_match.group(1)
+    summary, total_h = get_semester_summary(user_school, user_dept, f"semester_{sem_num}")
+    
+    if summary:
+        safety_msg = check_workload_safety(total_h, max_credits)
+        json_context = f"\n[ADVISOR ANALYSIS]:\nStatus: {status_name}\nMax Allowed: {max_credits} CH\n{safety_msg}\n{summary}"
+        
+        # 3. Special Logic for Half-Load
+        if user_cgpa < 2.0 and not target_track:
+            json_context += "\n\nATTENTION: Student is on Half-Load. Ask them which specific track (e.g., Software, AI, Communications) they want to focus on so we can prioritize their 14 credits."
 
         system_prompt = f"""
         You are 'Senpai', the E-JUST advisor. 
