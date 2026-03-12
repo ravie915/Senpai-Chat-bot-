@@ -10,6 +10,9 @@
         {"code": "CHM 111", "name": "Chemistry (1)", "prereq": null, "Type" :"Core", "credit hours":"1"},
         {"code": "PHY 112", "name": "Physics Lab (1)", "prereq": "PHY 111", "Type" :"Core", "credit hours":"1"},
         {"code": "MTH 111", "name": "Mathematics (1) (Calculus + Linear Algebra)", "prereq": null, "Type" :"Core", "credit hours":"3"},
+        {"code": "LRA 113", "name": "Safety & Risk Management", "prereq": null, "Type" :"elective", "credit hours":"2"},
+        {"code": "LRA 113", "name": "Fundamentals of Communication", "prereq": null, "Type" :"elective", "credit hours":"2"},
+        {"code": "CHM 112", "name": "Chemistry Lab (1)", "prereq": null, "Type" :"core", "credit hours":"1"},
         {"code": "LRA 111", "name": "Japanese Language (1)", "prereq": null, "Type" :"elective", "credit hours":"1"}
    
       ],
