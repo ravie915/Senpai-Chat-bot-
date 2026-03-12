@@ -161,15 +161,37 @@ if prompt := st.chat_input("Ask Senpai ..."):
 
         if sem_match:
             sem_num = sem_match.group(1)
-            summary, total_h = get_semester_summary(user_school, user_dept, f"semester_{sem_num}")
-            if summary:
-                safety_msg = check_workload_safety(total_h, max_credits)
-                json_context = f"\n[ADVISOR DATA]:\nStatus: {status_name}\nMax Allowed: {max_credits} CH\n{safety_msg}\n{summary}"
+            # HARDCODE DEFAULT FOR NOW SINCE SIDEBAR IS GONE
+            summary, total_h = get_semester_summary("ECCE", "CSE", f"semester_{sem_num}")
+            
+        if summary:
+            safety_msg = check_workload_safety(total_h, max_credits)
                 
-                # If they are Half-Load and haven't picked a track, Senpai will prompt them
+                # --- NEW: GET THE RECOMMENDATION DATA ---
+                # 1. Get the raw data for this semester
+        if sem_num in ["1", "2", "3"]:
+            raw_data = ejust_data["curriculum"]["PHASE_1_FOUNDATION"][f"semester_{sem_num}"]
+        else:
+            raw_data = ejust_data["curriculum"]["PHASE_2_SCHOOLS"]["ECCE"]["departments"]["CSE"]["semesters"][f"semester_{sem_num}"]
+                
+                # 2. Run the priority algorithm
+                priorities = get_priority_recommendation(raw_data, target_track)
+                
+                # 3. Format it for the AI to read
+                rec_text = "\n".join([f"- {p['code']}: {p['name']} ({p['ch']} CH) [Priority: {p['priority']}]" for p in priorities])
+                
+                json_context = f"""
+                [ADVISOR DATA]:
+                Status: {status_name} (Limit: {max_credits} CH)
+                {safety_msg}
+                {summary}
+                
+                [PRIORITY RANKING]:
+                {rec_text}
+                """
+                
                 if user_cgpa < 2.0 and not target_track:
-                    json_context += "\n\nINSTRUCTION: The student is on Half-Load. Ask them which track they want to pursue so you can prioritize their 14 credits."
-        # C. Professor Logic
+                    json_context += "\n\nINSTRUCTION: Student is Half-Load but hasn't picked a track. ASK them which track they want so you can filter this list!"# C. Professor Logic
         prof_context = ""
         if profs_df is not None:
             q_low = prompt.lower()
