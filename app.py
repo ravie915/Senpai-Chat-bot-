@@ -141,6 +141,14 @@ if prompt := st.chat_input("Ask Senpai ..."):
         # Track detection (checks if they mentioned a specific field)
         track_keywords = ["power", "communications", "data", "software", "robotics", "embedded"]
         target_track = next((k for k in track_keywords if k in prompt.lower()), None)
+        # Inside the assistant block (around line 130)
+    # Check if the user mentioned a GPA in their message
+         gpa_match = re.search(r"gpa\s*[:=]?\s*(\d(?:\.\d+)?)", prompt.lower
+         if gpa_match:
+             user_cgpa = float(gpa_match.group(1))
+                 else:
+                     user_cgpa = 3.0 # Default if they don't say it
+        
 
         if sem_match:
             sem_num = sem_match.group(1)
