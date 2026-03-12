@@ -164,15 +164,15 @@ if prompt := st.chat_input("Ask Senpai ..."):
             # HARDCODE DEFAULT FOR NOW SINCE SIDEBAR IS GONE
             summary, total_h = get_semester_summary("ECCE", "CSE", f"semester_{sem_num}")
             
-        if summary:
-            safety_msg = check_workload_safety(total_h, max_credits)
+            if summary:
+                safety_msg = check_workload_safety(total_h, max_credits)
                 
                 # --- NEW: GET THE RECOMMENDATION DATA ---
                 # 1. Get the raw data for this semester
-        if sem_num in ["1", "2", "3"]:
-            raw_data = ejust_data["curriculum"]["PHASE_1_FOUNDATION"][f"semester_{sem_num}"]
-        else:
-            raw_data = ejust_data["curriculum"]["PHASE_2_SCHOOLS"]["ECCE"]["departments"]["CSE"]["semesters"][f"semester_{sem_num}"]
+                if sem_num in ["1", "2", "3"]:
+                    raw_data = ejust_data["curriculum"]["PHASE_1_FOUNDATION"][f"semester_{sem_num}"]
+                else:
+                    raw_data = ejust_data["curriculum"]["PHASE_2_SCHOOLS"]["ECCE"]["departments"]["CSE"]["semesters"][f"semester_{sem_num}"]
                 
                 # 2. Run the priority algorithm
                 priorities = get_priority_recommendation(raw_data, target_track)
@@ -191,7 +191,8 @@ if prompt := st.chat_input("Ask Senpai ..."):
                 """
                 
                 if user_cgpa < 2.0 and not target_track:
-                    json_context += "\n\nINSTRUCTION: Student is Half-Load but hasn't picked a track. ASK them which track they want so you can filter this list!"# C. Professor Logic
+                    json_context += "\n\nINSTRUCTION: Student is Half-Load but hasn't picked a track. ASK them which track they want so you can filter this list!"
+        # C. Professor Logic
         prof_context = ""
         if profs_df is not None:
             q_low = prompt.lower()
