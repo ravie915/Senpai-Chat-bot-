@@ -135,7 +135,7 @@ if prompt := st.chat_input("Ask Senpai ..."):
             pdf_context = "\n".join([d.page_content for d in docs])
 
         # B. AUTOMATIC JSON FETCHING (Detection Logic)
-     json_context = ""
+        json_context = ""
         sem_match = re.search(r"(?:semester|sem)\s*(\d)", prompt.lower())
         
         # Track detection (checks if they mentioned a specific field)
