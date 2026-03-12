@@ -128,6 +128,17 @@ if prompt := st.chat_input("Ask Senpai ..."):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
+        user_cgpa = 3.0 
+        status_name = "Regular Load"
+        max_credits = 19
+       
+
+        # 2. DETECT GPA FROM INPUT
+        gpa_match = re.search(r"(\d(?:\.\d+)?)", prompt) # Improved regex
+        if gpa_match:
+            user_cgpa = float(gpa_match.group(1))
+            # Call your function to update status based on the new GPA
+            status_name, max_credits = get_student_status(user_cgpa)
         # A. PDF RAG
         pdf_context = ""
         if vdb:
