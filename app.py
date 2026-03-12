@@ -9,14 +9,20 @@ from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
 
-def load_tracks():
-    with open('tracks.json', 'r') as file:
-        return json.load(file)
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="Faculty Advisor AI", layout="wide", page_icon="🎓")
 st.title("🎓 Senpai - E-JUST Advisor")
 
 # --- 1. DATA LOADING (Excel) ---
+def load_tracks():
+    if os.path.exists('Tracks.json'):
+        with open('Tracks.json', 'r') as file:
+            return json.load(file)
+    return None
+
+# Load the data globally
+ejust_data = load_tracks()
+
 @st.cache_data
 def load_professor_data():
     file_name = 'Professors_Data.xlsx'
@@ -35,7 +41,7 @@ def process_pdf(file_path):
     
     loader = PyPDFLoader(file_path)
     data = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
     chunks = text_splitter.split_documents(data)
     
     # HuggingFace is free and works in the cloud without Ollama
@@ -48,18 +54,45 @@ profs_df = load_professor_data()
 vdb = process_pdf("Full_HandBook.pdf")
 
 
-def get_course_info(course_code):
-    # Search logic to find the course inside your nested JSON
-    schools = ejust_data["curriculum"]["PHASE_2_SCHOOLS"]
-    for school in schools.values():
-        for dept in school.get("departments", {}).values():
-            for sem, courses in dept.get("semesters", {}).items():
-                for c in courses:
-                    if c["code"].upper() == course_code.upper():
-                        return c
-    return None
+def get_semester_summary(school_key, dept_key, sem_key):
+    try:
+        # --- NEW LOGIC: Check where the semester lives ---
+        if sem_key in ["semester_1", "semester_2","semester_3"]:
+            # Look in Foundation (Phase 1)
+            sem_data = ejust_data["curriculum"]["PHASE_1_FOUNDATION"][sem_key]
+            title_prefix = "Foundation"
+        else:
+            # Look in Schools (Phase 2)
+            sem_data = ejust_data["curriculum"]["PHASE_2_SCHOOLS"][school_key]["departments"][dept_key]["semesters"][sem_key]
+            title_prefix = dept_key
 
+        course_details = []
+        total_ch = 0
+        
+        for c in sem_data:
+            name = c.get("name", "Unknown")
+            code = c.get("code", "???")
+            prereq = c.get("prereq") if c.get("prereq") else "None"
+            
+            # Ensure credit hours is handled even if it's a string or missing
+            ch_raw = c.get("credit hours", 0)
+            ch = int(ch_raw) if str(ch_raw).isdigit() else 0
+            total_ch += ch
+            
+            course_details.append(f"| {code} | {name} | {prereq} | {ch} CH |")
+        
+        header = "| Code | Course Name | Prerequisite | Credits |\n| :--- | :--- | :--- | :--- |"
+        table = "\n".join(course_details)
+        
+        summary = f"### 📚 {title_prefix} - {sem_key.replace('_', ' ').title()}\n{header}\n{table}\n\n**Total Workload: {total_ch} Credit Hours**"
+        
+        if total_ch > 18:
+            summary += "\n\n⚠️ **Warning:** This semester exceeds 18 CH!"
+            
+        return summary, total_ch
 
+    except KeyError as e:
+        return f"I couldn't find data for {sem_key}. (Error: {str(e)})", 0
 GROQ_API_KEY = "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"
 client = Groq(api_key=GROQ_API_KEY)
 
