@@ -18,8 +18,16 @@
       ],
       "semester_2": [
         {"code": "MTH 121", "name": "Mathematics (2) (Calculus + Linear Algebra)", "prereq": "MTH 111", "Type" :"Core", "credit hours":"3"},
-        {"code": "MTH 121", "name": "Japanese Language (2)", "prereq": "LRA 111", "Type" :"elective", "credit hours":"1"}
-        
+        {"code": "PHY 121", "name": "Physics (2)", "prereq": "PHY 111" , "Type" :"Core", "credit hours":"3"},
+        {"code": "PHY 122", "name": "Physics Lab (2)", "prereq": "PHY 121" , "Type" :"Core", "credit hours":"1"},
+        {"code": "CHM 121", "name": "Chemistry (2)", "prereq": "CHM 111", "Type" :"Core", "credit hours":"1"},
+        {"code": "CHM 122", "name": "Chemistry Lab (2)", "prereq": "CHM 121", "Type" :"Core", "credit hours":"1"},
+        {"code": "IME 121", "name": "Introduction to Manufacturing Processes", "prereq": null , "Type" :"Core", "credit hours":"3"},
+        {"code": "LRA 121", "name": "Japanese Language (2)", "prereq": "LRA 111", "Type" :"elective", "credit hours":"1"},
+        {"code": "LRA 123", "name": "Key Skills Seminar", "prereq": null, "Type" :"elective", "credit hours":"2"},
+        {"code": "LRA 122", "name": "Japanese Culture", "prereq": null, "Type" :"elective", "credit hours":"2"},
+        {"code": "CSE 111", "name": "Introduction to Computer Science", "prereq": null, "Type" :"elective", "credit hours":"2"}
+      
     ],
       "semester_3": [{"code": "ECE 211", "name": "Electrical Engineering Fundamentals", "prereq": "PHY 121"}]
     },
