@@ -40,6 +40,42 @@ def process_pdf(file_path):
 profs_df = load_professor_data()
 vdb = process_pdf("Full_HandBook.pdf")
 
+def get_student_status(cgpa):
+    if cgpa < 2.0:
+        return "Half-Load (Academic Probation)", 14
+    elif 2.0 <= cgpa < 3.0:
+        return "Regular Load", 19
+    else:
+        return "Over-Achiever (Honors)", 21
+
+def check_workload_safety(total_ch, limit):
+    if total_ch > limit:
+        return f"⚠️ **CRITICAL:** This schedule is {total_ch} CH, but your limit is {limit} CH. You MUST drop courses."
+    return f"✅ This schedule is within your {limit} CH limit."
+    
+def get_priority_recommendation(sem_data, target_track=None):
+    # Priorities: 
+    # 1. Courses that are prerequisites for the student's desired track
+    # 2. Hard core requirements
+    # 3. Electives (Last priority)
+    
+    priority_list = []
+    for c in sem_data:
+        # Logic: If the course name matches the track keywords, move to top
+        is_priority = False
+        if target_track and target_track.lower() in c['name'].lower():
+            is_priority = True
+            
+        priority_list.append({
+            "code": c['code'],
+            "name": c['name'],
+            "ch": int(c.get('credit hours', 0)),
+            "priority": is_priority
+        })
+    
+    # Sort so priority courses are at the top
+    return sorted(priority_list, key=lambda x: x['priority'], reverse=True)    
+
 # --- 2. SEMESTER SUMMARY ALGORITHM ---
 def get_semester_summary(school_key, dept_key, sem_key):
     try:
