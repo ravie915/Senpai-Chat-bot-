@@ -162,7 +162,8 @@ if prompt := st.chat_input("Ask Senpai ..."):
         if sem_match:
             sem_num = sem_match.group(1)
             # HARDCODE DEFAULT FOR NOW SINCE SIDEBAR IS GONE
-            summary, total_h = get_semester_summary("ECCE", "CSE", f"semester_{sem_num}")
+           # Updated line 155 in app.py
+            summary, total_h = get_semester_summary("ECCE", target_dept or "CSE", f"semester_{sem_num}")
             
             if summary:
                 safety_msg = check_workload_safety(total_h, max_credits)
