@@ -9,4 +9,5 @@ langchain-text-splitters
 pypdf
 chromadb
 sentence-transformers
+google-generativeai
  
