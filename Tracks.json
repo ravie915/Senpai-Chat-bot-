@@ -2,110 +2,104 @@
   "university": "E-JUST",
   "curriculum": {
     "PHASE_1_FOUNDATION": {
-      "semester_1":
-       [
-        {"code": "MTE 111", "name": "Mechanics (Statics + Dynamics)", "prereq": null, "Type" :"Core", "credit hours":"3"},
-        {"code": "IME 111", "name": "Engineering Drawings", "prereq": null, "Type" :"Core", "credit hours":"2"},
-        {"code": "PHY 111", "name": "Physics (1)", "prereq": null, "Type" :"Core", "credit hours":"3"},
-        {"code": "CHM 111", "name": "Chemistry (1)", "prereq": null, "Type" :"Core", "credit hours":"1"},
-        {"code": "PHY 112", "name": "Physics Lab (1)", "prereq": "PHY 111", "Type" :"Core", "credit hours":"1"},
-        {"code": "MTH 111", "name": "Mathematics (1) (Calculus + Linear Algebra)", "prereq": null, "Type" :"Core", "credit hours":"3"},
-        {"code": "LRA 113", "name": "Safety & Risk Management", "prereq": null, "Type" :"elective", "credit hours":"2"},
-        {"code": "LRA 113", "name": "Fundamentals of Communication", "prereq": null, "Type" :"elective", "credit hours":"2"},
-        {"code": "CHM 112", "name": "Chemistry Lab (1)", "prereq": null, "Type" :"core", "credit hours":"1"},
-        {"code": "LRA 111", "name": "Japanese Language (1)", "prereq": null, "Type" :"elective", "credit hours":"1"}
-   
+      "semester_1": [
+        {"code": "MTE 111", "name": "Mechanics (Statics + Dynamics)", "prereq": null, "Type": "Core", "credit hours": "3"},
+        {"code": "IME 111", "name": "Engineering Drawings", "prereq": null, "Type": "Core", "credit hours": "2"},
+        {"code": "PHY 111", "name": "Physics (1)", "prereq": null, "Type": "Core", "credit hours": "3"},
+        {"code": "CHM 111", "name": "Chemistry (1)", "prereq": null, "Type": "Core", "credit hours": "1"},
+        {"code": "PHY 112", "name": "Physics Lab (1)", "prereq": "PHY 111", "Type": "Core", "credit hours": "1"},
+        {"code": "MTH 111", "name": "Mathematics (1)", "prereq": null, "Type": "Core", "credit hours": "3"},
+        {"code": "CHM 112", "name": "Chemistry Lab (1)", "prereq": null, "Type": "Core", "credit hours": "1"},
+        {"code": "LRA 113a", "name": "Safety & Risk Management", "prereq": null, "Type": "elective", "credit hours": "2"},
+        {"code": "LRA 113b", "name": "Fundamentals of Communication", "prereq": null, "Type": "elective", "credit hours": "2"},
+        {"code": "LRA 111", "name": "Japanese Language (1)", "prereq": null, "Type": "elective", "credit hours": "1"}
       ],
       "semester_2": [
-        {"code": "MTH 121", "name": "Mathematics (2) (Calculus + Linear Algebra)", "prereq": "MTH 111", "Type" :"Core", "credit hours":"3"},
-        {"code": "PHY 121", "name": "Physics (2)", "prereq": "PHY 111" , "Type" :"Core", "credit hours":"3"},
-        {"code": "PHY 122", "name": "Physics Lab (2)", "prereq": "PHY 121" , "Type" :"Core", "credit hours":"1"},
-        {"code": "CHM 121", "name": "Chemistry (2)", "prereq": "CHM 111", "Type" :"Core", "credit hours":"1"},
-        {"code": "CHM 122", "name": "Chemistry Lab (2)", "prereq": "CHM 121", "Type" :"Core", "credit hours":"1"},
-        {"code": "IME 121", "name": "Introduction to Manufacturing Processes", "prereq": null , "Type" :"Core", "credit hours":"3"},
-        {"code": "LRA 121", "name": "Japanese Language (2)", "prereq": "LRA 111", "Type" :"elective", "credit hours":"1"},
-        {"code": "LRA 123", "name": "Key Skills Seminar", "prereq": null, "Type" :"elective", "credit hours":"2"},
-        {"code": "LRA 122", "name": "Japanese Culture", "prereq": null, "Type" :"elective", "credit hours":"2"},
-        {"code": "CSE 111", "name": "Introduction to Computer Science", "prereq": null, "Type" :"elective", "credit hours":"2"}
-      
-    ],
+        {"code": "MTH 121", "name": "Mathematics (2)", "prereq": "MTH 111", "Type": "Core", "credit hours": "3"},
+        {"code": "PHY 121", "name": "Physics (2)", "prereq": "PHY 111", "Type": "Core", "credit hours": "3"},
+        {"code": "PHY 122", "name": "Physics Lab (2)", "prereq": "PHY 121", "Type": "Core", "credit hours": "1"},
+        {"code": "CHM 121", "name": "Chemistry (2)", "prereq": "CHM 111", "Type": "Core", "credit hours": "1"},
+        {"code": "CHM 122", "name": "Chemistry Lab (2)", "prereq": "CHM 121", "Type": "Core", "credit hours": "1"},
+        {"code": "IME 121", "name": "Introduction to Manufacturing Processes", "prereq": null, "Type": "Core", "credit hours": "3"},
+        {"code": "CSE 111", "name": "Introduction to Computer Science", "prereq": null, "Type": "elective", "credit hours": "2"},
+        {"code": "LRA 121", "name": "Japanese Language (2)", "prereq": "LRA 111", "Type": "elective", "credit hours": "1"},
+        {"code": "LRA 123", "name": "Key Skills Seminar", "prereq": null, "Type": "elective", "credit hours": "2"},
+        {"code": "LRA 122", "name": "Japanese Culture", "prereq": null, "Type": "elective", "credit hours": "2"}
+      ],
       "semester_3": [
-        {"code": "LRA 211", "name": "Japanese Language (3)", "prereq": "LRA 121", "Type" :"elective", "credit hours":"1"},
-        {"code": "LRA 212", "name": "Economics and Sustainable Development", "prereq": null , "Type" :"elective", "credit hours":"2"},
-        {"code": "LRA 21X", "name": "UR Elective (1)", "prereq": null , "Type" :"elective", "credit hours":"2","options": [
-        { "code": "LRA 213", "name": "Music and Technology" },
-        { "code": "LRA 214", "name": "Theatre and Drama" },
-        { "code": "LRA 215", "name": "Fine Arts" },
-        { "code": "LRA 216", "name": "Art and Architecture of Ancient Egypt" }
-      ]},
-        {"code": "MTH 211", "name": "Mathematics (3)", "prereq": "MTH 121", "Type" :"Core", "credit hours":"3"},
-        {"code": "CSE 211", "name": "Computer Programming", "prereq": "CSE 111", "Type" :"Core", "credit hours":"2"},
-        {"code": "IME 211", "name": "Introduction to Mechanical Engineering", "prereq": null , "Type" :"Core", "credit hours":"3"},
-        {"code": "CPE 211", "name": "Introduction to Energy, Environmental and Chem Engineering", "prereq": null , "Type" :"Core", "credit hours":"3"},
-        {"code": "ECE 211", "name": "Introduction to Electrical Engineering", "prereq": null ,"Type" :"Core", "credit hours":"3"}
+        {"code": "MTH 211", "name": "Mathematics (3)", "prereq": "MTH 121", "Type": "Core", "credit hours": "3"},
+        {"code": "CSE 211", "name": "Computer Programming", "prereq": "CSE 111", "Type": "Core", "credit hours": "2"},
+        {"code": "IME 211", "name": "Introduction to Mechanical Engineering", "prereq": null, "Type": "Core", "credit hours": "3"},
+        {"code": "CPE 211", "name": "Introduction to Energy, Environmental and Chemical Engineering", "prereq": null, "Type": "Core", "credit hours": "3"},
+        {"code": "ECE 211", "name": "Introduction to Electrical Engineering", "prereq": null, "Type": "Core", "credit hours": "3"},
+        {"code": "LRA 211", "name": "Japanese Language (3)", "prereq": "LRA 121", "Type": "elective", "credit hours": "1"},
+        {"code": "LRA 212", "name": "Economics and Sustainable Development", "prereq": null, "Type": "elective", "credit hours": "2"},
+        {"code": "LRA 21X", "name": "UR Elective (1)", "prereq": null, "Type": "elective", "credit hours": "2",
+          "options": [
+            {"code": "LRA 213", "name": "Music and Technology"},
+            {"code": "LRA 214", "name": "Theatre and Drama"},
+            {"code": "LRA 215", "name": "Fine Arts"},
+            {"code": "LRA 216", "name": "Art and Architecture of Ancient Egypt"}
+          ]
+        }
       ]
     },
     "PHASE_2_SCHOOLS": {
       "ECCE": {
         "name": "Electronics, Communications, and Computers Engineering",
         "semester_4_core": [
-          {"code": "LRA 22X", "name": "UR Elective (2)", "prereq": null , "Type" :"elective", "credit hours":"2" ,"options": [
-        { "code": "LRA 221", "name": "Natural Resources and Sustainability" },
-        { "code": "LRA 222", "name": "Environment and Earth Science " },
-        { "code": "LRA 223", "name": "Climate Change" },
-        { "code": "LRA 224", "name": "Advanced Japanese Language" }
-      ]},
-          {"code": "MTH 221", "name": "Mathematics (4)", "prereq": "MTH 211", "Type" :"Core", "credit hours":"3"},
-          {"code": "EPE 221", "name": "Measurements and Instrumentations", "prereq": "ECE 211", "Type" :"Core", "credit hours":"3"},
-          {"code": "ECE 221", "name": "Digital Logic Design", "prereq": "ECE 211" ,"Type" :"School", "credit hours":"3"},
-          {"code": "ECE 222", "name": "Introduction to Electronics", "prereq": "ECE 211" , "Type" :"School", "credit hours":"3"},
-          {"code": "ECE 223", "name": "Signals and Systems", "prereq": "MTH 121" , "Type" :"School", "credit hours":"3"},
-          {"code": "IME 221", "name": "Project Management", "prereq": null, "Type" :"Core", "credit hours":"2"}
+          {"code": "MTH 221", "name": "Mathematics (4)", "prereq": "MTH 211", "Type": "Core", "credit hours": "3"},
+          {"code": "EPE 221", "name": "Measurements and Instrumentations", "prereq": "ECE 211", "Type": "Core", "credit hours": "3"},
+          {"code": "ECE 221", "name": "Digital Logic Design", "prereq": "ECE 211", "Type": "School", "credit hours": "3"},
+          {"code": "ECE 222", "name": "Introduction to Electronics", "prereq": "ECE 211", "Type": "School", "credit hours": "3"},
+          {"code": "ECE 223", "name": "Signals and Systems", "prereq": "MTH 121", "Type": "School", "credit hours": "3"},
+          {"code": "IME 221", "name": "Project Management", "prereq": null, "Type": "Core", "credit hours": "2"},
+          {"code": "LRA 22X", "name": "UR Elective (2)", "prereq": null, "Type": "elective", "credit hours": "2",
+            "options": [
+              {"code": "LRA 221", "name": "Natural Resources and Sustainability"},
+              {"code": "LRA 222", "name": "Environment and Earth Science"},
+              {"code": "LRA 223", "name": "Climate Change"},
+              {"code": "LRA 224", "name": "Advanced Japanese Language"}
+            ]
+          }
         ],
         "departments": {
-          
-            "CSE": {
+          "CSE": {
             "name": "Computer Engineering",
             "semesters": {
               "semester_5": [
-                {"code": "LRA 22X", "name": "UR Elective (3)", "prereq": null , "Type" :"elective", "credit hours":"2"},
-                {"code": "CSE 311", "name": "Computer Organization", "prereq": "ECE 221" , "Type" :"School", "credit hours":"3"}
-                {"code": "CSE 312", "name": "Discrete Mathematics", "prereq": "MTH 211" , "Type" :"School", "credit hours":"3"},
-                {"code": "CSE 315", "name": "Seminar and Project-based Learning on CSE", "prereq": null , "Type" :"School", "credit hours":"2"},
-                {"code": "MTH 312", "name": "Advanced Mathematics with software applications", "prereq": "MTH 221" , "Type" :"School", "credit hours":"3"},
-                {"code": "ECE 314", "name": "Electric and Magnetic Fields", "prereq": null , "Type" :"School", "credit hours":"3"},
-                {"code": "ECE 313", "name": "Digital Signal Processing", "prereq": "ECE 223" , "Type" :"School", "credit hours":"3"}
+                {"code": "CSE 311", "name": "Computer Organization", "prereq": "ECE 221", "Type": "School", "credit hours": "3"},
+                {"code": "CSE 312", "name": "Discrete Mathematics", "prereq": "MTH 211", "Type": "School", "credit hours": "3"},
+                {"code": "CSE 315", "name": "Seminar and Project-based Learning on CSE", "prereq": null, "Type": "School", "credit hours": "2"},
+                {"code": "MTH 312", "name": "Advanced Mathematics with Software Applications", "prereq": "MTH 221", "Type": "School", "credit hours": "3"},
+                {"code": "ECE 314", "name": "Electric and Magnetic Fields", "prereq": null, "Type": "School", "credit hours": "3"},
+                {"code": "ECE 313", "name": "Digital Signal Processing", "prereq": "ECE 223", "Type": "School", "credit hours": "3"},
+                {"code": "LRA 22X", "name": "UR Elective (3)", "prereq": null, "Type": "elective", "credit hours": "2"}
               ],
-              "semester_6": [{"code": "CSE 321", "name": "Operating Systems", "prereq": "CSE 311"}],
-              "semester_7": [{"code": "CSE 411", "name": "Computer Architecture", "prereq": "ECE 221"}],
-              "semester_8": [{"code": "CSE 499", "name": "Graduation Project II", "prereq": "CSE 498"}]
-            }
-          },  
-          "MIE": {
-            "name": "Biomedical and Bioinformatics Engineering",
-            "semesters": {
-              "semester_5": [{"code": "", "name": "", "prereq": ""}],
-              "semester_6": [{"code": "", "name": "", "prereq": ""}],
-              "semester_7": [{"code": "", "name": "", "prereq": ""}],
-              "semester_8": [{"code": "", "name": "", "prereq": ""}]
-            }
-          },
-          "EPE": {
-            "name": "Electrical Power Engineering",
-            "semesters": {
-              "semester_5": [{"code": "", "name": "", "prereq": ""}],
-              "semester_6": [{"code": "", "name": "", "prereq": ""}],
-              "semester_7": [{"code": "", "name": "", "prereq": ""}],
-              "semester_8": [{"code": "", "name": "", "prereq": ""}]
+              "semester_6": [{"code": "CSE 321", "name": "Operating Systems", "prereq": "CSE 311", "Type": "School", "credit hours": "3"}],
+              "semester_7": [{"code": "CSE 411", "name": "Computer Architecture", "prereq": "ECE 221", "Type": "School", "credit hours": "3"}],
+              "semester_8": [{"code": "CSE 499", "name": "Graduation Project II", "prereq": "CSE 498", "Type": "School", "credit hours": "6"}]
             }
           },
           "ECE": {
             "name": "Electronics and Communications Engineering",
             "semesters": {
-              "semester_5": [{"code": "ECE 311", "name": "Electromagnetic Waves", "prereq": "MTH 211"}],
-              "semester_6": [{"code": "ECE 322", "name": "Communication Systems", "prereq": "ECE 223"}],
-              "semester_7": [{"code": "ECE 412", "name": "Antenna Engineering", "prereq": "ECE 311"}],
-              "semester_8": [{"code": "ECE 422", "name": "Wireless Communications", "prereq": "ECE 322"}]
+              "semester_5": [{"code": "ECE 311", "name": "Electromagnetic Waves", "prereq": "MTH 211", "Type": "School", "credit hours": "3"}],
+              "semester_6": [{"code": "ECE 322", "name": "Communication Systems", "prereq": "ECE 223", "Type": "School", "credit hours": "3"}],
+              "semester_7": [{"code": "ECE 412", "name": "Antenna Engineering", "prereq": "ECE 311", "Type": "School", "credit hours": "3"}],
+              "semester_8": [{"code": "ECE 422", "name": "Wireless Communications", "prereq": "ECE 322", "Type": "School", "credit hours": "3"}]
+            }
+          },
+          "EPE": {
+            "name": "Electrical Power Engineering",
+            "semesters": {
+              "semester_5": [], "semester_6": [], "semester_7": [], "semester_8": []
+            }
+          },
+          "MIE": {
+            "name": "Biomedical and Bioinformatics Engineering",
+            "semesters": {
+              "semester_5": [], "semester_6": [], "semester_7": [], "semester_8": []
             }
           }
         }
@@ -113,16 +107,16 @@
       "IDE": {
         "name": "Innovative Design Engineering",
         "semester_4_core": [
-          {"code": "MTR 221", "name": "Kinematics of Machinery", "prereq": "MTR 111"}
+          {"code": "MTR 221", "name": "Kinematics of Machinery", "prereq": "IME 211", "Type": "Core", "credit hours": "3"}
         ],
         "departments": {
           "MTR": {
             "name": "Mechatronics Engineering",
             "semesters": {
-              "semester_5": [{"code": "MTR 311", "name": "Sensors and Actuators", "prereq": "ECE 211"}],
-              "semester_6": [{"code": "MTR 321", "name": "Control Systems", "prereq": "MTH 211"}],
-              "semester_7": [{"code": "MTR 411", "name": "Robotics", "prereq": "MTR 221"}],
-              "semester_8": [{"code": "MTR 422", "name": "Mechatronics System Design", "prereq": "MTR 411"}]
+              "semester_5": [{"code": "MTR 311", "name": "Sensors and Actuators", "prereq": "ECE 211", "Type": "School", "credit hours": "3"}],
+              "semester_6": [{"code": "MTR 321", "name": "Control Systems", "prereq": "MTH 211", "Type": "School", "credit hours": "3"}],
+              "semester_7": [{"code": "MTR 411", "name": "Robotics", "prereq": "MTR 221", "Type": "School", "credit hours": "3"}],
+              "semester_8": [{"code": "MTR 422", "name": "Mechatronics System Design", "prereq": "MTR 411", "Type": "School", "credit hours": "3"}]
             }
           }
         }
@@ -130,16 +124,16 @@
       "EECE": {
         "name": "Energy, Environmental, Chemical and Petrochemical Engineering",
         "semester_4_core": [
-          {"code": "CPE 221", "name": "Thermodynamics", "prereq": "PHY 111"}
+          {"code": "CPE 221", "name": "Thermodynamics", "prereq": "PHY 111", "Type": "Core", "credit hours": "3"}
         ],
         "departments": {
           "CPE": {
             "name": "Chemical and Petrochemical Engineering",
             "semesters": {
-              "semester_5": [{"code": "CPE 311", "name": "Mass Transfer", "prereq": "CPE 221"}],
-              "semester_6": [{"code": "CPE 321", "name": "Chemical Reaction Engineering", "prereq": "CPE 311"}],
-              "semester_7": [{"code": "CPE 411", "name": "Plant Design", "prereq": "CPE 321"}],
-              "semester_8": [{"code": "CPE 421", "name": "Petrochemical Technology", "prereq": "CPE 411"}]
+              "semester_5": [{"code": "CPE 311", "name": "Mass Transfer", "prereq": "CPE 221", "Type": "School", "credit hours": "3"}],
+              "semester_6": [{"code": "CPE 321", "name": "Chemical Reaction Engineering", "prereq": "CPE 311", "Type": "School", "credit hours": "3"}],
+              "semester_7": [{"code": "CPE 411", "name": "Plant Design", "prereq": "CPE 321", "Type": "School", "credit hours": "3"}],
+              "semester_8": [{"code": "CPE 421", "name": "Petrochemical Technology", "prereq": "CPE 411", "Type": "School", "credit hours": "3"}]
             }
           }
         }
