@@ -1,10 +1,11 @@
 streamlit
+google-generativeai
 pandas
 openpyxl
-groq
+langchain
 langchain-community
 langchain-huggingface
-chromadb
+langchain-text-splitters
 pypdf
+chromadb
 sentence-transformers
-google-generativeai
