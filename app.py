@@ -550,7 +550,7 @@ st.title("🎓 Senpai — E-JUST Academic Advisor")
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyCgMeBL0_VmChSxC08XX-NgTKJ3_bddt-s")
 genai.configure(api_key=GEMINI_API_KEY)
-gemini_model = genai.GenerativeModel("gemini-1.5-pro")
+gemini_model = genai.GenerativeModel("gemini-2.0-flash")
 
 # Persistent state
 if "messages"     not in st.session_state: st.session_state.messages     = []
