@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import os
 import re
-import google.generativeai as genai
+from openai import OpenAI
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
@@ -548,9 +548,8 @@ INSTRUCTION FOR SENPAI:
 st.set_page_config(page_title="Senpai — E-JUST Advisor", layout="wide", page_icon="🎓")
 st.title("🎓 Senpai — E-JUST Academic Advisor")
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyDt-SMhkGuZne6DEW58zXLPo8J82kUTt30")
-genai.configure(api_key=GEMINI_API_KEY)
-gemini_model = genai.GenerativeModel("gemini-2.0-flash")
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "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")
+client = OpenAI(api_key=OPENROUTER_API_KEY, base_url="https://openrouter.ai/api/v1")
 
 # Persistent state
 if "messages"     not in st.session_state: st.session_state.messages     = []
@@ -842,18 +841,21 @@ You are friendly, knowledgeable, and direct. Students rely on you for real help 
 
         # ── G. CALL GEMINI ────────────────────────────────────────────────
         try:
-            # Build conversation history in Gemini format
-            history = []
-            for m in st.session_state.messages[:-1]:
-                role = "user" if m["role"] == "user" else "model"
-                history.append({"role": role, "parts": [m["content"]]})
-
-            chat = gemini_model.start_chat(history=history)
-            full_prompt = f"{system_prompt}\n\n{prompt}"
-            resp   = chat.send_message(full_prompt)
-            answer = resp.text
-            st.markdown(answer)
-            st.session_state.messages.append({"role": "assistant", "content": answer})
-
-        except Exception as e:
-            st.error(f"Gemini API Error: {e}")
+    history = [
+        {"role": m["role"], "content": m["content"]}
+        for m in st.session_state.messages[:-1]
+    ]
+    resp = client.chat.completions.create(
+        model="meta-llama/llama-4-maverick:free",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            *history,
+            {"role": "user", "content": prompt},
+        ],
+        temperature=0.2,
+    )
+    answer = resp.choices[0].message.content
+    st.markdown(answer)
+    st.session_state.messages.append({"role": "assistant", "content": answer})
+except Exception as e:
+    st.error(f"OpenRouter API Error: {e}")
