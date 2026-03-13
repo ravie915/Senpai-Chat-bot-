@@ -1,5 +1,5 @@
 streamlit
-google-generativeai
+openai
 pandas
 openpyxl
 langchain
@@ -9,3 +9,4 @@ langchain-text-splitters
 pypdf
 chromadb
 sentence-transformers
+ 
