@@ -542,37 +542,392 @@ INSTRUCTION FOR SENPAI:
 
 
 # ════════════════════════════════════════════════════════════════
-# 9. PAGE CONFIG & STREAMLIT SESSION STATE
+# 9. PAGE CONFIG, STYLING & STREAMLIT SESSION STATE
 # ════════════════════════════════════════════════════════════════
 
-st.set_page_config(page_title="Senpai — E-JUST Advisor", layout="wide", page_icon="🎓")
-st.title("🎓 Senpai — E-JUST Academic Advisor")
+st.set_page_config(page_title="Senpai — E-JUST Advisor", layout="wide", page_icon="🦉")
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyCgMeBL0_VmChSxC08XX-NgTKJ3_bddt-s")
+# ── Encode logo as base64 ────────────────────────────────────────
+import base64
+def get_logo_b64():
+    logo_paths = ["senpai_logo.jpg", "senpai_logo.png", "logo.jpg", "logo.png"]
+    for p in logo_paths:
+        if os.path.exists(p):
+            with open(p, "rb") as f:
+                ext = p.split(".")[-1]
+                mime = "image/jpeg" if ext == "jpg" else "image/png"
+                return f"data:{mime};base64,{base64.b64encode(f.read()).decode()}"
+    return None
+
+logo_b64 = get_logo_b64()
+logo_html = f'<img src="{logo_b64}" class="logo-img" />' if logo_b64 else \
+            '<div class="logo-fallback">🦉</div>'
+
+# ── Full custom CSS ──────────────────────────────────────────────
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap');
+
+/* Lemon Milk via CDN */
+@font-face {
+    font-family: 'LemonMilk';
+    src: url('https://cdn.jsdelivr.net/gh/dharmatype/Bebas-Neue@master/fonts/BebasNeue(2019)byDhamraType.otf');
+}
+
+/* ── Reset Streamlit chrome ── */
+#MainMenu, footer, header { visibility: hidden; }
+.stApp { background: #ffffff !important; }
+.block-container {
+    padding: 0 !important;
+    max-width: 100% !important;
+}
+section[data-testid="stSidebar"] { display: none; }
+
+/* Hide default chat elements */
+.stChatMessage { display: none !important; }
+[data-testid="stChatInput"] { display: none !important; }
+
+/* ── Page layout ── */
+.senpai-page {
+    min-height: 100vh;
+    background: #ffffff;
+    font-family: 'DM Sans', sans-serif;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* ── Red wave top-right ── */
+.wave-bg {
+    position: fixed;
+    top: 0; right: 0;
+    width: 52%;
+    height: 260px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── Header ── */
+.senpai-header {
+    position: relative;
+    z-index: 10;
+    padding: 28px 52px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo-img {
+    width: 62px;
+    height: 62px;
+    object-fit: contain;
+}
+
+.logo-fallback {
+    font-size: 52px;
+    line-height: 1;
+}
+
+.brand-text {
+    font-family: 'LemonMilk', 'Bebas Neue', 'Impact', sans-serif;
+    font-size: 48px;
+    letter-spacing: 6px;
+    color: #1a1a1a;
+    line-height: 1;
+    font-weight: 400;
+}
+
+/* ── Chat container ── */
+.chat-container {
+    position: relative;
+    z-index: 10;
+    padding: 8px 52px 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 60vh;
+}
+
+/* ── Empty state ── */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 0 40px;
+    gap: 12px;
+    opacity: 0.35;
+}
+
+.empty-state-owl { font-size: 48px; }
+.empty-state-text {
+    font-size: 15px;
+    color: #666;
+    text-align: center;
+    max-width: 360px;
+    line-height: 1.6;
+}
+
+/* ── Message row ── */
+.msg-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    animation: fadeUp 0.25s ease both;
+}
+.msg-row.user { flex-direction: row-reverse; }
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Avatars ── */
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+}
+.avatar.bot-av  { background: #1a1a1a; color: #ffffff; font-family: 'LemonMilk','Bebas Neue',sans-serif; font-size: 9px; letter-spacing: 1px; }
+.avatar.user-av { background: #c8291a; color: #ffffff; }
+
+/* ── Bubbles ── */
+.bubble {
+    max-width: 66%;
+    padding: 12px 18px;
+    font-size: 14.5px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.bubble.bot-b {
+    background: #f3f2f0;
+    color: #1a1a1a;
+    border-radius: 18px 18px 18px 4px;
+}
+.bubble.user-b {
+    background: #c8291a;
+    color: #ffffff;
+    border-radius: 18px 18px 4px 18px;
+}
+
+/* ── Input area (fixed bottom) ── */
+.input-area {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 12px 52px 24px;
+    background: linear-gradient(to top, #ffffff 75%, rgba(255,255,255,0));
+}
+
+/* ── Suggestion chips ── */
+.chips-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+.chip-btn {
+    padding: 6px 16px;
+    border-radius: 50px;
+    border: 1.5px solid #e0e0e0;
+    background: #ffffff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12.5px;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+}
+.chip-btn:hover {
+    border-color: #c8291a;
+    color: #c8291a;
+    background: #fff5f4;
+}
+
+/* ── Input pill ── */
+.input-pill {
+    display: flex;
+    align-items: center;
+    background: #ebebeb;
+    border: 1.5px solid #d2d2d2;
+    border-radius: 50px;
+    padding: 8px 8px 8px 22px;
+    gap: 8px;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.input-pill:focus-within {
+    border-color: #c8291a;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(200,41,26,0.07);
+}
+.input-pill input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: #1a1a1a;
+    outline: none;
+    padding: 4px 0;
+}
+.input-pill input::placeholder { color: #aaa; }
+.send-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #c8291a;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.18s, transform 0.12s;
+    font-size: 14px;
+    color: white;
+}
+.send-btn:hover  { background: #a82215; }
+.send-btn:active { transform: scale(0.93); }
+</style>
+""", unsafe_allow_html=True)
+
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "YOUR_GEMINI_API_KEY_HERE")
 genai.configure(api_key=GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel("gemini-2.0-flash")
 
-# Persistent state
-if "messages"     not in st.session_state: st.session_state.messages     = []
-if "user_cgpa"    not in st.session_state: st.session_state.user_cgpa    = None
-if "track_info"   not in st.session_state: st.session_state.track_info   = None
-# track_info = None | (school, dept, label)
+# ── Session state ────────────────────────────────────────────────
+if "messages"   not in st.session_state: st.session_state.messages   = []
+if "user_cgpa"  not in st.session_state: st.session_state.user_cgpa  = None
+if "track_info" not in st.session_state: st.session_state.track_info = None
 
-# Render chat history
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+# ── Wave SVG ────────────────────────────────────────────────────
+wave_svg = """
+<svg class="wave-bg" viewBox="0 0 760 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g opacity="0.9">
+    <path d="M760 0 Q 480 70 180 260" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M760 0 Q 500 80 220 260" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M760 0 Q 520 90 260 260" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M760 0 Q 540 100 300 260" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M760 0 Q 560 110 340 260" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M760 0 Q 580 120 380 260" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M760 0 Q 600 130 420 260" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M760 0 Q 620 140 460 260" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M760 0 Q 640 150 500 260" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M760 0 Q 660 160 540 260" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M760 0 Q 680 170 580 260" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M760 0 Q 700 180 620 260" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M760 0 Q 720 190 660 260" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M760 0 Q 740 200 700 260" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M460 0 Q 620 75 760 110" stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M500 0 Q 640 70 760 90"  stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M540 0 Q 660 62 760 70"  stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M580 0 Q 680 52 760 52"  stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M620 0 Q 700 42 760 36"  stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M660 0 Q 720 30 760 20"  stroke="#c8291a" stroke-width="0.85" fill="none"/>
+    <path d="M700 0 Q 740 16 760 8"   stroke="#c8291a" stroke-width="0.85" fill="none"/>
+  </g>
+</svg>
+"""
+
+# ── Render page shell ────────────────────────────────────────────
+st.markdown(f"""
+<div class="senpai-page">
+  {wave_svg}
+  <div class="senpai-header">
+    {logo_html}
+    <span class="brand-text">SENPAI</span>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+# ── Render chat history ──────────────────────────────────────────
+chat_html = '<div class="chat-container">'
+
+if not st.session_state.messages:
+    chat_html += """
+    <div class="empty-state">
+      <div class="empty-state-owl">🦉</div>
+      <div class="empty-state-text">Ask me about your courses, professors, schedule, or academic rules</div>
+    </div>"""
+else:
+    for msg in st.session_state.messages:
+        role = msg["role"]
+        content = msg["content"].replace("<", "&lt;").replace(">", "&gt;")
+        if role == "assistant":
+            chat_html += f"""
+            <div class="msg-row bot">
+              <div class="avatar bot-av">SP</div>
+              <div class="bubble bot-b">{content}</div>
+            </div>"""
+        else:
+            initials = "ME"
+            chat_html += f"""
+            <div class="msg-row user">
+              <div class="avatar user-av">{initials}</div>
+              <div class="bubble user-b">{content}</div>
+            </div>"""
+
+chat_html += '</div>'
+st.markdown(chat_html, unsafe_allow_html=True)
+
+# ── Input area with chips + pill ────────────────────────────────
+# Show chips only on first message
+chips_html = ""
+if not st.session_state.messages:
+    chips_html = """
+    <div class="chips-row">
+      <span class="chip-btn">📚 Semester 3 courses</span>
+      <span class="chip-btn">👨‍🏫 Best professors</span>
+      <span class="chip-btn">📋 How to register</span>
+      <span class="chip-btn">📊 My GPA rules</span>
+    </div>"""
+
+st.markdown(f"""
+<div class="input-area">
+  {chips_html}
+  <div class="input-pill">
+    <span style="font-size:16px">💬</span>
+    <input type="text" placeholder="Ask Senpai...." id="senpai-input" disabled />
+    <button class="send-btn" disabled>➤</button>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+# Actual functional Streamlit input (hidden, provides real interactivity)
+st.markdown("""
+<style>
+div[data-testid="stChatInput"] {
+    display: block !important;
+    position: fixed;
+    bottom: 24px; left: 52px; right: 52px;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: all;
+}
+div[data-testid="stChatInput"] textarea {
+    border-radius: 50px !important;
+    background: transparent !important;
+    height: 52px !important;
+    cursor: text !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ════════════════════════════════════════════════════════════════
 # 10. MAIN CHAT HANDLER
 # ════════════════════════════════════════════════════════════════
 
-if prompt := st.chat_input("Ask Senpai …"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
+if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
+    prompt = st.session_state.messages[-1]["content"]
 
-    with st.chat_message("assistant"):
+    with st.spinner(""):
 
         # ── A. EXTRACT & PERSIST CGPA ────────────────────────────────────
         gpa_match = re.search(r'\b(?:cgpa|gpa)\s*[:=]?\s*(\d(?:\.\d+)?)\b', prompt.lower())
@@ -591,7 +946,7 @@ if prompt := st.chat_input("Ask Senpai …"):
         detected = detect_track(prompt)
         if detected:
             st.session_state.track_info = detected
-        track_info  = st.session_state.track_info   # None | (school, dept, label)
+        track_info  = st.session_state.track_info
         school      = track_info[0] if track_info else None
         dept        = track_info[1] if track_info else None
         track_label = track_info[2] if track_info else "Not chosen yet"
@@ -607,18 +962,8 @@ if prompt := st.chat_input("Ask Senpai …"):
         sem_match = re.search(r'\b(?:semester|sem)\s*(\d)\b', p_lower)
         adv_ctx   = ""
 
-        # ── Classify what the student is asking ───────────────────────────
-        # Questions that REQUIRE knowing the track before answering:
-        #   • Semester 4, 5, 6, 7, 8 (dept-specific content)
-        #   • "my schedule", "my plan", "recommend courses", "which track", "what track"
-        #   • Half-load schedule advice (needs track to prioritise electives)
-        # Questions that do NOT require a track:
-        #   • Semester 1, 2, 3 (shared foundation — same for everyone)
-        #   • General questions (rules, GPA, graduation, handbook, professors)
-        #   • Greetings, help, what can you do
-
         sem_num = sem_match.group(1) if sem_match else None
-        foundation_sem = sem_num in ('1', '2', '3')
+        foundation_sem     = sem_num in ('1', '2', '3')
         track_specific_sem = sem_num in ('4', '5', '6', '7', '8')
 
         needs_track = (
@@ -631,22 +976,15 @@ if prompt := st.chat_input("Ask Senpai …"):
         )
 
         if needs_track and not track_info:
-            # ── Track needed but not yet chosen → ask, then answer ────────
-            # Load foundation data if a semester was mentioned so we can
-            # still partially answer after they pick a track
             adv_ctx = ctx_ask_track(max_ch)
             if sem_num:
-                # Tell Senpai the student asked about a track-dependent semester
                 adv_ctx += (
                     f"\n\nNOTE: Student asked about Semester {sem_num}. "
                     f"This semester is track-specific. Once they choose a track, "
                     f"immediately show their semester {sem_num} plan."
                 )
-
         elif sem_num:
-            # ── Semester asked — load that semester's data ─────────────────
             if foundation_sem:
-                # Foundation semesters: same for everyone, no track needed
                 courses, title = load_semester(school or 'ECCE', dept or 'CSE', sem_num)
                 if courses:
                     adv_ctx = ctx_semester_plan(
@@ -654,19 +992,14 @@ if prompt := st.chat_input("Ask Senpai …"):
                         school or 'ECCE', dept or 'CSE', track_label,
                         max_ch, is_half
                     )
-                    # If no track yet, append a gentle nudge (not a hard block)
                     if not track_info:
                         adv_ctx += (
                             "\n\n[SOFT NUDGE FOR SENPAI]: After answering, casually ask "
-                            "which track the student plans to pursue. Mention that knowing "
-                            "their track helps you flag which electives are actually "
-                            "prerequisites for their future courses."
+                            "which track the student plans to pursue."
                         )
                 else:
                     adv_ctx = f"[No data found for Foundation Semester {sem_num}]"
-
             elif track_info:
-                # Track-specific semester with track known
                 courses, title = load_semester(school, dept, sem_num)
                 if courses:
                     adv_ctx = ctx_semester_plan(
@@ -680,20 +1013,14 @@ if prompt := st.chat_input("Ask Senpai …"):
                         f"This department's curriculum may still be incomplete.]"
                     )
             else:
-                # Track-specific semester but no track → ask
                 adv_ctx = ctx_ask_track(max_ch)
                 adv_ctx += (
                     f"\n\nNOTE: Student asked about Semester {sem_num} which varies by track. "
                     f"Ask for their track first, then show the semester plan."
                 )
-
         elif track_info:
-            # ── Track known, no specific semester → show prereq roadmap ───
             adv_ctx = ctx_track_overview(school, dept, track_label, max_ch, is_half)
-
         else:
-            # ── General question, no semester, no track needed ─────────────
-            # Just answer from handbook/general knowledge; no structured data needed
             adv_ctx = (
                 "[GENERAL QUESTION — No semester or track-specific data required]\n"
                 "Answer the student's question using the handbook context and your general "
@@ -702,24 +1029,19 @@ if prompt := st.chat_input("Ask Senpai …"):
             )
 
         # ── E. PROFESSOR CONTEXT ──────────────────────────────────────────
-        # Detect if user is asking about a professor (by name OR general review query)
         prof_ctx = ""
         asks_prof = any(kw in p_lower for kw in [
             'professor', 'prof', 'doctor', 'dr ', 'dr.', 'instructor',
             'review', 'rating', 'rate', 'recommend a doctor', 'best doctor',
             'who teaches', 'who is teaching', 'avoid', 'good teacher'
         ])
-
         if profs_df is not None:
-            # Try matching a specific name first
             matched_rows = []
             for _, row in profs_df.iterrows():
                 pname = str(row.get('Name', '')).lower()
                 if any(part in p_lower for part in pname.split() if len(part) > 2):
                     matched_rows.append(row)
-
             if matched_rows:
-                # Specific professor found
                 parts = []
                 for row in matched_rows:
                     parts.append(
@@ -728,39 +1050,29 @@ if prompt := st.chat_input("Ask Senpai …"):
                         f"Review: {row.get('Review', 'No review available')}"
                     )
                 prof_ctx = "\n".join(parts)
-
             elif asks_prof:
-                # General professor query — provide the full list so Senpai can answer
                 rows = []
                 for _, row in profs_df.iterrows():
                     name   = row.get('Name', 'Unknown')
                     rating = row.get('Rating (1-5)', 'N/A')
-                    review = str(row.get('Review', ''))[:120]  # trim long reviews
+                    review = str(row.get('Review', ''))[:120]
                     rows.append(f"  • {name} | Rating: {rating}/5 | {review}")
-                prof_ctx = (
-                    "[ALL PROFESSOR REVIEWS]\n"
-                    + "\n".join(rows)
-                    + "\n\nSenpai: Use this list to answer questions about ratings, "
-                    "recommendations, or comparisons between professors."
-                )
+                prof_ctx = "[ALL PROFESSOR REVIEWS]\n" + "\n".join(rows)
 
-        # ── F. DETECT INTENT / MISSION ────────────────────────────────────
-        # Tell Senpai which mission is active so it focuses the right capability
+        # ── F. MISSION DETECTION ──────────────────────────────────────────
         asks_registration = any(kw in p_lower for kw in [
             'register', 'registration', 'add course', 'drop course', 'enroll',
-            'sign up', 'how to register', 'course registration', 'add/drop',
-            'portal', 'student system', 'sis', 'how do i add'
+            'sign up', 'how to register', 'course registration', 'portal', 'sis'
         ])
         asks_handbook = any(kw in p_lower for kw in [
             'rule', 'policy', 'regulation', 'graduate', 'graduation', 'gpa requirement',
             'academic', 'probation', 'dismissal', 'appeal', 'leave', 'transfer',
-            'credit', 'handbook', 'bylaw', 'attendance', 'exam', 'retake', 'withdraw'
+            'handbook', 'bylaw', 'attendance', 'exam', 'retake', 'withdraw'
         ])
         asks_schedule = any(kw in p_lower for kw in [
             'schedule', 'plan', 'roadmap', 'semester', 'courses', 'credit hours',
             'what should i take', 'which courses', 'next semester'
         ])
-
         active_mission = (
             "COURSE REGISTRATION ASSISTANCE" if asks_registration else
             "PROFESSOR REVIEWS & RECOMMENDATIONS" if (asks_prof and prof_ctx) else
@@ -771,64 +1083,32 @@ if prompt := st.chat_input("Ask Senpai …"):
 
         # ── G. SYSTEM PROMPT ──────────────────────────────────────────────
         system_prompt = f"""
-You are **Senpai**, the official AI academic advisor for E-JUST (Egypt-Japan University of Science and Technology).
-You are friendly, knowledgeable, and direct. Students rely on you for real help — not vague answers.
+You are **Senpai**, the official AI academic advisor for E-JUST.
+You are friendly, knowledgeable, and direct.
 
-━━━ YOUR MISSIONS (you handle ALL of these) ━━━
-1. 📋 COURSE REGISTRATION HELP
-   - Explain how to register/add/drop courses step by step
-   - Warn about prerequisites, credit hour limits, and deadlines
-   - Help the student build a valid course list for their semester
-   - Flag conflicts: if a student wants to take a course they don't have the prereq for, tell them
+━━━ YOUR MISSIONS ━━━
+1. 📋 COURSE REGISTRATION HELP — explain how to register/add/drop, warn about prereqs and limits
+2. 👨‍🏫 PROFESSOR REVIEWS — share ratings and reviews, recommend professors
+3. 📖 HANDBOOK & RULES — answer policy questions, GPA rules, graduation requirements
+4. 🗓️ COURSE PLANNING — help plan semesters, show prereq chains, build half-load schedules
 
-2. 👨‍🏫 PROFESSOR REVIEWS & RECOMMENDATIONS
-   - Share ratings and student reviews from the professor database
-   - Recommend professors based on ratings when asked
-   - If asked "who is the best doctor for X course", suggest the highest-rated one
-   - Be honest but fair — share the data, don't editorialize
-
-3. 📖 HANDBOOK & ACADEMIC RULES
-   - Answer questions about university policies, GPA rules, probation, graduation requirements
-   - Explain credit hour limits by status (half-load / regular / over-achiever)
-   - Answer questions about attendance, exams, appeals, withdrawals, etc.
-   - Source answers from the handbook context provided
-
-4. 🗓️ COURSE PLANNING & SCHEDULE ADVICE
-   - Help students plan their semester based on their GPA and track
-   - Show prerequisite chains so students understand what they need to take first
-   - For half-load students: build a tight schedule that fits in 14 CH
-   - Flag electives that are secretly prerequisites for later core courses
-
-━━━ ACTIVE MISSION THIS TURN ━━━
+━━━ ACTIVE MISSION ━━━
 {active_mission}
 
 ━━━ STUDENT PROFILE ━━━
-  • CGPA         : {user_cgpa}
-  • Status       : {status_lbl}
-  • Credit limit : {max_ch} CH/semester
-  • Chosen track : {track_label}
-  • Half-Load    : {'YES — Academic Probation (max 14 CH per semester)' if is_half else 'No'}
+  • CGPA: {user_cgpa} | Status: {status_lbl} | Limit: {max_ch} CH | Track: {track_label}
+  • Half-Load: {'YES — Academic Probation (max 14 CH)' if is_half else 'No'}
 
-━━━ CREDIT HOUR RULES (never contradict) ━━━
-  • CGPA < 2.0        → Half-Load       — max 14 CH
-  • 2.0 ≤ CGPA < 3.0  → Regular Load   — max 19 CH
-  • CGPA ≥ 3.0        → Over-Achiever  — max 21 CH
+━━━ CREDIT RULES ━━━
+  • CGPA < 2.0 → Half-Load — max 14 CH
+  • 2.0–2.99   → Regular   — max 19 CH
+  • ≥ 3.0      → Honors    — max 21 CH
 
 ━━━ BEHAVIOUR RULES ━━━
-  • ALWAYS answer the question first. Never refuse or deflect.
-  • Only ask for the student's track when the answer genuinely requires it (semester 4+, personalised plans).
-  • For foundation semesters (1–3), general rules, professor reviews — answer immediately.
-  • After answering, you may invite them to share their track to personalise further.
-  • Never say "I can only help with course registration" — you help with everything above.
-  • Keep responses concise and structured. Use bullet points or tables when it helps.
-
-━━━ STRICT DATA SOURCE RULES ━━━
-  • ALL course information (names, codes, credit hours, prerequisites, types) MUST come
-    ONLY from the COURSE & SCHEDULE DATA section below (loaded from Tracks.json).
-  • NEVER use the handbook to answer questions about courses, semesters, or curricula.
-  • NEVER invent, guess, or infer course names or codes that are not in the data.
-  • If a course or semester has no data, say clearly: "This data is not available yet."
-  • The handbook is ONLY for academic rules, policies, regulations, and procedures.
+  • ALWAYS answer first. Never refuse.
+  • Ask for track only when genuinely needed (sem 4+, personalised plans).
+  • Never invent courses — only use data from COURSE & SCHEDULE DATA below.
+  • The handbook is ONLY for rules/policies, never for course lists.
 
 ━━━ COURSE & SCHEDULE DATA ━━━
 {adv_ctx}
@@ -840,20 +1120,21 @@ You are friendly, knowledgeable, and direct. Students rely on you for real help 
 {prof_ctx if prof_ctx else "No professor data matched this query."}
 """.strip()
 
-        # ── G. CALL GEMINI ────────────────────────────────────────────────
+        # ── H. CALL GEMINI ────────────────────────────────────────────────
         try:
-            # Build conversation history in Gemini format
             history = []
             for m in st.session_state.messages[:-1]:
                 role = "user" if m["role"] == "user" else "model"
                 history.append({"role": role, "parts": [m["content"]]})
-
-            chat = gemini_model.start_chat(history=history)
-            full_prompt = f"{system_prompt}\n\n{prompt}"
-            resp   = chat.send_message(full_prompt)
+            chat   = gemini_model.start_chat(history=history)
+            resp   = chat.send_message(f"{system_prompt}\n\n{prompt}")
             answer = resp.text
-            st.markdown(answer)
             st.session_state.messages.append({"role": "assistant", "content": answer})
+            st.rerun()
 
         except Exception as e:
-            st.error(f"Gemini API Error: {e}")
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": f"⚠️ Gemini API Error: {e}"
+            })
+            st.rerun()
