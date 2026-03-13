@@ -701,49 +701,134 @@ if prompt := st.chat_input("Ask Senpai …"):
             )
 
         # ── E. PROFESSOR CONTEXT ──────────────────────────────────────────
+        # Detect if user is asking about a professor (by name OR general review query)
         prof_ctx = ""
+        asks_prof = any(kw in p_lower for kw in [
+            'professor', 'prof', 'doctor', 'dr ', 'dr.', 'instructor',
+            'review', 'rating', 'rate', 'recommend a doctor', 'best doctor',
+            'who teaches', 'who is teaching', 'avoid', 'good teacher'
+        ])
+
         if profs_df is not None:
-            q_low = prompt.lower()
+            # Try matching a specific name first
+            matched_rows = []
             for _, row in profs_df.iterrows():
                 pname = str(row.get('Name', '')).lower()
-                if any(part in q_low for part in pname.split() if len(part) > 2):
-                    prof_ctx = (
-                        f"Professor: {row.get('Name')}\n"
-                        f"Rating: {row.get('Rating (1-5)', 'N/A')}\n"
-                        f"Review: {row.get('Review', 'No summary')}"
+                if any(part in p_lower for part in pname.split() if len(part) > 2):
+                    matched_rows.append(row)
+
+            if matched_rows:
+                # Specific professor found
+                parts = []
+                for row in matched_rows:
+                    parts.append(
+                        f"Professor: {row.get('Name')} | "
+                        f"Rating: {row.get('Rating (1-5)', 'N/A')}/5 | "
+                        f"Review: {row.get('Review', 'No review available')}"
                     )
-                    break
+                prof_ctx = "\n".join(parts)
 
-        # ── F. SYSTEM PROMPT ──────────────────────────────────────────────
+            elif asks_prof:
+                # General professor query — provide the full list so Senpai can answer
+                rows = []
+                for _, row in profs_df.iterrows():
+                    name   = row.get('Name', 'Unknown')
+                    rating = row.get('Rating (1-5)', 'N/A')
+                    review = str(row.get('Review', ''))[:120]  # trim long reviews
+                    rows.append(f"  • {name} | Rating: {rating}/5 | {review}")
+                prof_ctx = (
+                    "[ALL PROFESSOR REVIEWS]\n"
+                    + "\n".join(rows)
+                    + "\n\nSenpai: Use this list to answer questions about ratings, "
+                    "recommendations, or comparisons between professors."
+                )
+
+        # ── F. DETECT INTENT / MISSION ────────────────────────────────────
+        # Tell Senpai which mission is active so it focuses the right capability
+        asks_registration = any(kw in p_lower for kw in [
+            'register', 'registration', 'add course', 'drop course', 'enroll',
+            'sign up', 'how to register', 'course registration', 'add/drop',
+            'portal', 'student system', 'sis', 'how do i add'
+        ])
+        asks_handbook = any(kw in p_lower for kw in [
+            'rule', 'policy', 'regulation', 'graduate', 'graduation', 'gpa requirement',
+            'academic', 'probation', 'dismissal', 'appeal', 'leave', 'transfer',
+            'credit', 'handbook', 'bylaw', 'attendance', 'exam', 'retake', 'withdraw'
+        ])
+        asks_schedule = any(kw in p_lower for kw in [
+            'schedule', 'plan', 'roadmap', 'semester', 'courses', 'credit hours',
+            'what should i take', 'which courses', 'next semester'
+        ])
+
+        active_mission = (
+            "COURSE REGISTRATION ASSISTANCE" if asks_registration else
+            "PROFESSOR REVIEWS & RECOMMENDATIONS" if (asks_prof and prof_ctx) else
+            "HANDBOOK / ACADEMIC RULES" if asks_handbook else
+            "COURSE SCHEDULE & PLANNING" if asks_schedule else
+            "GENERAL ADVISING"
+        )
+
+        # ── G. SYSTEM PROMPT ──────────────────────────────────────────────
         system_prompt = f"""
-You are 'Senpai', the official E-JUST academic advisor chatbot.
-Be warm, clear, and direct. Only reference courses from the advisor data below — never invent courses.
+You are **Senpai**, the official AI academic advisor for E-JUST (Egypt-Japan University of Science and Technology).
+You are friendly, knowledgeable, and direct. Students rely on you for real help — not vague answers.
 
-STUDENT PROFILE:
+━━━ YOUR MISSIONS (you handle ALL of these) ━━━
+1. 📋 COURSE REGISTRATION HELP
+   - Explain how to register/add/drop courses step by step
+   - Warn about prerequisites, credit hour limits, and deadlines
+   - Help the student build a valid course list for their semester
+   - Flag conflicts: if a student wants to take a course they don't have the prereq for, tell them
+
+2. 👨‍🏫 PROFESSOR REVIEWS & RECOMMENDATIONS
+   - Share ratings and student reviews from the professor database
+   - Recommend professors based on ratings when asked
+   - If asked "who is the best doctor for X course", suggest the highest-rated one
+   - Be honest but fair — share the data, don't editorialize
+
+3. 📖 HANDBOOK & ACADEMIC RULES
+   - Answer questions about university policies, GPA rules, probation, graduation requirements
+   - Explain credit hour limits by status (half-load / regular / over-achiever)
+   - Answer questions about attendance, exams, appeals, withdrawals, etc.
+   - Source answers from the handbook context provided
+
+4. 🗓️ COURSE PLANNING & SCHEDULE ADVICE
+   - Help students plan their semester based on their GPA and track
+   - Show prerequisite chains so students understand what they need to take first
+   - For half-load students: build a tight schedule that fits in 14 CH
+   - Flag electives that are secretly prerequisites for later core courses
+
+━━━ ACTIVE MISSION THIS TURN ━━━
+{active_mission}
+
+━━━ STUDENT PROFILE ━━━
   • CGPA         : {user_cgpa}
   • Status       : {status_lbl}
-  • Credit limit : {max_ch} CH
+  • Credit limit : {max_ch} CH/semester
   • Chosen track : {track_label}
   • Half-Load    : {'YES — Academic Probation (max 14 CH per semester)' if is_half else 'No'}
 
-CREDIT HOUR RULES (never contradict these):
+━━━ CREDIT HOUR RULES (never contradict) ━━━
   • CGPA < 2.0        → Half-Load       — max 14 CH
   • 2.0 ≤ CGPA < 3.0  → Regular Load   — max 19 CH
   • CGPA ≥ 3.0        → Over-Achiever  — max 21 CH
 
-TRACK RULE: Ask for the student's track only when the answer genuinely depends on it
-(semester 4+, personalised schedules, track recommendations). For general questions,
-foundation semesters (1–3), GPA rules, or handbook questions — answer directly first,
-then invite them to share their track if it would help personalise further.
+━━━ BEHAVIOUR RULES ━━━
+  • ALWAYS answer the question first. Never refuse or deflect.
+  • Only ask for the student's track when the answer genuinely requires it (semester 4+, personalised plans).
+  • For foundation semesters (1–3), general rules, professor reviews — answer immediately.
+  • After answering, you may invite them to share their track to personalise further.
+  • Never say "I can only help with course registration" — you help with everything above.
+  • Keep responses concise and structured. Use bullet points or tables when it helps.
 
-━━━ ADVISOR DATA ━━━
+━━━ COURSE & SCHEDULE DATA ━━━
 {adv_ctx}
 
-━━━ HANDBOOK ━━━
+━━━ HANDBOOK CONTEXT ━━━
 {pdf_ctx}
 
-━━━ PROFESSOR INFO ━━━
-{prof_ctx}
+━━━ PROFESSOR DATA ━━━
+{prof_ctx if prof_ctx else "No professor data matched this query."}
 """.strip()
 
         # ── G. CALL GROQ ──────────────────────────────────────────────────
