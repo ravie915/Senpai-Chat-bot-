@@ -840,22 +840,22 @@ You are friendly, knowledgeable, and direct. Students rely on you for real help 
 """.strip()
 
         # ── G. CALL GEMINI ────────────────────────────────────────────────
-try:
-    history = [
-        {"role": m["role"], "content": m["content"]}
-        for m in st.session_state.messages[:-1]
-    ]
-    resp = client.chat.completions.create(
-        model="openrouter/hunter-alpha",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            *history,
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0.2,
-    )
-    answer = resp.choices[0].message.content
-    st.markdown(answer)
-    st.session_state.messages.append({"role": "assistant", "content": answer})
-except Exception as e:
-    st.error(f"OpenRouter API Error: {e}")
+        try:
+            history = [
+                {"role": m["role"], "content": m["content"]}
+                for m in st.session_state.messages[:-1]
+            ]
+            resp = client.chat.completions.create(
+                model="openrouter/hunter-alpha",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    *history,
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.2,
+            )
+            answer = resp.choices[0].message.content
+            st.markdown(answer)
+            st.session_state.messages.append({"role": "assistant", "content": answer})
+        except Exception as e:
+            st.error(f"OpenRouter API Error: {e}")
