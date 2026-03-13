@@ -602,32 +602,103 @@ if prompt := st.chat_input("Ask Senpai …"):
             pdf_ctx = "\n".join(d.page_content for d in docs)
 
         # ── D. BUILD ADVISOR CONTEXT ──────────────────────────────────────
-        sem_match = re.search(r'\b(?:semester|sem)\s*(\d)\b', prompt.lower())
+        p_lower   = prompt.lower()
+        sem_match = re.search(r'\b(?:semester|sem)\s*(\d)\b', p_lower)
         adv_ctx   = ""
 
-        if not track_info:
-            # ── No track → ALWAYS ask first ──────────────────────────────
-            adv_ctx = ctx_ask_track(max_ch)
+        # ── Classify what the student is asking ───────────────────────────
+        # Questions that REQUIRE knowing the track before answering:
+        #   • Semester 4, 5, 6, 7, 8 (dept-specific content)
+        #   • "my schedule", "my plan", "recommend courses", "which track", "what track"
+        #   • Half-load schedule advice (needs track to prioritise electives)
+        # Questions that do NOT require a track:
+        #   • Semester 1, 2, 3 (shared foundation — same for everyone)
+        #   • General questions (rules, GPA, graduation, handbook, professors)
+        #   • Greetings, help, what can you do
 
-        elif sem_match:
-            # ── Track known + specific semester asked ─────────────────────
-            sem_num = sem_match.group(1)
-            courses, title = load_semester(school, dept, sem_num)
-            if courses:
-                adv_ctx = ctx_semester_plan(
-                    courses, title, sem_num,
-                    school, dept, track_label,
-                    max_ch, is_half
+        sem_num = sem_match.group(1) if sem_match else None
+        foundation_sem = sem_num in ('1', '2', '3')
+        track_specific_sem = sem_num in ('4', '5', '6', '7', '8')
+
+        needs_track = (
+            track_specific_sem
+            or (not sem_num and any(kw in p_lower for kw in [
+                'schedule', 'plan', 'recommend', 'which courses', 'what courses',
+                'my track', 'which track', 'what track', 'track advice',
+                'graduation', 'department', 'which department',
+            ]))
+        )
+
+        if needs_track and not track_info:
+            # ── Track needed but not yet chosen → ask, then answer ────────
+            # Load foundation data if a semester was mentioned so we can
+            # still partially answer after they pick a track
+            adv_ctx = ctx_ask_track(max_ch)
+            if sem_num:
+                # Tell Senpai the student asked about a track-dependent semester
+                adv_ctx += (
+                    f"\n\nNOTE: Student asked about Semester {sem_num}. "
+                    f"This semester is track-specific. Once they choose a track, "
+                    f"immediately show their semester {sem_num} plan."
                 )
+
+        elif sem_num:
+            # ── Semester asked — load that semester's data ─────────────────
+            if foundation_sem:
+                # Foundation semesters: same for everyone, no track needed
+                courses, title = load_semester(school or 'ECCE', dept or 'CSE', sem_num)
+                if courses:
+                    adv_ctx = ctx_semester_plan(
+                        courses, title, sem_num,
+                        school or 'ECCE', dept or 'CSE', track_label,
+                        max_ch, is_half
+                    )
+                    # If no track yet, append a gentle nudge (not a hard block)
+                    if not track_info:
+                        adv_ctx += (
+                            "\n\n[SOFT NUDGE FOR SENPAI]: After answering, casually ask "
+                            "which track the student plans to pursue. Mention that knowing "
+                            "their track helps you flag which electives are actually "
+                            "prerequisites for their future courses."
+                        )
+                else:
+                    adv_ctx = f"[No data found for Foundation Semester {sem_num}]"
+
+            elif track_info:
+                # Track-specific semester with track known
+                courses, title = load_semester(school, dept, sem_num)
+                if courses:
+                    adv_ctx = ctx_semester_plan(
+                        courses, title, sem_num,
+                        school, dept, track_label,
+                        max_ch, is_half
+                    )
+                else:
+                    adv_ctx = (
+                        f"[No course data yet for {track_label} Semester {sem_num}. "
+                        f"This department's curriculum may still be incomplete.]"
+                    )
             else:
-                adv_ctx = (
-                    f"[No data for Semester {sem_num} in {track_label}. "
-                    f"This department's curriculum may not be filled in yet.]"
+                # Track-specific semester but no track → ask
+                adv_ctx = ctx_ask_track(max_ch)
+                adv_ctx += (
+                    f"\n\nNOTE: Student asked about Semester {sem_num} which varies by track. "
+                    f"Ask for their track first, then show the semester plan."
                 )
+
+        elif track_info:
+            # ── Track known, no specific semester → show prereq roadmap ───
+            adv_ctx = ctx_track_overview(school, dept, track_label, max_ch, is_half)
 
         else:
-            # ── Track known, no specific semester → show full prereq roadmap ──
-            adv_ctx = ctx_track_overview(school, dept, track_label, max_ch, is_half)
+            # ── General question, no semester, no track needed ─────────────
+            # Just answer from handbook/general knowledge; no structured data needed
+            adv_ctx = (
+                "[GENERAL QUESTION — No semester or track-specific data required]\n"
+                "Answer the student's question using the handbook context and your general "
+                "E-JUST knowledge. You may mention the available tracks and invite them to "
+                "share their track if relevant, but do NOT block the answer."
+            )
 
         # ── E. PROFESSOR CONTEXT ──────────────────────────────────────────
         prof_ctx = ""
@@ -660,8 +731,10 @@ CREDIT HOUR RULES (never contradict these):
   • 2.0 ≤ CGPA < 3.0  → Regular Load   — max 19 CH
   • CGPA ≥ 3.0        → Over-Achiever  — max 21 CH
 
-GOLDEN RULE: Always ask for the student's track BEFORE giving any course or semester advice.
-If track_info = "Not chosen yet", present the track menu and wait.
+TRACK RULE: Ask for the student's track only when the answer genuinely depends on it
+(semester 4+, personalised schedules, track recommendations). For general questions,
+foundation semesters (1–3), GPA rules, or handbook questions — answer directly first,
+then invite them to share their track if it would help personalise further.
 
 ━━━ ADVISOR DATA ━━━
 {adv_ctx}
