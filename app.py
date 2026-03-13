@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import os
 import re
-from groq import Groq
+import google.generativeai as genai
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
@@ -548,8 +548,9 @@ INSTRUCTION FOR SENPAI:
 st.set_page_config(page_title="Senpai — E-JUST Advisor", layout="wide", page_icon="🎓")
 st.title("🎓 Senpai — E-JUST Academic Advisor")
 
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "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")
-client = Groq(api_key=GROQ_API_KEY)
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyCgMeBL0_VmChSxC08XX-NgTKJ3_bddt-s")
+genai.configure(api_key=GEMINI_API_KEY)
+gemini_model = genai.GenerativeModel("gemini-1.5-pro")
 
 # Persistent state
 if "messages"     not in st.session_state: st.session_state.messages     = []
@@ -839,24 +840,20 @@ You are friendly, knowledgeable, and direct. Students rely on you for real help 
 {prof_ctx if prof_ctx else "No professor data matched this query."}
 """.strip()
 
-        # ── G. CALL GROQ ──────────────────────────────────────────────────
+        # ── G. CALL GEMINI ────────────────────────────────────────────────
         try:
-            history = [
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages[:-1]
-            ]
-            resp = client.chat.completions.create(
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    *history,
-                    {"role": "user",   "content": prompt},
-                ],
-                model="llama-3.3-70b-versatile",
-                temperature=0.2,
-            )
-            answer = resp.choices[0].message.content
+            # Build conversation history in Gemini format
+            history = []
+            for m in st.session_state.messages[:-1]:
+                role = "user" if m["role"] == "user" else "model"
+                history.append({"role": role, "parts": [m["content"]]})
+
+            chat = gemini_model.start_chat(history=history)
+            full_prompt = f"{system_prompt}\n\n{prompt}"
+            resp   = chat.send_message(full_prompt)
+            answer = resp.text
             st.markdown(answer)
             st.session_state.messages.append({"role": "assistant", "content": answer})
 
         except Exception as e:
-            st.error(f"Groq API Error: {e}")
+            st.error(f"Gemini API Error: {e}")
