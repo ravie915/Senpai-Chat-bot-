@@ -840,7 +840,7 @@ You are friendly, knowledgeable, and direct. Students rely on you for real help 
 """.strip()
 
         # ── G. CALL GEMINI ────────────────────────────────────────────────
-        try:
+try:
     history = [
         {"role": m["role"], "content": m["content"]}
         for m in st.session_state.messages[:-1]
