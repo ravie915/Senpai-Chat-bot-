@@ -846,7 +846,7 @@ try:
         for m in st.session_state.messages[:-1]
     ]
     resp = client.chat.completions.create(
-        model="meta-llama/llama-4-maverick:free",
+        model="openrouter/hunter-alpha",
         messages=[
             {"role": "system", "content": system_prompt},
             *history,
