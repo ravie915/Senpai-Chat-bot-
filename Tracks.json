@@ -29,50 +29,74 @@
         {"code": "CSE 111", "name": "Introduction to Computer Science", "prereq": null, "Type" :"elective", "credit hours":"2"}
       
     ],
-      "semester_3": [{"code": "ECE 211", "name": "Electrical Engineering Fundamentals", "prereq": "PHY 121"}]
+      "semester_3": [
+        {"code": "LRA 211", "name": "Japanese Language (3)", "prereq": "LRA 121", "Type" :"elective", "credit hours":"1"},
+        {"code": "LRA 212", "name": "Economics and Sustainable Development", "prereq": null , "Type" :"elective", "credit hours":"2"},
+        {"code": "LRA 21X", "name": "UR Elective (1)", "prereq": null , "Type" :"elective", "credit hours":"2","options": [
+        { "code": "LRA 213", "name": "Music and Technology" },
+        { "code": "LRA 214", "name": "Theatre and Drama" },
+        { "code": "LRA 215", "name": "Fine Arts" },
+        { "code": "LRA 216", "name": "Art and Architecture of Ancient Egypt" }
+      ]},
+        {"code": "MTH 211", "name": "Mathematics (3)", "prereq": "MTH 121", "Type" :"Core", "credit hours":"3"},
+        {"code": "CSE 211", "name": "Computer Programming", "prereq": "CSE 111", "Type" :"Core", "credit hours":"2"},
+        {"code": "IME 211", "name": "Introduction to Mechanical Engineering", "prereq": null , "Type" :"Core", "credit hours":"3"},
+        {"code": "CPE 211", "name": "Introduction to Energy, Environmental and Chem Engineering", "prereq": null , "Type" :"Core", "credit hours":"3"},
+        {"code": "ECE 211", "name": "Introduction to Electrical Engineering", "prereq": null ,"Type" :"Core", "credit hours":"3"}
+      ]
     },
     "PHASE_2_SCHOOLS": {
       "ECCE": {
         "name": "Electronics, Communications, and Computers Engineering",
         "semester_4_core": [
-          {"code": "ECE 221", "name": "Digital Logic Design", "prereq": "ECE 211"}
+          {"code": "LRA 22X", "name": "UR Elective (2)", "prereq": null , "Type" :"elective", "credit hours":"2" ,"options": [
+        { "code": "LRA 221", "name": "Natural Resources and Sustainability" },
+        { "code": "LRA 222", "name": "Environment and Earth Science " },
+        { "code": "LRA 223", "name": "Climate Change" },
+        { "code": "LRA 224", "name": "Advanced Japanese Language" }
+      ]},
+          {"code": "MTH 221", "name": "Mathematics (4)", "prereq": "MTH 211", "Type" :"Core", "credit hours":"3"},
+          {"code": "EPE 221", "name": "Measurements and Instrumentations", "prereq": "ECE 211", "Type" :"Core", "credit hours":"3"},
+          {"code": "ECE 221", "name": "Digital Logic Design", "prereq": "ECE 211" ,"Type" :"School", "credit hours":"3"},
+          {"code": "ECE 222", "name": "Introduction to Electronics", "prereq": "ECE 211" , "Type" :"School", "credit hours":"3"},
+          {"code": "ECE 223", "name": "Signals and Systems", "prereq": "MTH 121" , "Type" :"School", "credit hours":"3"},
+          {"code": "IME 221", "name": "Project Management", "prereq": null, "Type" :"Core", "credit hours":"2"}
         ],
         "departments": {
           
             "CSE": {
             "name": "Computer Engineering",
             "semesters": {
-              "semester_5": [{"code": "CSE 311", "name": "Data Structures", "prereq": "CSE 111"}],
+              "semester_5": [
+                {"code": "LRA 22X", "name": "UR Elective (3)", "prereq": null , "Type" :"elective", "credit hours":"2"},
+                {"code": "CSE 311", "name": "Computer Organization", "prereq": "ECE 221" , "Type" :"School", "credit hours":"3"}
+                {"code": "CSE 312", "name": "Discrete Mathematics", "prereq": "MTH 211" , "Type" :"School", "credit hours":"3"},
+                {"code": "CSE 315", "name": "Seminar and Project-based Learning on CSE", "prereq": null , "Type" :"School", "credit hours":"2"},
+                {"code": "MTH 312", "name": "Advanced Mathematics with software applications", "prereq": "MTH 221" , "Type" :"School", "credit hours":"3"},
+                {"code": "ECE 314", "name": "Electric and Magnetic Fields", "prereq": null , "Type" :"School", "credit hours":"3"},
+                {"code": "ECE 313", "name": "Digital Signal Processing", "prereq": "ECE 223" , "Type" :"School", "credit hours":"3"}
+              ],
               "semester_6": [{"code": "CSE 321", "name": "Operating Systems", "prereq": "CSE 311"}],
               "semester_7": [{"code": "CSE 411", "name": "Computer Architecture", "prereq": "ECE 221"}],
               "semester_8": [{"code": "CSE 499", "name": "Graduation Project II", "prereq": "CSE 498"}]
             }
           },  
-          "CSE": {
-            "name": "Computer Engineering",
+          "MIE": {
+            "name": "Biomedical and Bioinformatics Engineering",
             "semesters": {
-              "semester_5": [{"code": "CSE 311", "name": "Data Structures", "prereq": "CSE 111"}],
-              "semester_6": [{"code": "CSE 321", "name": "Operating Systems", "prereq": "CSE 311"}],
-              "semester_7": [{"code": "CSE 411", "name": "Computer Architecture", "prereq": "ECE 221"}],
-              "semester_8": [{"code": "CSE 499", "name": "Graduation Project II", "prereq": "CSE 498"}]
+              "semester_5": [{"code": "", "name": "", "prereq": ""}],
+              "semester_6": [{"code": "", "name": "", "prereq": ""}],
+              "semester_7": [{"code": "", "name": "", "prereq": ""}],
+              "semester_8": [{"code": "", "name": "", "prereq": ""}]
             }
           },
-          "CSE": {
-            "name": "Computer Engineering",
+          "EPE": {
+            "name": "Electrical Power Engineering",
             "semesters": {
-              "semester_5": [{"code": "CSE 311", "name": "Data Structures", "prereq": "CSE 111"}],
-              "semester_6": [{"code": "CSE 321", "name": "Operating Systems", "prereq": "CSE 311"}],
-              "semester_7": [{"code": "CSE 411", "name": "Computer Architecture", "prereq": "ECE 221"}],
-              "semester_8": [{"code": "CSE 499", "name": "Graduation Project II", "prereq": "CSE 498"}]
-            }
-          },
-          "CSE": {
-            "name": "Computer Engineering",
-            "semesters": {
-              "semester_5": [{"code": "CSE 311", "name": "Data Structures", "prereq": "CSE 111"}],
-              "semester_6": [{"code": "CSE 321", "name": "Operating Systems", "prereq": "CSE 311"}],
-              "semester_7": [{"code": "CSE 411", "name": "Computer Architecture", "prereq": "ECE 221"}],
-              "semester_8": [{"code": "CSE 499", "name": "Graduation Project II", "prereq": "CSE 498"}]
+              "semester_5": [{"code": "", "name": "", "prereq": ""}],
+              "semester_6": [{"code": "", "name": "", "prereq": ""}],
+              "semester_7": [{"code": "", "name": "", "prereq": ""}],
+              "semester_8": [{"code": "", "name": "", "prereq": ""}]
             }
           },
           "ECE": {
