@@ -548,7 +548,7 @@ INSTRUCTION FOR SENPAI:
 st.set_page_config(page_title="Senpai — E-JUST Advisor", layout="wide", page_icon="🎓")
 st.title("🎓 Senpai — E-JUST Academic Advisor")
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "sk-efgh5678abcd1234efgh5678abcd1234efgh5678")
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "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")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 # Persistent state
