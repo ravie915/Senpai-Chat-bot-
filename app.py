@@ -548,7 +548,7 @@ INSTRUCTION FOR SENPAI:
 st.set_page_config(page_title="Senpai — E-JUST Advisor", layout="wide", page_icon="🎓")
 st.title("🎓 Senpai — E-JUST Academic Advisor")
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyCgMeBL0_VmChSxC08XX-NgTKJ3_bddt-s")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyDt-SMhkGuZne6DEW58zXLPo8J82kUTt30")
 genai.configure(api_key=GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel("gemini-2.0-flash")
 
