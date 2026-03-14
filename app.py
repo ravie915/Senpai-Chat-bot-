@@ -10,6 +10,7 @@ from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 import time
 
+
 st.markdown("""
 <style>
 
@@ -26,10 +27,18 @@ html, body,
 section[data-testid="stSidebar"],
 .main {
     background-color: #ffffff !important;
+    color: #1a1a1a !important;
+}
+
+/* Force all text to be dark */
+div, p, span, h1, h2, h3, h4, h5, h6, .stMarkdown, .stChatMessage,
+[data-testid="stChatMessage"] *,
+.stChatInputContainer *,
+.stTextInput * {
+    color: #1a1a1a !important;
 }
 
 #MainMenu, footer, header { visibility: hidden; }
-
 
 /* ── Wave decoration ── */
 .wave {
@@ -62,7 +71,7 @@ section[data-testid="stSidebar"],
     font-size: 38px;
     font-weight: 900;
     letter-spacing: 3px;
-    color: #1a1a1a;
+    color: #1a1a1a !important;
     line-height: 1;
 }
 
@@ -75,6 +84,7 @@ section[data-testid="stSidebar"],
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
     position: relative;
     z-index: 1;
+    color: #1a1a1a !important;
 }
 
 /* ── Chat input ── */
@@ -85,12 +95,17 @@ section[data-testid="stSidebar"],
     font-size: 15px !important;
     background: #f5f5f5 !important;
     box-shadow: none !important;
+    color: #1a1a1a !important;
 }
 
 [data-testid="stChatInput"] textarea:focus {
     border-color: #cc0000 !important;
     background: #ffffff !important;
     outline: none !important;
+}
+
+[data-testid="stChatInput"] textarea::placeholder {
+    color: #666666 !important;
 }
 
 /* ── Mobile ── */
@@ -105,16 +120,6 @@ section[data-testid="stSidebar"],
 
 </style>
 """, unsafe_allow_html=True)
-
-# ── Header HTML ──
-st.markdown("""
-<img src="assets/wave.png" class="wave" alt="">
-<div class="header-container">
-    <img src="assets/owl.png" class="logo" alt="Senpai Owl">
-    <div class="senpai-title">SENPAI</div>
-</div>
-""", unsafe_allow_html=True)
-
 
 # ════════════════════════════════════════════════════════════════
 # 1. DATA LOADING
