@@ -1,105 +1,277 @@
 {
   "university": "E-JUST",
   "curriculum": {
+  "shared_elective_options": {
+    "LRA_elective_1": [
+      {"code": "LRA 213", "name": "Music and Technology"},
+      {"code": "LRA 214", "name": "Theatre and Drama"},
+      {"code": "LRA 215", "name": "Fine Arts"},
+      {"code": "LRA 216", "name": "Art and Architecture of Ancient Egypt"}
+    ],
+    "LRA_elective_2": [
+      {"code": "LRA 221", "name": "Natural Resources and Sustainability"},
+      {"code": "LRA 222", "name": "Environment and Earth Science"},
+      {"code": "LRA 223", "name": "Climate Change"},
+      {"code": "LRA 224", "name": "Advanced Japanese Language"}
+    ],
+    "LRA_elective_3": [
+      {"code": "LRA 311", "name": "Entrepreneurship and Innovation"},
+      {"code": "LRA 312", "name": "Public Policy and Peace Studies"},
+      {"code": "LRA 313", "name": "Introduction to Philosophy"},
+      {"code": "LRA 314", "name": "Human Rights"}
+    ]
+  },
     "PHASE_1_FOUNDATION": {
-      "semester_1": [
-        {"code": "MTE 111", "name": "Mechanics (Statics + Dynamics)", "prereq": null, "Type": "Core", "credit hours": "3"},
-        {"code": "IME 111", "name": "Engineering Drawings", "prereq": null, "Type": "Core", "credit hours": "2"},
-        {"code": "PHY 111", "name": "Physics (1)", "prereq": null, "Type": "Core", "credit hours": "3"},
-        {"code": "CHM 111", "name": "Chemistry (1)", "prereq": null, "Type": "Core", "credit hours": "1"},
-        {"code": "PHY 112", "name": "Physics Lab (1)", "prereq": "PHY 111", "Type": "Core", "credit hours": "1"},
-        {"code": "MTH 111", "name": "Mathematics (1)", "prereq": null, "Type": "Core", "credit hours": "3"},
-        {"code": "CHM 112", "name": "Chemistry Lab (1)", "prereq": null, "Type": "Core", "credit hours": "1"},
-        {"code": "LRA 113a", "name": "Safety & Risk Management", "prereq": null, "Type": "elective", "credit hours": "2"},
-        {"code": "LRA 113b", "name": "Fundamentals of Communication", "prereq": null, "Type": "elective", "credit hours": "2"},
-        {"code": "LRA 111", "name": "Japanese Language (1)", "prereq": null, "Type": "elective", "credit hours": "1"}
+      "semester_1":
+       [
+        {"code": "MTE 111", "name": "Mechanics (Statics + Dynamics)", "prereq": null, "Type" :"Core", "credit hours":"3"},
+        {"code": "IME 111", "name": "Engineering Drawings", "prereq": null, "Type" :"Core", "credit hours":"2"},
+        {"code": "PHY 111", "name": "Physics (1)", "prereq": null, "Type" :"Core", "credit hours":"3"},
+        {"code": "CHM 111", "name": "Chemistry (1)", "prereq": null, "Type" :"Core", "credit hours":"1"},
+        {"code": "PHY 112", "name": "Physics Lab (1)", "prereq": "PHY 111", "Type" :"Core", "credit hours":"1"},
+        {"code": "MTH 111", "name": "Mathematics (1) (Calculus + Linear Algebra)", "prereq": null, "Type" :"Core", "credit hours":"3"},
+        {"code": "LRA 113", "name": "Safety & Risk Management", "prereq": null, "Type" :"elective", "credit hours":"2"},
+        {"code": "LRA 113", "name": "Fundamentals of Communication", "prereq": null, "Type" :"elective", "credit hours":"2"},
+        {"code": "CHM 112", "name": "Chemistry Lab (1)", "prereq": null, "Type" :"core", "credit hours":"1"},
+        {"code": "LRA 111", "name": "Japanese Language (1)", "prereq": null, "Type" :"elective", "credit hours":"1"}
+   
       ],
       "semester_2": [
-        {"code": "MTH 121", "name": "Mathematics (2)", "prereq": "MTH 111", "Type": "Core", "credit hours": "3"},
-        {"code": "PHY 121", "name": "Physics (2)", "prereq": "PHY 111", "Type": "Core", "credit hours": "3"},
-        {"code": "PHY 122", "name": "Physics Lab (2)", "prereq": "PHY 121", "Type": "Core", "credit hours": "1"},
-        {"code": "CHM 121", "name": "Chemistry (2)", "prereq": "CHM 111", "Type": "Core", "credit hours": "1"},
-        {"code": "CHM 122", "name": "Chemistry Lab (2)", "prereq": "CHM 121", "Type": "Core", "credit hours": "1"},
-        {"code": "IME 121", "name": "Introduction to Manufacturing Processes", "prereq": null, "Type": "Core", "credit hours": "3"},
-        {"code": "CSE 111", "name": "Introduction to Computer Science", "prereq": null, "Type": "elective", "credit hours": "2"},
-        {"code": "LRA 121", "name": "Japanese Language (2)", "prereq": "LRA 111", "Type": "elective", "credit hours": "1"},
-        {"code": "LRA 123", "name": "Key Skills Seminar", "prereq": null, "Type": "elective", "credit hours": "2"},
-        {"code": "LRA 122", "name": "Japanese Culture", "prereq": null, "Type": "elective", "credit hours": "2"}
-      ],
+        {"code": "MTH 121", "name": "Mathematics (2) (Calculus + Linear Algebra)", "prereq": "MTH 111", "Type" :"Core", "credit hours":"3"},
+        {"code": "PHY 121", "name": "Physics (2)", "prereq": "PHY 111" , "Type" :"Core", "credit hours":"3"},
+        {"code": "PHY 122", "name": "Physics Lab (2)", "prereq": "PHY 121" , "Type" :"Core", "credit hours":"1"},
+        {"code": "CHM 121", "name": "Chemistry (2)", "prereq": "CHM 111", "Type" :"Core", "credit hours":"1"},
+        {"code": "CHM 122", "name": "Chemistry Lab (2)", "prereq": "CHM 121", "Type" :"Core", "credit hours":"1"},
+        {"code": "IME 121", "name": "Introduction to Manufacturing Processes", "prereq": null , "Type" :"Core", "credit hours":"3"},
+        {"code": "LRA 121", "name": "Japanese Language (2)", "prereq": "LRA 111", "Type" :"elective", "credit hours":"1"},
+        {"code": "LRA 123", "name": "Key Skills Seminar", "prereq": null, "Type" :"elective", "credit hours":"2"},
+        {"code": "LRA 122", "name": "Japanese Culture", "prereq": null, "Type" :"elective", "credit hours":"2"},
+        {"code": "CSE 111", "name": "Introduction to Computer Science", "prereq": null, "Type" :"elective", "credit hours":"2"}
+      
+    ],
       "semester_3": [
-        {"code": "MTH 211", "name": "Mathematics (3)", "prereq": "MTH 121", "Type": "Core", "credit hours": "3"},
-        {"code": "CSE 211", "name": "Computer Programming", "prereq": "CSE 111", "Type": "Core", "credit hours": "2"},
-        {"code": "IME 211", "name": "Introduction to Mechanical Engineering", "prereq": null, "Type": "Core", "credit hours": "3"},
-        {"code": "CPE 211", "name": "Introduction to Energy, Environmental and Chemical Engineering", "prereq": null, "Type": "Core", "credit hours": "3"},
-        {"code": "ECE 211", "name": "Introduction to Electrical Engineering", "prereq": null, "Type": "Core", "credit hours": "3"},
-        {"code": "LRA 211", "name": "Japanese Language (3)", "prereq": "LRA 121", "Type": "elective", "credit hours": "1"},
-        {"code": "LRA 212", "name": "Economics and Sustainable Development", "prereq": null, "Type": "elective", "credit hours": "2"},
-        {"code": "LRA 21X", "name": "UR Elective (1)", "prereq": null, "Type": "elective", "credit hours": "2",
-          "options": [
-            {"code": "LRA 213", "name": "Music and Technology"},
-            {"code": "LRA 214", "name": "Theatre and Drama"},
-            {"code": "LRA 215", "name": "Fine Arts"},
-            {"code": "LRA 216", "name": "Art and Architecture of Ancient Egypt"}
-          ]
-        }
+        {"code": "LRA 211", "name": "Japanese Language (3)", "prereq": "LRA 121", "Type" :"elective", "credit hours":"1"},
+        {"code": "LRA 212", "name": "Economics and Sustainable Development", "prereq": null , "Type" :"elective", "credit hours":"2"},
+        {"code": "LRA 21X", "name": "UR Elective (1)", "prereq": null , "Type" :"elective", "credit hours":"2","options": "LRA_elective_1"},
+        {"code": "MTH 211", "name": "Mathematics (3)", "prereq": "MTH 121", "Type" :"Core", "credit hours":"3"},
+        {"code": "CSE 211", "name": "Computer Programming", "prereq": "CSE 111", "Type" :"Core", "credit hours":"2"},
+        {"code": "IME 211", "name": "Introduction to Mechanical Engineering", "prereq": null , "Type" :"Core", "credit hours":"3"},
+        {"code": "CPE 211", "name": "Introduction to Energy, Environmental and Chem Engineering", "prereq": null , "Type" :"Core", "credit hours":"3"},
+        {"code": "ECE 211", "name": "Introduction to Electrical Engineering", "prereq": null ,"Type" :"Core", "credit hours":"3"}
       ]
     },
     "PHASE_2_SCHOOLS": {
       "ECCE": {
         "name": "Electronics, Communications, and Computers Engineering",
         "semester_4_core": [
-          {"code": "MTH 221", "name": "Mathematics (4)", "prereq": "MTH 211", "Type": "Core", "credit hours": "3"},
-          {"code": "EPE 221", "name": "Measurements and Instrumentations", "prereq": "ECE 211", "Type": "Core", "credit hours": "3"},
-          {"code": "ECE 221", "name": "Digital Logic Design", "prereq": "ECE 211", "Type": "School", "credit hours": "3"},
-          {"code": "ECE 222", "name": "Introduction to Electronics", "prereq": "ECE 211", "Type": "School", "credit hours": "3"},
-          {"code": "ECE 223", "name": "Signals and Systems", "prereq": "MTH 121", "Type": "School", "credit hours": "3"},
-          {"code": "IME 221", "name": "Project Management", "prereq": null, "Type": "Core", "credit hours": "2"},
-          {"code": "LRA 22X", "name": "UR Elective (2)", "prereq": null, "Type": "elective", "credit hours": "2",
-            "options": [
-              {"code": "LRA 221", "name": "Natural Resources and Sustainability"},
-              {"code": "LRA 222", "name": "Environment and Earth Science"},
-              {"code": "LRA 223", "name": "Climate Change"},
-              {"code": "LRA 224", "name": "Advanced Japanese Language"}
-            ]
-          }
+          {"code": "LRA 22X", "name": "UR Elective (2)", "prereq": null , "Type" :"elective", "credit hours":"2" ,"options":"LRA_elective_2"},
+          {"code": "MTH 221", "name": "Mathematics (4)", "prereq": "MTH 211", "Type" :"Core", "credit hours":"3"},
+          {"code": "EPE 221", "name": "Measurements and Instrumentations", "prereq": "ECE 211", "Type" :"Core", "credit hours":"3"},
+          {"code": "ECE 221", "name": "Digital Logic Design", "prereq": "ECE 211" ,"Type" :"School", "credit hours":"3"},
+          {"code": "ECE 222", "name": "Introduction to Electronics", "prereq": "ECE 211" , "Type" :"School", "credit hours":"3"},
+          {"code": "ECE 223", "name": "Signals and Systems", "prereq": "MTH 121" , "Type" :"School", "credit hours":"3"},
+          {"code": "IME 221", "name": "Project Management", "prereq": null, "Type" :"Core", "credit hours":"2"}
         ],
         "departments": {
-          "CSE": {
+          
+            "CSE": {
             "name": "Computer Engineering",
+            "elective_options": {
+              "CSE_school_electives": [
+                {"code": "CSE 433", "name": "Emerging Topics in Computer Science and Engineering", "prereq": null},
+                {"code": "CSE 427", "name": "Computer and Network Security", "prereq": "CSE 411 + CSE 412"},
+                {"code": "CSE 436", "name": "Advanced Embedded Systems", "prereq": "CSE 424"},
+                {"code": "CSE 428", "name": "Data Engineering", "prereq": "CSE 326"},
+                {"code": "CSE 422", "name": "Programming Languages and Compilers", "prereq": "CSE 323"},
+                {"code": "CSE 440", "name": "Introduction to Quantum Computing", "prereq": "MTH 221 + CSE 326"}
+              ]},
             "semesters": {
               "semester_5": [
-                {"code": "CSE 311", "name": "Computer Organization", "prereq": "ECE 221", "Type": "School", "credit hours": "3"},
-                {"code": "CSE 312", "name": "Discrete Mathematics", "prereq": "MTH 211", "Type": "School", "credit hours": "3"},
-                {"code": "CSE 315", "name": "Seminar and Project-based Learning on CSE", "prereq": null, "Type": "School", "credit hours": "2"},
-                {"code": "MTH 312", "name": "Advanced Mathematics with Software Applications", "prereq": "MTH 221", "Type": "School", "credit hours": "3"},
-                {"code": "ECE 314", "name": "Electric and Magnetic Fields", "prereq": null, "Type": "School", "credit hours": "3"},
-                {"code": "ECE 313", "name": "Digital Signal Processing", "prereq": "ECE 223", "Type": "School", "credit hours": "3"},
-                {"code": "LRA 22X", "name": "UR Elective (3)", "prereq": null, "Type": "elective", "credit hours": "2"}
+                {"code": "LRA 31X", "name": "UR Elective (3)", "prereq": null , "Type" :"elective", "credit hours":"2", "options":"LRA_elective_3"},
+                {"code": "CSE 311", "name": "Computer Organization", "prereq": "ECE 221" , "Type" :"Program", "credit hours":"3"},
+                {"code": "CSE 312", "name": "Discrete Mathematics", "prereq": "MTH 211" , "Type" :"Program", "credit hours":"3"},
+                {"code": "CSE 315", "name": "Seminar and Project-based Learning on CSE", "prereq": null , "Type" :"Program", "credit hours":"2"},
+                {"code": "MTH 312", "name": "Advanced Mathematics with software applications", "prereq": "MTH 221" , "Type" :"Program", "credit hours":"3"},
+                {"code": "ECE 314", "name": "Electric and Magnetic Fields", "prereq": null , "Type" :"School", "credit hours":"3"},
+                {"code": "ECE 313", "name": "Digital Signal Processing", "prereq": "ECE 223" , "Type" :"School", "credit hours":"3"}
               ],
-              "semester_6": [{"code": "CSE 321", "name": "Operating Systems", "prereq": "CSE 311", "Type": "School", "credit hours": "3"}],
-              "semester_7": [{"code": "CSE 411", "name": "Computer Architecture", "prereq": "ECE 221", "Type": "School", "credit hours": "3"}],
-              "semester_8": [{"code": "CSE 499", "name": "Graduation Project II", "prereq": "CSE 498", "Type": "School", "credit hours": "6"}]
-            }
+              "semester_6": [
+                {"code": "LRA 321", "name": "Contemporary Societal Issues", "prereq": null , "Type" :"elective", "credit hours":"2"},
+                {"code": "ERE 310", "name": "Thermo-Fluid", "prereq": null , "Type" :"School", "credit hours":"3"},
+                {"code": "EPE 326", "name": "Introduction to Control Systems", "prereq": "MTH 121" , "Type" :"School", "credit hours":"3"},
+                {"code": "CSE 321", "name": "Machine Learning", "prereq": "MTH 121" , "Type" :"Program", "credit hours":"3"},
+                {"code": "CSE 324", "name": "Embedded Systems", "prereq": "ECE 221 + ECE 311" , "Type" :"Program", "credit hours":"3"},
+                {"code": "CSE 326", "name": "Analysis and Design of Algorithms", "prereq": "CSE 312" , "Type" :"Program", "credit hours":"3"},
+                {"code": "CSE 323", "name": "Advanced Programming", "prereq": "CSE 211" , "Type" :"Program", "credit hours":"2"}
+              ],
+              "semester_7": [
+                {"code": "LRA 411", "name": "Engineering /International Contracts and Arbitration", "prereq": null , "Type" :"elective", "credit hours":"2"},
+                {"code": "CSE 411", "name": "Cryptography", "prereq": "CSE 312 + MTH 211" , "Type" :"Program", "credit hours":"3"},
+                {"code": "CSE 412", "name": "Operating Systems", "prereq": "CSE 311" , "Type" :"Program", "credit hours":"3"},
+                {"code": "CSE 410", "name": "Graduation Project I", "prereq": null , "Type" :"Program", "credit hours":"3"},
+                {"code": "CSE 421", "name": "Computer Networks", "prereq": "CSE 311 + CSE 323" , "Type" :"Program", "credit hours":"3"},
+                {"code": "CSE 4XX", "name": "Elective (1)", "prereq": null , "Type" :"Program", "credit hours":"3" , "options": "CSE_school_electives"},
+                {"code": "CSE 429", "name": "Image Processing and Computer Vision", "prereq": "MTH 123" , "Type" :"Program", "credit hours":"2"}
+              ],
+              "semester_8": [
+                {"code": "CSE 420", "name": "Graduation Project II", "prereq": null, "Type" :"Program", "credit hours":"6" },
+                {"code": "CSE 4XX", "name": "Elective (2)", "prereq": null , "Type" :"Program", "credit hours":"3" , "options": "CSE_school_electives"},
+                {"code": "CSE 4XX", "name": "Elective (3)", "prereq": null , "Type" :"Program", "credit hours":"3" , "options": "CSE_school_electives"},
+                { "code": "CSE 424", "name": "Parallel and Distributed Computing" ,"prereq": null , "Type" :"Program", "credit hours":"3" },
+                { "code": "CSE 426", "name": "Theory of Computation" ,"prereq": null , "Type" :"Program", "credit hours":"3" }
+          ]
+          }  },
+           "MIE": {
+            "name": "Biomedical and Bioinformatics Engineering",
+            "elective_options": {
+              "MIE_program_electives": [
+                {"code": "MIE 431", "name": "Medical Imaging", "prereq": "MIE 324"},
+                {"code": "ECE 434", "name": "Embedded Systems", "prereq": "ECE 310"},
+                {"code": "MIE 432", "name": "Rehabilitation Science and Instrumentation", "prereq": "MIE 321 + MIE 415"},
+                {"code": "MIE 433", "name": "Biomaterial", "prereq": "MIE 415"},
+                {"code": "MIE 434", "name": "Internet of Things in Medicine", "prereq": "MIE 321"},
+                {"code": "MIE 435", "name": "Clinical Engineering", "prereq": null},
+                {"code": "MIE 451", "name": "Pattern Recognition & Decision Making", "prereq": "MIE 411"},
+                {"code": "MIE 452", "name": "Telemedicine", "prereq": "MIE 413"},
+                {"code": "MIE 453", "name": "Genomic Bioinformatics", "prereq": "MIE 324"},
+                {"code": "MIE 454", "name": "Database Systems & File Structure", "prereq": "MIE 413"},
+                {"code": "MIE 455", "name": "Scripting Languages in Bioinformatics", "prereq": "CSE 211 + MIE 324"},
+                {"code": "MIE 456", "name": "Biomedical Innovation and Transforming Healthcare", "prereq": "MIE 327"}
+              ]
+            },
+           "semesters": {
+            "semester_5": [
+              {"code": "LRA 31X", "name": "UR Elective (3)", "prereq": null, "Type": "elective", "credit hours": "2", "options": "LRA_elective_3"},
+              {"code": "MTH 312", "name": "Advanced Mathematics with Software Applications", "prereq": "MTH 221 + CSE 211", "Type": "School", "credit hours": "3"},
+              {"code": "ECE 313", "name": "Digital Signal Processing", "prereq": "ECE 223", "Type": "School", "credit hours": "3"},
+              {"code": "ECE 314", "name": "Electric and Magnetic Fields", "prereq": null, "Type": "School", "credit hours": "3"},
+              {"code": "ECE 311", "name": "Microprocessors and Microcontrollers", "prereq": "ECE 221", "Type": "School", "credit hours": "3"},
+              {"code": "MIE 311", "name": "Human Biology", "prereq": null, "Type": "Program", "credit hours": "2"},
+              {"code": "MIE 312", "name": "Pathophysiology", "prereq": null, "Type": "Program", "credit hours": "2"}
+            ],
+            "semester_6": [
+              {"code": "LRA 321", "name": "Contemporary Societal Issues", "prereq": null, "Type": "elective", "credit hours": "2"},
+              {"code": "ERE 310", "name": "Thermo-Fluid", "prereq": null, "Type": "School", "credit hours": "3"},
+              {"code": "EPE 326", "name": "Introduction to Control Systems", "prereq": "MTH 221", "Type": "School", "credit hours": "3"},
+              {"code": "MIE 321", "name": "Biomedical Electronics", "prereq": "ECE 222", "Type": "Program", "credit hours": "3"},
+              {"code": "MIE 324", "name": "Bioinformatics (1)", "prereq": "CSE 211 + MIE 311 + MIE 312", "Type": "Program", "credit hours": "3"},
+              {"code": "MIE 326", "name": "Data Structures & Algorithms in Biomedical Applications", "prereq": "CSE 211", "Type": "Program", "credit hours": "3"},
+              {"code": "MIE 327", "name": "Project-Based Learning in MIE", "prereq": "ECE 311", "Type": "Program", "credit hours": "2"}
+            ],
+            "semester_7": [
+              {"code": "LRA 421", "name": "International Contracts and Arbitration", "prereq": null, "Type": "elective", "credit hours": "2"},
+              {"code": "MIE 411", "name": "Biomedical Signals and Image Processing", "prereq": "ECE 313", "Type": "Program", "credit hours": "3"},
+              {"code": "MIE 412", "name": "Computational Biology", "prereq": "MIE 324", "Type": "Program", "credit hours": "3"},
+              {"code": "MIE 413", "name": "HealthCare Information Systems", "prereq": "MIE 326", "Type": "Program", "credit hours": "3"},
+              {"code": "MIE 414", "name": "Biomedical Sensors and Actuators", "prereq": "EPE 221", "Type": "Program", "credit hours": "3"},
+              {"code": "MIE 415", "name": "Biomechanics", "prereq": "MTR 111", "Type": "Program", "credit hours": "2"},
+              {"code": "MIE 410", "name": "Graduation Project I", "prereq": null, "Type": "Program", "credit hours": "3"}
+            ],
+            "semester_8": [
+              {"code": "MIE 420", "name": "Graduation Project II", "prereq": "MIE 410", "Type": "Program", "credit hours": "6"},
+              {"code": "MIE 421", "name": "Seminar on Biomedical and Bioinformatics Engineering", "prereq": "MIE 324 + MIE 414", "Type": "Program", "credit hours": "3"},
+              {"code": "MIE/ECE XXX", "name": "Elective (1)", "prereq": null, "Type": "Program", "credit hours": "3", "options": "MIE_program_electives"},
+              {"code": "MIE/ECE XXX", "name": "Elective (2)", "prereq": null, "Type": "Program", "credit hours": "3", "options": "MIE_program_electives"},
+              {"code": "MIE/ECE XXX", "name": "Elective (3)", "prereq": null, "Type": "Program", "credit hours": "3", "options": "MIE_program_electives"}
+               ]
+             }
           },
+        "EPE": {
+          "name": "Electrical Power Engineering",
+          "elective_options": {
+            "EPE_school_electives": [
+              {"code": "EPE 423", "name": "Advanced Simulation, Design, and Applications in Power Electronics", "prereq": "EPE 321"},
+              {"code": "EEP 424", "name": "Power System Stability and Control", "prereq": "EPE 412"},
+              {"code": "EPE 425", "name": "Energy Storage", "prereq": "EPE 323"},
+              {"code": "EPE 426", "name": "Energy Efficient Building Design", "prereq": "EPE 211"},
+              {"code": "EPE 427", "name": "Power Quality", "prereq": "EPE 412"},
+              {"code": "EPE 428", "name": "Smart Grid", "prereq": "EPE 323"}
+            ]
+          },
+          "semesters": {
+            "semester_5": [
+              {"code": "LRA 31X", "name": "UR Elective (3)", "prereq": null, "Type": "elective", "credit hours": "2", "options": "LRA_elective_3"},
+                {"code": "MTH 312", "name": "Advanced Mathematics with Software Applications", "prereq": "MTH 221", "Type": "School", "credit hours": "3"},
+                {"code": "ECE 313", "name": "Digital Signal Processing", "prereq": "ECE 223", "Type": "School", "credit hours": "3"},
+                {"code": "ECE 314", "name": "Electric and Magnetic Fields", "prereq": null, "Type": "School", "credit hours": "3"},
+                {"code": "EPE 312", "name": "Power Electronics 1", "prereq": "ECE 222", "Type": "Program", "credit hours": "3"},
+                {"code": "EPE 313", "name": "Electrical Machines 1", "prereq": "ECE 211", "Type": "Program", "credit hours": "3"},
+                {"code": "EPE 314", "name": "Advanced Electrical Circuit", "prereq": "ECE 211", "Type": "School", "credit hours": "2"}
+              ],
+            "semester_6": [
+                {"code": "LRA 321", "name": "Contemporary Societal Issues", "prereq": null, "Type": "elective", "credit hours": "2"},
+                {"code": "ERE 310", "name": "Thermo-Fluid", "prereq": null, "Type": "School", "credit hours": "3"},
+                {"code": "EPE 326", "name": "Introduction to Control Systems", "prereq": "MTH 121", "Type": "Program", "credit hours": "3"},
+                {"code": "EPE 320", "name": "Seminar and Project Based Learning on EPE", "prereq": null, "Type": "Program", "credit hours": "2"},
+                {"code": "EPE 321", "name": "Power Electronics 2", "prereq": "EPE 312", "Type": "Program", "credit hours": "3"},
+                {"code": "EPE 322", "name": "Electrical Machines 2", "prereq": "EPE 313", "Type": "Program", "credit hours": "3"},
+                {"code": "EPE 323", "name": "Fundamentals of Power Systems", "prereq": "EPE 314", "Type": "Program", "credit hours": "3"}
+              ],
+            "semester_7": [
+                {"code": "LRA 421", "name": "International Contracts and Arbitration", "prereq": null, "Type": "elective", "credit hours": "2"},
+                {"code": "EPE 411", "name": "Special Machines", "prereq": "EPE 322", "Type": "Program", "credit hours": "2"},
+                {"code": "EPE 412", "name": "Power Systems Analysis", "prereq": "EPE 323", "Type": "Program", "credit hours": "3"},
+                {"code": "EPE 413", "name": "High Voltage Engineering", "prereq": "EPE 323", "Type": "Program", "credit hours": "2"},
+                {"code": "EPE 414", "name": "Economic Operation and Control of Power Systems", "prereq": "EPE 323", "Type": "Program", "credit hours": "3"},
+                {"code": "EPE 4xx", "name": "Elective (1)", "prereq": null, "Type": "Program", "credit hours": "3", "options": "EPE_school_electives"},
+                {"code": "EPE 410", "name": "Graduation Project (1)", "prereq": null, "Type": "Program", "credit hours": "3"}
+              ],
+           "semester_8": [
+                {"code": "EPE 421", "name": "Electric Drives", "prereq": "EPE 411", "Type": "Program", "credit hours": "3"},
+                {"code": "EEP 422", "name": "Switchgear and Protection of Power Systems", "prereq": "EPE 412", "Type": "Program", "credit hours": "3"},
+                {"code": "EPE 4xx", "name": "Elective (2)", "prereq": null, "Type": "Program", "credit hours": "3", "options": "EPE_school_electives"},
+                {"code": "EPE 4xx", "name": "Elective (3)", "prereq": null, "Type": "Program", "credit hours": "3", "options": "EPE_school_electives"},
+                {"code": "EPE 420", "name": "Graduation Project II", "prereq": "EPE 410", "Type": "Program", "credit hours": "6"}
+              ]
+        }
+        },
           "ECE": {
             "name": "Electronics and Communications Engineering",
+            "elective_options": {
+              "ECE_school_electives": [
+                {"code": "ECE 430", "name": "Radio Frequency Electronics", "prereq": "ECE 312"},
+                {"code": "ECE 433", "name": "Digital Integrated Circuits", "prereq": "ECE 221 + ECE 222"},
+                {"code": "ECE 434", "name": "Embedded Systems", "prereq": "ECE 311"},
+                {"code": "ECE 428", "name": "Mobile Communication Systems", "prereq": "ECE 413 + ECE 426*"},
+                {"code": "ECE 413", "name": "Selected Topics in Signal Processing and Machine Learning", "prereq": "ECE 313"},
+                {"code": "ECE 423", "name": "Digital Image Processing", "prereq": "ECE 313"}
+              ]
+            },
             "semesters": {
-              "semester_5": [{"code": "ECE 311", "name": "Electromagnetic Waves", "prereq": "MTH 211", "Type": "School", "credit hours": "3"}],
-              "semester_6": [{"code": "ECE 322", "name": "Communication Systems", "prereq": "ECE 223", "Type": "School", "credit hours": "3"}],
-              "semester_7": [{"code": "ECE 412", "name": "Antenna Engineering", "prereq": "ECE 311", "Type": "School", "credit hours": "3"}],
-              "semester_8": [{"code": "ECE 422", "name": "Wireless Communications", "prereq": "ECE 322", "Type": "School", "credit hours": "3"}]
-            }
-          },
-          "EPE": {
-            "name": "Electrical Power Engineering",
-            "semesters": {
-              "semester_5": [], "semester_6": [], "semester_7": [], "semester_8": []
-            }
-          },
-          "MIE": {
-            "name": "Biomedical and Bioinformatics Engineering",
-            "semesters": {
-              "semester_5": [], "semester_6": [], "semester_7": [], "semester_8": []
+              "semester_5": [
+                {"code": "LRA 31X", "name": "UR Elective (3)", "prereq": null, "Type": "elective", "credit hours": "2", "options": "LRA_elective_3"},
+                {"code": "MTH 312", "name": "Advanced Engineering Mathematics with Software Applications", "prereq": "MTH 221", "Type": "School", "credit hours": "3"},
+                {"code": "ECE 314", "name": "Electric and Magnetic Fields", "prereq": "MTH 121 + ECE 222", "Type": "School", "credit hours": "3"},
+                {"code": "ECE 313", "name": "Digital Signal Processing", "prereq": "ECE 223", "Type": "School", "credit hours": "3"},
+                {"code": "ECE 311", "name": "Microprocessors and Microcontrollers", "prereq": "ECE 221", "Type": "Program", "credit hours": "3"},
+                {"code": "ECE 312", "name": "Electronic Devices", "prereq": "ECE 222", "Type": "Program", "credit hours": "3"},
+                {"code": "ECE 315", "name": "Seminar and Project Based Learning in ECE", "prereq": "ECE 221 + ECE 211", "Type": "Program", "credit hours": "2"}
+              ],
+              "semester_6": [
+                {"code": "LRA 321", "name": "Contemporary Societal Issues", "prereq": null, "Type": "elective", "credit hours": "2"},
+                {"code": "ERE 310", "name": "Thermo-Fluid", "prereq": null, "Type": "School", "credit hours": "3"},
+                {"code": "EPE 326", "name": "Introduction to Control Systems", "prereq": "MTH 121", "Type": "School", "credit hours": "3"},
+                {"code": "ECE 321", "name": "Electronic Circuits", "prereq": "ECE 312", "Type": "Program", "credit hours": "3"},
+                {"code": "ECE 326", "name": "Communications Systems Fundamentals", "prereq": "ECE 223", "Type": "Program", "credit hours": "3"},
+                {"code": "ECE 327", "name": "Optical Communications Devices", "prereq": "ECE 222", "Type": "Program", "credit hours": "3"},
+                {"code": "ECE 328", "name": "Data Communication Networks", "prereq": "ECE 221 + ECE 326*", "Type": "Program", "credit hours": "2"}
+              ],
+              "semester_7": [
+                {"code": "LRA 421", "name": "Engineering / International Contracts and Arbitration", "prereq": null, "Type": "elective", "credit hours": "2"},
+                {"code": "ECE 416", "name": "Digital Communications Systems", "prereq": "ECE 326", "Type": "Program", "credit hours": "3"},
+                {"code": "ECE 414", "name": "Electromagnetic Fields and Antennas", "prereq": "ECE 314", "Type": "Program", "credit hours": "3"},
+                {"code": "ECE 432", "name": "Digital VLSI Modeling and Design", "prereq": "ECE 311", "Type": "Program", "credit hours": "3"},
+                {"code": "ECE 418", "name": "Principles of Information Theory and Coding", "prereq": "ECE 221", "Type": "Program", "credit hours": "2"},
+                {"code": "ECE 4XX", "name": "Elective (1)", "prereq": null, "Type": "Program", "credit hours": "3", "options": "ECE_school_electives"},
+                {"code": "ECE 410", "name": "Graduation Project I", "prereq": null, "Type": "Program", "credit hours": "3"}
+            ],
+              "semester_8": [
+                {"code": "ECE 431", "name": "CMOS Analog Integrated Circuits", "prereq": "ECE 312", "Type": "Program", "credit hours": "3"},
+                {"code": "ECE 426", "name": "Fundamentals of Wireless Communications", "prereq": "ECE 416", "Type": "Program", "credit hours": "2"},
+                {"code": "ECE 4XX", "name": "Elective (2)", "prereq": null, "Type": "Program", "credit hours": "3", "options": "ECE_school_electives"},
+                {"code": "ECE 4XX", "name": "Elective (3)", "prereq": null, "Type": "Program", "credit hours": "3", "options": "ECE_school_electives"},
+                {"code": "ECE 420", "name": "Graduation Project II", "prereq": "ECE 410", "Type": "Program", "credit hours": "6"}
+              ]
             }
           }
         }
@@ -107,16 +279,309 @@
       "IDE": {
         "name": "Innovative Design Engineering",
         "semester_4_core": [
-          {"code": "MTR 221", "name": "Kinematics of Machinery", "prereq": "IME 211", "Type": "Core", "credit hours": "3"}
-        ],
+          {"code": "LRA 22X", "name": "UR Elective (2)", "prereq": null, "Type": "elective", "credit hours": "2", "options": "LRA_elective_2"},
+          {"code": "MTH 221", "name": "Mathematics (4)", "prereq": "MTH 211", "Type": "Core", "credit hours": "3"},
+          {"code": "EPE 221", "name": "Measurements and Instrumentations", "prereq": "ECE 211", "Type": "Core", "credit hours": "3"},
+          {"code": "IME 221", "name": "Project Management", "prereq": null, "Type": "Core", "credit hours": "2"},
+          {"code": "ECE 222", "name": "Introduction to Electronics Engineering", "prereq": "ECE 211", "Type": "School", "credit hours": "3"},
+          {"code": "ECE 221", "name": "Digital Logic Design", "prereq": "ECE 211", "Type": "School", "credit hours": "3"},
+          {"code": "ECE 223", "name": "Signal and Systems", "prereq": "MTH 211 + ECE 211", "Type": "School", "credit hours": "3"}
+       ],
         "departments": {
           "MTR": {
             "name": "Mechatronics Engineering",
+             "elective_options": {
+              "ECE_school_electives": [
+                {"code": "LRA 22X", "name": "UR Elective (2)", "prereq": null, "Type": "elective", "credit hours": "2", "options": "LRA_elective_2"},
+                {"code": "MTH 221", "name": "Mathematics (4)", "prereq": "MTH 211", "Type": "Core", "credit hours": "3"},
+                {"code": "EPE 221", "name": "Measurement and Instrumentation", "prereq": "ECE 211", "Type": "Core", "credit hours": "3"},
+                {"code": "IME 221", "name": "Project Management", "prereq": null, "Type": "Core", "credit hours": "2"},
+                {"code": "MSE 221", "name": "Engineering Materials", "prereq": null, "Type": "School", "credit hours": "3"},
+                {"code": "MTR 221", "name": "Theory of Machines", "prereq": "MTR 111", "Type": "School", "credit hours": "3"},
+                {"code": "IME 222", "name": "Strength of Materials", "prereq": null, "Type": "School", "credit hours": "3"}
+              ]
+            },
             "semesters": {
-              "semester_5": [{"code": "MTR 311", "name": "Sensors and Actuators", "prereq": "ECE 211", "Type": "School", "credit hours": "3"}],
-              "semester_6": [{"code": "MTR 321", "name": "Control Systems", "prereq": "MTH 211", "Type": "School", "credit hours": "3"}],
-              "semester_7": [{"code": "MTR 411", "name": "Robotics", "prereq": "MTR 221", "Type": "School", "credit hours": "3"}],
-              "semester_8": [{"code": "MTR 422", "name": "Mechatronics System Design", "prereq": "MTR 411", "Type": "School", "credit hours": "3"}]
+              "semester_5": [
+                {"code": "LRA 31X", "name": "UR Elective (3)", "prereq": null, "Type": "elective", "credit hours": "2", "options": "LRA_elective_3"},
+                {"code": "MTR 311", "name": "Introduction to Mechatronics", "prereq": null, "Type": "Program", "credit hours": "2"},
+                {"code": "MTR 312", "name": "Embedded Systems in Mechatronics", "prereq": null, "Type": "Program", "credit hours": "3"},
+                {"code": "MTR 311", "name": "Mechanical Vibrations", "prereq": "MTR 221", "Type": "School", "credit hours": "3"},
+                {"code": "IME 311", "name": "Mechanical Design (1)", "prereq": "IME 222", "Type": "School", "credit hours": "3"},
+                {"code": "ECE 321", "name": "Electronic Circuits", "prereq": null, "Type": "Program", "credit hours": "3"},
+                {"code": "ECE 221", "name": "Digital Logic Design", "prereq": null, "Type": "Program", "credit hours": "3"}
+                  ],
+              "semester_6": [
+                {"code": "LRA 321", "name": "Contemporary Societal Issues", "prereq": null, "Type": "elective", "credit hours": "2"},
+                {"code": "MTR 321", "name": "Systems Modeling and Control", "prereq": "MTR 311", "Type": "School", "credit hours": "3"},
+                {"code": "ERE 318", "name": "Thermodynamics and Heat Transfer", "prereq": null, "Type": "School", "credit hours": "3"},
+                {"code": "ERE 319", "name": "Fluid Mechanics and Hydraulics", "prereq": null, "Type": "School", "credit hours": "3"},
+                {"code": "MTR 322", "name": "Mechatronics Systems Design", "prereq": "ECE 321", "Type": "Program", "credit hours": "3"},
+                {"code": "MTR 323", "name": "Robotics (1)", "prereq": "MTR 222", "Type": "Program", "credit hours": "3"},
+                {"code": "MTR 324", "name": "Seminar and Project Based Learning in Mechatronics Engineering", "prereq": null, "Type": "Program", "credit hours": "2"}
+              ],
+              "semester_7": [
+                {"code": "LRA 421", "name": "Engineering / International Contracts and Arbitration", "prereq": null, "Type": "elective", "credit hours": "2"},
+                {"code": "MTR 411", "name": "Mobile Robots & Machine Vision", "prereq": null, "Type": "Program", "credit hours": "3"},
+                {"code": "MTR 412", "name": "Control System Design (Control 2)", "prereq": "MTR 321", "Type": "Program", "credit hours": "3"},
+                {"code": "MTR 413", "name": "Micro Systems Technology", "prereq": null, "Type": "Program", "credit hours": "3"},
+                {"code": "MTR 414", "name": "Artificial Intelligence in Mechatronics and Robotics", "prereq": null, "Type": "Program", "credit hours": "3"},
+                {"code": "MTR 415", "name": "Programmable Logic Controllers", "prereq": null, "Type": "Program", "credit hours": "2"},
+                {"code": "MTR 400", "name": "Industrial Training", "prereq": null, "Type": "Program", "credit hours": "0"},
+                {"code": "MTR 410", "name": "Graduation Project I", "prereq": null, "Type": "Program", "credit hours": "3"}
+            ],
+              "semester_8": [
+                {"code": "MTR 4XX", "name": "Elective 1", "prereq": null, "Type": "Program", "credit hours": "3", "options": "MTR_school_electives"},
+                {"code": "MTR 4XX", "name": "Elective 2", "prereq": null, "Type": "Program", "credit hours": "3", "options": "MTR_school_electives"},
+                {"code": "MTR 4XX", "name": "Elective 3", "prereq": null, "Type": "Program", "credit hours": "3", "options": "MTR_school_electives"},
+                {"code": "MTR 416", "name": "Hydraulic and Pneumatic Control Systems", "prereq": null, "Type": "Program", "credit hours": "2"},
+                {"code": "MTR 420", "name": "Graduation Project II", "prereq": "MTR 410", "Type": "Program", "credit hours": "6"}
+              ]
+            }
+          },
+          "ASE": {
+          "name": "Aerospace Engineering",
+          "elective_options": {
+            "ASE_aeronautical_electives": [
+              {"code": "ASE 432", "name": "High-Speed Aerodynamics", "prereq": "ASE 431 + ASE 312"},
+              {"code": "ASE 433", "name": "Helicopter Performance and Design", "prereq": "ASE 431 + ASE 311"},
+              {"code": "ASE 434", "name": "Unmanned Aircraft Mission Engineering", "prereq": "ASE 431 + ASE 311"},
+              {"code": "ASE 435", "name": "Multidisciplinary Design Optimization", "prereq": "ASE 431 + ASE 311"},
+              {"code": "ASE 436", "name": "Aircraft Systems", "prereq": "ASE 431 + ASE 311"},
+              {"code": "ASE 437", "name": "Airline Operation and Management", "prereq": "ASE 431 + ASE 311"}
+            ],
+            "ASE_astronautical_electives": [
+              {"code": "ASE 442", "name": "Spacecraft Payload Systems", "prereq": "ASE 441 + ASE 311"},
+              {"code": "ASE 443", "name": "Space Mission Engineering", "prereq": "ASE 441 + ASE 311"},
+              {"code": "ASE 444", "name": "Spacecraft Thermal Management", "prereq": "ASE 441 + ASE 311"},
+              {"code": "ASE 445", "name": "Spacecraft Propulsion", "prereq": "ASE 441 + ASE 311"},
+              {"code": "ASE 446", "name": "Spacecraft Attitude Dynamics", "prereq": "ASE 441 + ASE 311"},
+              {"code": "ASE 447", "name": "Spacecraft Electrical Power Systems", "prereq": "ASE 441 + ASE 311"},
+              {"code": "ASE 448", "name": "Principles of Satellite Technology", "prereq": null}
+            ]},
+          "has_tracks": true,
+          "tracks": {
+              "aeronautical": {
+                "name": "Aeronautical Engineering",
+                "track_compulsory": [
+                  {"code": "ASE 431", "name": "Aircraft Performance", "prereq": "ASE 311", "credit_hours": "3"}
+                ],
+                "track_electives": "ASE_aeronautical_electives"
+              },
+              "astronautical": {
+                "name": "Astronautical Engineering",
+                "track_compulsory": [
+                  {"code": "ASE 441", "name": "Orbital Mechanics", "prereq": "ASE 311", "credit_hours": "3"}
+                ],
+                "track_electives": "ASE_astronautical_electives"
+                }
+              },
+            "semesters": {
+              "semester_5": [
+                 {"code": "LRA 31X", "name": "UR Elective (3)", "prereq": null, "type": "elective", "credit_hours": "2", "options": "LRA_elective_3"},
+                  {"code": "MTR 311", "name": "Mechanical Vibrations", "prereq": "MTR 221", "type": "School", "credit_hours": "3"},
+                  {"code": "IME 311", "name": "Mechanical Design (1)", "prereq": "IME 222", "type": "School", "credit_hours": "3"},
+                  {"code": "ASE 311", "name": "Introduction to Aerospace Engineering", "prereq": "IME 211", "type": "Program", "credit_hours": "2"},
+                  {"code": "ASE 312", "name": "Aerodynamics (1)", "prereq": null, "type": "Program", "credit_hours": "3"},
+                  {"code": "ASE 313", "name": "Aerospace Structures (1)", "prereq": "IME 222", "type": "Program", "credit_hours": "3"},
+                  {"code": "ASE 314", "name": "Seminar and Project Based Learning on Aerospace Systems Design", "prereq": null, "type": "Program", "credit_hours": "2"}
+                ],
+              "semester_6": [
+                {"code": "LRA 321", "name": "Contemporary Societal Issues", "prereq": null, "type": "elective", "credit_hours": "2"},
+                {"code": "MTR 321", "name": "Systems Modeling and Control", "prereq": null, "type": "School", "credit_hours": "3"},
+                {"code": "ERE 318", "name": "Thermodynamics and Heat Transfer", "prereq": null, "type": "School", "credit_hours": "3"},
+                {"code": "ERE 319", "name": "Fluid Mechanics and Hydraulics", "prereq": null, "type": "School", "credit_hours": "3"},
+                {"code": "ASE 321", "name": "Aerodynamics (2)", "prereq": "ASE 312", "type": "Program", "credit_hours": "3"},
+                {"code": "ASE 322", "name": "Aerospace Systems Manufacturing Technology", "prereq": "IME 222", "type": "Program", "credit_hours": "2"},
+                {"code": "ASE 323", "name": "Aerospace Structures (2)", "prereq": "ASE 313", "type": "Program", "credit_hours": "3"}
+              ],
+              "semester_7": [
+                {"code": "LRA 421", "name": "International Contracts and Arbitration", "prereq": null, "type": "elective", "credit_hours": "2"},
+                {"code": "ASE 411", "name": "Aerospace Vehicle Dynamics and Control (1)", "prereq": "MTR 321", "type": "Program", "credit_hours": "3"},
+                {"code": "ASE 412", "name": "Aerospace Propulsion (1)", "prereq": "ERE 319", "type": "Program", "credit_hours": "3"},
+                {"code": "ASE 413", "name": "Computational Mechanics", "prereq": "ASE 323 + ASE 321", "type": "Program", "credit_hours": "2"},
+                {"code": "ASE 4XX", "name": "Track Compulsory (ASE 431 or ASE 441)", "prereq": "ASE 311", "type": "Program", "credit_hours": "3", "options": ["ASE 431", "ASE 441"]},
+                {"code": "ASE 4XX", "name": "Track Elective (1)", "prereq": "ASE 311", "type": "Program", "credit_hours": "3", "options": ["ASE_aeronautical_electives", "ASE_astronautical_electives"]},
+                {"code": "ASE 410", "name": "Graduation Project I", "prereq": null, "type": "Program", "credit_hours": "3"}
+               ],
+              "semester_8": [  
+                {"code": "ASE 421", "name": "Aerospace Vehicle Dynamics and Control (2)", "prereq": "ASE 411", "type": "Program", "credit_hours": "3"},
+                {"code": "ASE 422", "name": "Aerospace Propulsion (2)", "prereq": "ASE 412", "type": "Program", "credit_hours": "3"},
+                {"code": "ASE 4XX", "name": "Elective (2)", "prereq": "ASE 431 + ASE 311 or ASE 441 + ASE 311", "type": "Program", "credit_hours": "3", "options": ["ASE_aeronautical_electives", "ASE_astronautical_electives"]},
+                {"code": "ASE 4XX", "name": "Elective (3)", "prereq": "ASE 431 + ASE 311 or ASE 441 + ASE 311", "type": "Program", "credit_hours": "3", "options": ["ASE_aeronautical_electives", "ASE_astronautical_electives"]},
+                {"code": "ASE 420", "name": "Graduation Project II", "prereq": "ASE 410", "type": "Program", "credit_hours": "6"}
+              ]
+            }
+      },
+      "MSE": {
+        "name": "Materials Science and Engineering",
+        "elective_options": {
+          "MSE_school_electives": [
+            {"code": "MSE 431", "name": "Introduction to Advanced Materials", "prereq": null},
+            {"code": "MSE 432", "name": "Surface Engineering and Coatings", "prereq": null},
+            {"code": "MSE 433", "name": "Nanomaterials for Engineers", "prereq": null},
+            {"code": "MSE 434", "name": "Biomaterials", "prereq": null},
+            {"code": "MSE 435", "name": "Magnetic and Semiconductor Materials", "prereq": null},
+            {"code": "MSE 436", "name": "Nuclear Materials", "prereq": null}
+          ]
+         },
+         "semesters": {
+              "semester_5": [
+                {"code": "LRA 31X", "name": "UR Elective (3)", "prereq": null, "type": "elective", "credit_hours": "2", "options": "LRA_elective_3"},
+                {"code": "MTR 311", "name": "Mechanical Vibrations", "prereq": "MTR 221", "type": "School", "credit_hours": "3"},
+                {"code": "IME 311", "name": "Mechanical Design (1)", "prereq": "IME 222", "type": "School", "credit_hours": "3"},
+                {"code": "MSE 311", "name": "Structures and Properties of Materials", "prereq": "MSE 221", "type": "Program", "credit_hours": "3"},
+                {"code": "MSE 312", "name": "Thermodynamics and Phase Transformations in Solids", "prereq": "MSE 221", "type": "Program", "credit_hours": "3"},
+                {"code": "MSE 313", "name": "Electrochemistry and Corrosion", "prereq": "CHM 121", "type": "Program", "credit_hours": "2"},
+                {"code": "MSE 314", "name": "Mechanical Behavior of Materials", "prereq": "IME 222", "type": "Program", "credit_hours": "3"}
+              ],
+              "semester_6": [
+                {"code": "LRA 321", "name": "Contemporary Societal Issues", "prereq": null, "type": "elective", "credit_hours": "2"},
+                {"code": "MTR 321", "name": "Systems Modeling and Control", "prereq": null, "type": "School", "credit_hours": "3"},
+                {"code": "ERE 328", "name": "Thermodynamics and Heat Transfer", "prereq": null, "type": "School", "credit_hours": "3"},
+                {"code": "ERE 329", "name": "Fluid Mechanics and Hydraulics", "prereq": null, "type": "School", "credit_hours": "3"},
+                {"code": "MSE 321", "name": "Fundamental of Materials Processing", "prereq": "MSE 314", "type": "Program", "credit_hours": "3"},
+                {"code": "MSE 322", "name": "Computational Methods in Materials Engineering", "prereq": "MTH 221", "type": "Program", "credit_hours": "3"},
+                {"code": "MSE 323", "name": "Seminar and Project Based Learning on MSE", "prereq": null, "type": "Program", "credit_hours": "3"}
+              ],
+              "semester_7": [
+                {"code": "LRA 421", "name": "International Contracts and Arbitration", "prereq": null, "type": "elective", "credit_hours": "2"},
+                {"code": "MSE 411", "name": "Ceramic and Glasses", "prereq": "MSE 221", "type": "Program", "credit_hours": "3"},
+                {"code": "MSE 412", "name": "Polymeric and Composite Materials", "prereq": "MSE 221", "type": "Program", "credit_hours": "3"},
+                {"code": "MSE 413", "name": "Metallic Materials and Heat Treatment", "prereq": "MSE 221", "type": "Program", "credit_hours": "3"},
+                {"code": "MSE 43X", "name": "Elective (1)", "prereq": null, "type": "elective", "credit_hours": "3", "options": "MSE_school_electives"},
+                {"code": "MSE 410", "name": "Graduation Project I", "prereq": null, "type": "Program", "credit_hours": "3"}
+              ],
+              "semester_8": [
+                {"code": "MSE 421", "name": "Materials Testing and Failure Analysis", "prereq": "MSE 314 + IME 222", "type": "Program", "credit_hours": "3"},
+                {"code": "MSE 422", "name": "Materials Extraction", "prereq": "MSE 311", "type": "Program", "credit_hours": "3"},
+                {"code": "MSE 43X", "name": "Elective (2)", "prereq": null, "type": "elective", "credit_hours": "3", "options": "MSE_school_electives"},
+                {"code": "MSE 43X", "name": "Elective (3)", "prereq": null, "type": "elective", "credit_hours": "3", "options": "MSE_school_electives"},
+                {"code": "MSE 420", "name": "Graduation Project II", "prereq": "MSE 410", "type": "Program", "credit_hours": "6"}
+              ]
+      } },
+      "IME": {
+            "name": "Industrial and Manufacturing Engineering",
+            "elective_options": {
+              "IME_industrial_electives": [
+                {"code": "IME 434", "name": "Simulation Modeling and Analysis", "prereq": null},
+                {"code": "IME 435", "name": "Data Analytics and Business Intelligence", "prereq": null},
+                {"code": "IME 436", "name": "Systems Thinking", "prereq": null},
+                {"code": "IME 437", "name": "Total quality and Lean Management", "prereq": null},
+                {"code": "IME 438", "name": "Operations Research (2)", "prereq": "IME 312"},
+                {"code": "IME 439", "name": "Inventory Management and Control", "prereq": "IME 331"}
+              ],
+              "IME_manufacturing_electives": [
+                {"code": "IME 351", "name": "Mechanical Design (2)", "prereq": "IME 311"},
+                {"code": "IME 450", "name": "Product Design and Development", "prereq": null},
+                {"code": "IME 446", "name": "Materials Selection", "prereq": null},
+                {"code": "IME 447", "name": "Reverse Engineering and Additive Manufacturing", "prereq": null},
+                {"code": "IME 448", "name": "Abrasive Machining", "prereq": null},
+                {"code": "IME 452", "name": "Finite Elements Analysis", "prereq": "IME 311"}
+              ],
+              "IME_design_electives": [
+                {"code": "IME 454", "name": "Statistical Methods for Engineers", "prereq": null},
+                {"code": "IME 455", "name": "Tool and Die Design", "prereq": null},
+                {"code": "IME 456", "name": "Maintenance and Reliability Engineering", "prereq": null},
+                {"code": "IME 457", "name": "Machine Condition Monitoring", "prereq": null},
+                {"code": "IME 458", "name": "Failure Analysis", "prereq": null},
+                {"code": "IME 459", "name": "Industrial Noise Measurement and Control", "prereq": null}
+              ],
+              "IME_metallurgy_electives": [
+                {"code": "IME 464", "name": "Non-Ferrous Materials", "prereq": null},
+                {"code": "IME 465", "name": "Bulk Deformation Processes", "prereq": null},
+                {"code": "IME 466", "name": "Mass and Heat Transfer in Metallurgical Processes", "prereq": null},
+                {"code": "IME 467", "name": "Powder Metallurgy", "prereq": null},
+                {"code": "IME 468", "name": "Modeling and Simulation of Metallurgical Processes", "prereq": null},
+                {"code": "IME 469", "name": "Furnaces and Refractories", "prereq": null}
+              ]
+            },
+            "has_tracks": true,
+            "tracks": {
+              "industrial": {
+                "name": "Industrial Engineering",
+                "track_compulsory": [
+                  {"code": "IME 331", "name": "Production and Operations Management", "prereq": "IME 312", "credit_hours": "3"},
+                  {"code": "IME 332", "name": "Management Information Systems", "prereq": null, "credit_hours": "3"},
+                  {"code": "IME 431", "name": "Facilities Planning and Material Handling", "prereq": "IME 312", "credit_hours": "3"},
+                  {"code": "IME 432", "name": "Statistical Quality Control", "prereq": "MTH 211", "credit_hours": "3"},
+                  {"code": "IME 451", "name": "Ergonomics and Human Factors Engineering", "prereq": null, "credit_hours": "3"},
+                  {"code": "IME 433", "name": "Supply Chain and Logistics Management", "prereq": "IME 331", "credit_hours": "3"}
+                ],
+                "track_electives": "IME_industrial_electives"
+              },
+              "manufacturing": {
+                "name": "Manufacturing Engineering",
+                "track_compulsory": [
+                  {"code": "IME 341", "name": "Metrology and Precision Engineering", "prereq": null, "credit_hours": "3"},
+                  {"code": "IME 342", "name": "Computer Numerical Control (CNC) of Machine Tools", "prereq": "IME 314", "credit_hours": "3"},
+                  {"code": "IME 441", "name": "Design of Jigs and Fixtures", "prereq": "IME 311", "credit_hours": "3"},
+                  {"code": "IME 442", "name": "Non-Conventional Machining", "prereq": "IME 314", "credit_hours": "3"},
+                  {"code": "IME 443", "name": "Theory of Material Removal", "prereq": "IME 314", "credit_hours": "3"},
+                  {"code": "IME 444", "name": "Machine Tool Dynamics", "prereq": "IME 314 - MTR 311", "credit_hours": "3"}
+                ],
+                "track_electives": "IME_manufacturing_electives"
+              },
+              "design": {
+                "name": "Innovative Mechanical Design Engineering",
+                "track_compulsory": [
+                  {"code": "IME 351", "name": "Mechanical Design (2)", "prereq": "IME 311", "credit_hours": "3"},
+                  {"code": "IME 341", "name": "Metrology and Precision Engineering", "prereq": null, "credit_hours": "3"},
+                  {"code": "IME 450", "name": "Product Design and Development", "prereq": null, "credit_hours": "3"},
+                  {"code": "IME 451", "name": "Ergonomics and Human Factors Engineering", "prereq": null, "credit_hours": "3"},
+                  {"code": "IME 452", "name": "Finite Element Analysis", "prereq": "IME 311", "credit_hours": "3"},
+                  {"code": "IME 453", "name": "Engineering Tribology", "prereq": "IME 311 - IME 222", "credit_hours": "3"}
+                ],
+                "track_electives": "IME_design_electives"
+              },
+              "metallurgy": {
+                "name": "Metallurgical Engineering and Metal Forming",
+                "track_compulsory": [
+                  {"code": "IME 361", "name": "Thermodynamics and Kinetics of Materials", "prereq": null, "credit_hours": "3"},
+                  {"code": "IME 362", "name": "Physical Metallurgy", "prereq": "MSE 221", "credit_hours": "3"},
+                  {"code": "IME 460", "name": "Iron and Steel Making", "prereq": "IME 361", "credit_hours": "3"},
+                  {"code": "IME 461", "name": "Heat Treatment of Metals", "prereq": "IME 362", "credit_hours": "3"},
+                  {"code": "IME 462", "name": "Welding and Casting Processes and Technology", "prereq": "IME 362", "credit_hours": "3"},
+                  {"code": "IME 463", "name": "Materials Testing and Failure Analysis", "prereq": "MSE 221", "credit_hours": "3"}
+                ],
+                "track_electives": "IME_metallurgy_electives"
+              }
+            },
+            "semesters": {
+              "semester_5": [
+                {"code": "LRA 31X", "name": "UR Elective (3)", "prereq": null, "Type": "elective", "credit hours": "2", "options": "LRA_elective_3"},
+                {"code": "MTR 311", "name": "Mechanical Vibrations", "prereq": "MTR 221", "Type": "School", "credit hours": "3"},
+                {"code": "IME 311", "name": "Mechanical Design (1)", "prereq": "IME 222", "Type": "School", "credit hours": "3"},
+                {"code": "IME 310", "name": "Seminar and Project Based Learning in Industrial and Manufacturing Engineering", "prereq": null, "Type": "Program", "credit hours": "2"},
+                {"code": "IME 312", "name": "Operations Research (1)", "prereq": "MTH 211", "Type": "Program", "credit hours": "3"},
+                {"code": "IME 313", "name": "Metal Forming Processes", "prereq": "MSE 221", "Type": "Program", "credit hours": "3"},
+                {"code": "IME 314", "name": "Conventional Machining Processes", "prereq": "IME 121", "Type": "Program", "credit hours": "3"}
+              ],
+              "semester_6": [
+                {"code": "LRA 321", "name": "Contemporary Societal Issues", "prereq": null, "Type": "elective", "credit hours": "2"},
+                {"code": "MTR 321", "name": "Systems Modeling and Control", "prereq": "MTR 311", "Type": "School", "credit hours": "3"},
+                {"code": "ERE 328", "name": "Thermodynamics and Heat Transfer", "prereq": null, "Type": "School", "credit hours": "3"},
+                {"code": "ERE 329", "name": "Fluid Mechanics and Hydraulics", "prereq": null, "Type": "School", "credit hours": "3"},
+                {"code": "IME 321", "name": "Soft Computing in Industrial Applications", "prereq": "CSE 211", "Type": "Program", "credit hours": "2"},
+                {"code": "IME 3XX", "name": "Track Compulsory (1)", "prereq": null, "Type": "Program", "credit hours": "3", "options": ["IME 331", "IME 341", "IME 351", "IME 361"]},
+                {"code": "IME 3XX", "name": "Track Compulsory (2)", "prereq": null, "Type": "Program", "credit hours": "3", "options": ["IME 332", "IME 342", "IME 341", "IME 362"]}
+              ],
+              "semester_7": [
+                {"code": "LRA 421", "name": "International Contracts and Arbitration", "prereq": null, "Type": "elective", "credit hours": "2"},
+                {"code": "IME 411", "name": "Engineering Economic Analysis", "prereq": null, "Type": "Program", "credit hours": "2"},
+                {"code": "IME 4XX", "name": "Track Elective (1)", "prereq": null, "Type": "Program", "credit hours": "3", "options": ["IME_industrial_electives", "IME_manufacturing_electives", "IME_design_electives", "IME_metallurgy_electives"]},
+                {"code": "IME 4XX", "name": "Track Compulsory (3)", "prereq": null, "Type": "Program", "credit hours": "3", "options": ["IME 431", "IME 441", "IME 450", "IME 460"]},
+                {"code": "IME 4XX", "name": "Track Compulsory (4)", "prereq": null, "Type": "Program", "credit hours": "3", "options": ["IME 432", "IME 442", "IME 451", "IME 461"]},
+                {"code": "IME 4XX", "name": "Track Compulsory (5)", "prereq": null, "Type": "Program", "credit hours": "3", "options": ["IME 451", "IME 443", "IME 452", "IME 462"]},
+                {"code": "IME 410", "name": "Graduation Project I", "prereq": null, "Type": "Program", "credit hours": "3"}
+              ],
+              "semester_8": [
+                {"code": "IME 421", "name": "Computer-Integrated Manufacturing (CIM)", "prereq": null, "Type": "Program", "credit hours": "2"},
+                {"code": "IME 4XX", "name": "Track Compulsory (6)", "prereq": null, "Type": "Program", "credit hours": "3", "options": ["IME 433", "IME 444", "IME 453", "IME 463"]},
+                {"code": "IME 4XX", "name": "Track Elective (2)", "prereq": null, "Type": "Program", "credit hours": "3", "options": ["IME_industrial_electives", "IME_manufacturing_electives", "IME_design_electives", "IME_metallurgy_electives"]},
+                {"code": "IME 4XX", "name": "Track Elective (3)", "prereq": null, "Type": "Program", "credit hours": "3", "options": ["IME_industrial_electives", "IME_manufacturing_electives", "IME_design_electives", "IME_metallurgy_electives"]},
+                {"code": "IME 420", "name": "Graduation Project II", "prereq": "IME 410", "Type": "Program", "credit hours": "6"}
+              ]
             }
           }
         }
@@ -124,20 +589,212 @@
       "EECE": {
         "name": "Energy, Environmental, Chemical and Petrochemical Engineering",
         "semester_4_core": [
-          {"code": "CPE 221", "name": "Thermodynamics", "prereq": "PHY 111", "Type": "Core", "credit hours": "3"}
-        ],
+          {"code": "LRA 22X", "name": "UR Elective (2)", "prereq": null, "Type": "elective", "credit hours": "2", "options": "LRA_elective_2"},
+          {"code": "MTH 221", "name": "Mathematics (4)", "prereq": "MTH 211", "Type": "Core", "credit hours": "3"},
+          {"code": "EPE 221", "name": "Measurements and Instrumentations", "prereq": "ECE 211", "Type": "Core", "credit hours": "3"},
+          {"code": "IME 221", "name": "Project Management", "prereq": null, "Type": "Core", "credit hours": "2"},
+          {"code": "ERE 211", "name": "Fluid mechanics I", "prereq": null, "Type": "School", "credit hours": "3"},
+          {"code": "ERE 212", "name": "Thermodynamics I", "prereq": null, "Type": "School", "credit hours": "3"},
+          {"code": "ENV 221", "name": "Environmental management", "prereq": null, "Type": "School", "credit hours": "3"}
+              ],
         "departments": {
           "CPE": {
             "name": "Chemical and Petrochemical Engineering",
+            "elective_options": {
+              "CPE_program_electives": [
+                {"code": "CPE 414", "name": "Catalysis Engineering", "prereq": null},
+                {"code": "CPE 417", "name": "Chemical Engineering Computer Skills", "prereq": null},
+                {"code": "CPE 429", "name": "Introduction to Nanotechnology", "prereq": null},
+                {"code": "CPE 431", "name": "Chemical Engineering Materials", "prereq": null},
+                {"code": "CPE 432", "name": "Unit operations in Pharmaceutical Industry", "prereq": null},
+                {"code": "CPE 433", "name": "Polymers Engineering", "prereq": null}
+              ]},
             "semesters": {
-              "semester_5": [{"code": "CPE 311", "name": "Mass Transfer", "prereq": "CPE 221", "Type": "School", "credit hours": "3"}],
-              "semester_6": [{"code": "CPE 321", "name": "Chemical Reaction Engineering", "prereq": "CPE 311", "Type": "School", "credit hours": "3"}],
-              "semester_7": [{"code": "CPE 411", "name": "Plant Design", "prereq": "CPE 321", "Type": "School", "credit hours": "3"}],
-              "semester_8": [{"code": "CPE 421", "name": "Petrochemical Technology", "prereq": "CPE 411", "Type": "School", "credit hours": "3"}]
+              "semester_5": [     
+                {"code": "LRA 31X", "name": "UR Elective (3)", "prereq": null, "Type": "elective", "credit hours": "2", "options": "LRA_elective_3"},
+                {"code": "ERE 313", "name": "Heat and mass transfer I", "prereq": "ERE 211 + ERE 212", "Type": "School", "credit hours": "3"},
+                {"code": "IME 339", "name": "Strength of material and design", "prereq": "IME 211", "Type": "School", "credit hours": "3"},
+                {"code": "CPE 311", "name": "Principles of Chemical Engineering", "prereq": null, "Type": "Program", "credit hours": "3"},
+                {"code": "CPE 312", "name": "Chemical Process Technologies (Organic and Inorganic)", "prereq": null, "Type": "Program", "credit hours": "3"},
+                {"code": "CPE 313", "name": "Corrosion and Electrochemical Engineering", "prereq": null, "Type": "Program", "credit hours": "3"},
+                {"code": "CPE 314", "name": "Chemical Reaction Kinetics", "prereq": null, "Type": "Program", "credit hours": "3"}
+                    ],
+              "semester_6": [
+                {"code": "LRA 321", "name": "Contemporary Societal Issues", "prereq": null, "Type": "elective", "credit hours": "2"},
+                {"code": "CPE 329", "name": "Desalination", "prereq": "ERE 313", "Type": "School", "credit hours": "3"},
+                {"code": "CPE 321", "name": "Heat and mass transfer II", "prereq": "ERE 313", "Type": "School", "credit hours": "3"},
+                {"code": "MTR 329", "name": "Automatic processes control", "prereq": "MTR 319", "Type": "School", "credit hours": "3"},
+                {"code": "CPE 321", "name": "Separation Processes", "prereq": "CPE 311", "Type": "Program", "credit hours": "3"},
+                {"code": "CPE 322", "name": "Mechanical Unit operation", "prereq": null, "Type": "Program", "credit hours": "3"},
+                {"code": "CPE 323", "name": "Project Based Learning and Seminar on CPE", "prereq": null, "Type": "Program", "credit hours": "2"}
+                    ],
+              "semester_7": [
+                {"code": "LRA 421", "name": "International Contracts and Arbitration", "prereq": null, "Type": "elective", "credit hours": "2"},
+                {"code": "CPE 411", "name": "Chemical Process Modeling", "prereq": "CPE 311", "Type": "Program", "credit hours": "3"},
+                {"code": "CPE 412", "name": "Gas and Petrochemical Process Technology", "prereq": null, "Type": "Program", "credit hours": "3"},
+                {"code": "CPE 413", "name": "Unit operation Laboratory", "prereq": "CPE 311 + CPE 322", "Type": "Program", "credit hours": "2"},
+                {"code": "CPE 4XX", "name": "Elective 1", "prereq": null, "Type": "Program", "credit hours": "3", "options": "CPE_program_electives"},
+                {"code": "CPE 4XX", "name": "Elective 2", "prereq": null, "Type": "Program", "credit hours": "3", "options": "CPE_program_electives"},
+                {"code": "CPE 410", "name": "Graduation Project I", "prereq": null, "Type": "Program", "credit hours": "3"}
+                    ],
+              "semester_8": [
+                {"code": "CPE 421", "name": "Cleaner Production and Sustainability", "prereq": "CPE 311", "Type": "Program", "credit hours": "2"},
+                {"code": "CPE 422", "name": "Plant Design and Economics", "prereq": null, "Type": "Program", "credit hours": "3"},
+                {"code": "CPE 423", "name": "Petroleum Engineering", "prereq": null, "Type": "Program", "credit hours": "3"},
+                {"code": "CPE 4XX", "name": "Elective 3", "prereq": null, "Type": "Program", "credit hours": "3", "options": "CPE_program_electives"},
+                {"code": "CPE 420", "name": "Graduation Project II", "prereq": "CPE 410", "Type": "Program", "credit hours": "6"}
+              ]
             }
-          }
-        }
-      }
+          },
+          "ENV": {
+            "name": "Environmental Engineering",
+            "elective_options": {
+              "ENV_program_electives": [
+                {"code": "ENV 414", "name": "Environmental Impact of Water-Energy-Food Nexus", "prereq": null},
+                {"code": "ENV 415", "name": "Air quality Monitoring and assessment", "prereq": null},
+                {"code": "ENV 416", "name": "Industrial Safety and Environmental Regulations", "prereq": null},
+                {"code": "ENV 424", "name": "Computation of wastewater treatment", "prereq": null},
+                {"code": "ENV 425", "name": "Environmental Process", "prereq": null},
+                {"code": "ENV 426", "name": "Computer Application in Environmental Engineering", "prereq": null}
+      ]
+    },
+                "semesters": {
+                  "semester_5": [
+                    {"code": "LRA 31X", "name": "UR Elective (3)", "prereq": null, "Type": "elective", "credit hours": "2", "options": "LRA_elective_3"},
+                    {"code": "ENV 311", "name": "Air pollution and control technology", "prereq": null, "Type": "Program", "credit hours": "3"},
+                    {"code": "ENV 312", "name": "Fundamentals of Environmental Engineering", "prereq": null, "Type": "Program", "credit hours": "3"},
+                    {"code": "ERE 313", "name": "Heat and mass transfer I", "prereq": "ERE 211 + ERE 212", "Type": "School", "credit hours": "3"},
+                    {"code": "IME 339", "name": "Strength of material and design", "prereq": "IME 211", "Type": "School", "credit hours": "3"},
+                    {"code": "ENV 313", "name": "Water purification technologies", "prereq": null, "Type": "Program", "credit hours": "3"},
+                    {"code": "ENV 314", "name": "Cleaner Production Strategies", "prereq": null, "Type": "Program", "credit hours": "2"}
+                  ],
+                  "semester_6": [
+                    {"code": "LRA 321", "name": "Contemporary Societal Issues", "prereq": null, "Type": "elective", "credit hours": "2"},
+                    {"code": "CPE 329", "name": "Desalination", "prereq": "ERE 313", "Type": "School", "credit hours": "3"},
+                    {"code": "CPE 321", "name": "Heat and mass transfer II", "prereq": "ERE 313", "Type": "School", "credit hours": "3"},
+                    {"code": "MTR 329", "name": "Automatic processes control", "prereq": "MTH 221", "Type": "School", "credit hours": "3"},
+                    {"code": "ENV 321", "name": "Wastewater treatment technologies", "prereq": null, "Type": "Program", "credit hours": "3"},
+                    {"code": "ENV 322", "name": "Environmental Hydraulics", "prereq": null, "Type": "Program", "credit hours": "3"},
+                    {"code": "ENV 323", "name": "Seminar and Project based learning on ENV", "prereq": null, "Type": "Program", "credit hours": "2"}
+                  ],
+                  "semester_7": [
+                    {"code": "LRA 421", "name": "International Contracts and Arbitration", "prereq": null, "Type": "elective", "credit hours": "2"},
+                    {"code": "ENV 411", "name": "Groundwater Engineering", "prereq": null, "Type": "Program", "credit hours": "2"},
+                    {"code": "ENV 412", "name": "Water resources and analysis", "prereq": null, "Type": "Program", "credit hours": "3"},
+                    {"code": "ENV 413", "name": "Environmental Impact Assessment and Legalization", "prereq": null, "Type": "Program", "credit hours": "2"},
+                    {"code": "ENV 4XX", "name": "Elective 1", "prereq": null, "Type": "Program", "credit hours": "3", "options": "ENV_program_electives"},
+                    {"code": "ENV 4XX", "name": "Elective 2", "prereq": null, "Type": "Program", "credit hours": "3", "options": "ENV_program_electives"},
+                    {"code": "ENV 410", "name": "Graduation Project I", "prereq": null, "Type": "Program", "credit hours": "3"}
+                  ],
+                  "semester_8": [
+                    {"code": "ENV 421", "name": "Green and circular Economy", "prereq": null, "Type": "Program", "credit hours": "3"},
+                    {"code": "ENV 422", "name": "Solid Waste Management", "prereq": null, "Type": "Program", "credit hours": "3"},
+                    {"code": "ENV 423", "name": "Integrated Coastal Management", "prereq": null, "Type": "Program", "credit hours": "3"},
+                    {"code": "ENV 4XX", "name": "Elective 3", "prereq": null, "Type": "Program", "credit hours": "3", "options": "ENV_program_electives"},
+                    {"code": "ENV 420", "name": "Graduation Project II", "prereq": "ENV 410", "Type": "Program", "credit hours": "6"}
+                  ]
+    }
+        }, 
+        "EME": {
+           "name": "Electromechanical Buildings Systems Engineering",
+           "elective_options": {
+              "EME_program_electives": [
+                {"code": "ERE 463", "name": "Computer Applications in Electromechanical Buildings Systems", "prereq": null},
+                {"code": "ERE 446", "name": "Solar Energy and systems", "prereq": null},
+                {"code": "EPE 417", "name": "Electrical Machines", "prereq": null},
+                {"code": "ERE 464", "name": "Elevators and Escalators", "prereq": null},
+                {"code": "ERE 462", "name": "Sustainable and Smart Buildings", "prereq": null},
+                {"code": "ERE 463", "name": "Buildings codes and life Safety", "prereq": null}
+              ]
+              },
+              "semesters": {
+                "semester_5": [
+                  {"code": "LRA 31X", "name": "UR Elective (3)", "prereq": null, "Type": "elective", "credit hours": "2", "options": "LRA_elective_3"},
+                  {"code": "ERE 311", "name": "Fluid mechanics II", "prereq": "ERE 211", "Type": "Program", "credit hours": "2"},
+                  {"code": "ERE 312", "name": "Thermodynamics II", "prereq": "ERE 212", "Type": "Program", "credit hours": "3"},
+                  {"code": "ERE 313", "name": "Heat and mass transfer I", "prereq": "ERE 211 + ERE 212", "Type": "School", "credit hours": "3"},
+                  {"code": "IME 339", "name": "Strength of material and design", "prereq": "IME 211", "Type": "School", "credit hours": "3"},
+                  {"code": "MTR 319", "name": "Theory of machine and vibration", "prereq": "MTR 111", "Type": "Program", "credit hours": "3"},
+                  {"code": "EPE 319", "name": "Electric Circuits", "prereq": "ECE 211", "Type": "Program", "credit hours": "3"}
+                ],
+                "semester_6": [
+                  {"code": "LRA 321", "name": "Contemporary Societal Issues", "prereq": null, "Type": "elective", "credit hours": "2"},
+                  {"code": "CPE 329", "name": "Desalination", "prereq": "ERE 313", "Type": "School", "credit hours": "3"},
+                  {"code": "CPE 321", "name": "Heat and mass transfer II", "prereq": "ERE 313", "Type": "School", "credit hours": "3"},
+                  {"code": "MTR 329", "name": "Automatic processes control", "prereq": "CPE 321", "Type": "School", "credit hours": "3"},
+                  {"code": "ERE 315", "name": "Refrigeration and Air Conditioning", "prereq": "ERE 313 + ERE 312", "Type": "Program", "credit hours": "3"},
+                  {"code": "ECE 329", "name": "Logic Circuits and Micro Processors", "prereq": null, "Type": "Program", "credit hours": "3"},
+                  {"code": "ERE 325", "name": "Seminar and Project based learning on BSE", "prereq": null, "Type": "Program", "credit hours": "2"}
+                ],
+                "semester_7": [
+                  {"code": "LRA 421", "name": "International Contracts and Arbitration", "prereq": null, "Type": "elective", "credit hours": "2"},
+                  {"code": "ERE 451", "name": "Air Conditioning Systems and components", "prereq": "ERE 315", "Type": "Program", "credit hours": "3"},
+                  {"code": "ERE 452", "name": "Plumbing Systems", "prereq": "ERE 311", "Type": "Program", "credit hours": "2"},
+                  {"code": "ERE 453", "name": "Fire Fighting Systems", "prereq": "ERE 311", "Type": "Program", "credit hours": "3"},
+                  {"code": "EPE 418", "name": "Electrical power and lighting distributions Systems", "prereq": "EPE 319", "Type": "Program", "credit hours": "3"},
+                  {"code": "ECE 419", "name": "Low Current Distribution Systems", "prereq": "EPE 319", "Type": "Program", "credit hours": "3"},
+                  {"code": "ERE 410", "name": "Graduation Project I", "prereq": null, "Type": "Program", "credit hours": "3"}
+                ],
+                "semester_8": [
+                  {"code": "ERE 461", "name": "Process Control and Building Management Systems", "prereq": null, "Type": "Program", "credit hours": "2"},
+                  {"code": "EME 4XX", "name": "Elective 1", "prereq": null, "Type": "Program", "credit hours": "3", "options": "EME_program_electives"},
+                  {"code": "EME 4XX", "name": "Elective 2", "prereq": null, "Type": "Program", "credit hours": "3", "options": "EME_program_electives"},
+                  {"code": "EME 4XX", "name": "Elective 3", "prereq": null, "Type": "Program", "credit hours": "3", "options": "EME_program_electives"},
+                  {"code": "ERE 420", "name": "Graduation Project II", "prereq": "ERE 410", "Type": "Program", "credit hours": "6"}
+                ]
+              }
+},
+          "MPE": {
+            "name": "Mechanical Power and Energy Engineering",
+            "elective_options": {
+              "MPE_program_electives": [
+                {"code": "ERE 436", "name": "Nuclear Power Plants", "prereq": null},
+                {"code": "ERE 434", "name": "Turbomachinery", "prereq": null},
+                {"code": "ERE 437", "name": "Automotive Engineering", "prereq": null},
+                {"code": "ERE 445", "name": "Aerodynamics and wind energy", "prereq": null},
+                {"code": "ERE 444", "name": "Gas turbines", "prereq": null},
+                {"code": "ERE 435", "name": "Computational Fluid Dynamics (CFD)", "prereq": null}
+              ]
+    },
+            "semesters": {
+              "semester_5": [
+                {"code": "LRA 31X", "name": "UR Elective (3)", "prereq": null, "Type": "elective", "credit hours": "2", "options": "LRA_elective_3"},
+                {"code": "ERE 311", "name": "Fluid mechanics II", "prereq": "ERE 211", "Type": "Program", "credit hours": "2"},
+                {"code": "ERE 312", "name": "Thermodynamics II", "prereq": "ERE 212", "Type": "Program", "credit hours": "3"},
+                {"code": "ERE 313", "name": "Heat and mass transfer I", "prereq": "ERE 211 + ERE 212", "Type": "School", "credit hours": "3"},
+                {"code": "IME 339", "name": "Strength of material and design", "prereq": "IME 211", "Type": "School", "credit hours": "3"},
+                {"code": "MTR 319", "name": "Theory of machine and vibration", "prereq": "MTR 111", "Type": "Program", "credit hours": "3"},
+                {"code": "ERE 314", "name": "Renewable energy", "prereq": null, "Type": "Program", "credit hours": "3"}
+              ],
+              "semester_6": [
+                {"code": "LRA 321", "name": "Contemporary Societal Issues", "prereq": null, "Type": "elective", "credit hours": "2"},
+                {"code": "CPE 329", "name": "Desalination", "prereq": "ERE 313", "Type": "School", "credit hours": "3"},
+                {"code": "CPE 321", "name": "Heat and mass transfer II", "prereq": "ERE 313", "Type": "School", "credit hours": "3"},
+                {"code": "MTR 329", "name": "Automatic processes control", "prereq": "CPE 321", "Type": "School", "credit hours": "3"},
+                {"code": "ERE 315", "name": "Refrigeration and Air Conditioning", "prereq": "ERE 313", "Type": "Program", "credit hours": "3"},
+                {"code": "ERE 316", "name": "Combustion and engines", "prereq": "ERE 312", "Type": "Program", "credit hours": "3"},
+                {"code": "ERE 317", "name": "Seminar & Project based learning on MPE", "prereq": null, "Type": "Program", "credit hours": "2"}
+              ],
+              "semester_7": [
+                {"code": "LRA 421", "name": "International Contracts and Arbitration", "prereq": null, "Type": "elective", "credit hours": "2"},
+                {"code": "ERE 431", "name": "Solar energy", "prereq": "ERE 313", "Type": "Program", "credit hours": "3"},
+                {"code": "ERE 432", "name": "Power stations", "prereq": "ERE 312", "Type": "Program", "credit hours": "3"},
+                {"code": "ERE 433", "name": "Hydraulic Machines", "prereq": "ERE 311", "Type": "Program", "credit hours": "2"},
+                {"code": "MPE 4XX", "name": "Elective 1", "prereq": null, "Type": "Program", "credit hours": "3", "options": "MPE_program_electives"},
+                {"code": "MPE 4XX", "name": "Elective 2", "prereq": null, "Type": "Program", "credit hours": "3", "options": "MPE_program_electives"},
+                {"code": "ERE 410", "name": "Graduation Project I", "prereq": null, "Type": "Program", "credit hours": "3"}
+              ],
+              "semester_8": [
+                {"code": "ERE 441", "name": "Energy Audit and Management", "prereq": null, "Type": "Program", "credit hours": "3"},
+                {"code": "ERE 442", "name": "Computer applications in Thermal and Energy Systems", "prereq": null, "Type": "Program", "credit hours": "2"},
+                {"code": "ERE 443", "name": "Energy storage and transmission", "prereq": null, "Type": "Program", "credit hours": "3"},
+                {"code": "MPE 4XX", "name": "Elective 3", "prereq": null, "Type": "Program", "credit hours": "3", "options": "MPE_program_electives"},
+                {"code": "ERE 420", "name": "Graduation Project II", "prereq": "ERE 410", "Type": "Program", "credit hours": "6"}
+      ]
     }
   }
 }
+      }
+    } 
+  }
+  }  
