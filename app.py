@@ -9,12 +9,17 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 import time
+import base64
 
+def load_file_b64(path, mime):
+    if os.path.exists(path):
+        with open(path, "rb") as f:
+            return f"data:{mime};base64,{base64.b64encode(f.read()).decode()}"
+    return ""
 
-FONT_PATH = "fonts/LEMONMILK-Bold.otf"
-OWL_PATH  = "assets/owl.png"
-WAVE_PATH = "assets/wave.png"
-
+font_b64 = load_file_b64("fonts/LEMONMILK-Bold.otf", "font/otf")
+owl_b64  = load_file_b64("assets/owl.png", "image/png")
+wave_b64 = load_file_b64("assets/wave.png", "image/png")
 # ---------------------------
 # CSS + font-face + layout
 # ---------------------------
@@ -23,7 +28,7 @@ css = f"""
 
 @font-face {{
     font-family: 'LemonMilk';
-    src: url('{FONT_PATH}') format('opentype');
+    src: url('{font_b64}') format('opentype');
     font-weight: 700;
     font-style: normal;
 }}
@@ -126,13 +131,13 @@ section[data-testid="stSidebar"],
 st.markdown(css, unsafe_allow_html=True)
 
 # show wave image with fallback if file missing
-if os.path.exists(WAVE_PATH):
-    st.markdown(f'<img src="{WAVE_PATH}" class="wave">', unsafe_allow_html=True)
+if wave_b64:
+    st.markdown(f'<img src="{wave_b64}" class="wave">', unsafe_allow_html=True)
 
 # Header: owl logo + title
 logo_html = f"""
 <div class="header-container">
-    <img src="{OWL_PATH}" class="logo" alt="Senpai owl logo">
+    <img src="{owl_b64}" class="logo" alt="Senpai owl logo">
     <div class="senpai-title">SENPAI</div>
 </div>
 """
