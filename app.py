@@ -49,31 +49,31 @@ section[data-testid="stSidebar"],
 
 #MainMenu, footer, header {{ visibility: hidden; }}
 
-.header-container {
+ /* Header */
+.header-container {{
     display: flex;
     align-items: center;
     gap: 18px;
     padding: 28px 48px;
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    z-index: 10;
-}
-
-.logo {
+    position: relative;
+    top: -100px;
+    left: -100px;
+    z-index: 3;
+}}
+.logo {{
     width: 60px;
     height: auto;
     display: block;
-}
-
-.senpai-title {
+}}
+.senpai-title {{
     font-family: 'LemonMilk', 'Arial Black', sans-serif;
     font-size: 50px;
     font-weight: 700;
     letter-spacing: 4px;
-    color: #1a1a1a;
+    color: 
+#1a1a1a;
     line-height: 1;
-}
+}}
 
 /* Wave decoration (top-right) */
 .wave {{
