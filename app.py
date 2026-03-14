@@ -560,11 +560,11 @@ font-weight:bold;
 letter-spacing:2px;
 }
 
-.sen{
+.SENP{
 color:white;
 }
 
-.pai{
+.AI{
 color:red;
 }
 
@@ -598,7 +598,7 @@ st.markdown("""
 <img src="assets/owl.png" class="logo">
 
 <div class="senpai-title">
-<span class="sen">SEN</span><span class="pai">PAI</span>
+<span class="SEN">SENP</span><span class="AI">AI</span>
 </div>
 
 </div>
@@ -669,7 +669,12 @@ for msg in st.session_state.messages:
 # 10. MAIN CHAT HANDLER
 # ════════════════════════════════════════════════════════════════
 
-if prompt := st.chat_input("Ask Senpai …"):
+st.markdown('<div class="chatbox">', unsafe_allow_html=True)
+prompt = st.chat_input("Ask Senpai...")
+st.markdown('</div>', unsafe_allow_html=True)
+
+if prompt: 
+    
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
