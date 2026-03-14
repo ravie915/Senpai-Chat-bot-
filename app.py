@@ -11,115 +11,132 @@ from langchain_huggingface import HuggingFaceEmbeddings
 import time
 
 
-st.markdown("""
+FONT_PATH = "fonts/LEMONMILK-Bold.otf"
+OWL_PATH  = "assets/owl.png"
+WAVE_PATH = "assets/wave.png"
+
+# ---------------------------
+# CSS + font-face + layout
+# ---------------------------
+css = f"""
 <style>
 
-@font-face {
+@font-face {{
     font-family: 'LemonMilk';
-    src: url('fonts/LEMONMILK-Bold.otf') format('opentype');
-    font-weight: bold;
-}
+    src: url('{FONT_PATH}') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}}
 
-/* ── Reset & Global ── */
+/* Reset & Global */
 html, body,
 [data-testid="stAppViewContainer"],
 [data-testid="stApp"],
 section[data-testid="stSidebar"],
-.main {
+.main {{
     background-color: #ffffff !important;
     color: #1a1a1a !important;
-}
+}}
 
-/* Force all text to be dark */
-div, p, span, h1, h2, h3, h4, h5, h6, .stMarkdown, .stChatMessage,
-[data-testid="stChatMessage"] *,
-.stChatInputContainer *,
-.stTextInput * {
+* {{
     color: #1a1a1a !important;
-}
+}}
 
-#MainMenu, footer, header { visibility: hidden; }
+#MainMenu, footer, header {{ visibility: hidden; }}
 
-/* ── Wave decoration ── */
-.wave {
+/* Header */
+.header-container {{
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 28px 48px;
+    position: relative;
+    z-index: 3;
+}}
+
+.logo {{
+    width: 72px;
+    height: auto;
+    display: block;
+}}
+
+.senpai-title {{
+    font-family: 'LemonMilk', 'Arial Black', sans-serif;
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #1a1a1a;
+    line-height: 1;
+}}
+
+/* Wave decoration (top-right) */
+.wave {{
     position: fixed;
     top: 0;
     right: 0;
-    width: 420px;
+    width: 480px;
     z-index: 0;
     pointer-events: none;
-}
+    opacity: 0.95;
+}}
 
-/* ── Header ── */
-.header-container {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 32px 0 0 40px;
-    position: relative;
-    z-index: 1;
-    margin-bottom: 8px;
-}
-
-.logo {
-    width: 62px;
-    height: auto;
-}
-
-.senpai-title {
-    font-family: 'LemonMilk', 'Arial Black', sans-serif;
-    font-size: 38px;
-    font-weight: 900;
-    letter-spacing: 3px;
-    color: #1a1a1a !important;
-    line-height: 1;
-}
-
-/* ── Chat messages ── */
-[data-testid="stChatMessage"] {
+/* Chat messages */
+[data-testid="stChatMessage"] {{
     background: #ffffff !important;
     border-radius: 14px !important;
-    padding: 12px 18px !important;
+    padding: 14px 18px !important;
     margin-bottom: 10px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06) !important;
     position: relative;
     z-index: 1;
     color: #1a1a1a !important;
-}
+}}
 
-/* ── Chat input ── */
-[data-testid="stChatInput"] textarea {
-    border-radius: 30px !important;
-    border: 2px solid #d0d0d0 !important;
-    padding: 16px 24px !important;
+/* Chat input bubble styling */
+[data-testid="stChatInput"] textarea {{
+    border-radius: 28px !important;
+    border: 2px solid #223344 !important;
+    padding: 18px 22px !important;
     font-size: 15px !important;
-    background: #f5f5f5 !important;
+    background: #f2f2f2 !important;
     box-shadow: none !important;
     color: #1a1a1a !important;
-}
+}}
 
-[data-testid="stChatInput"] textarea:focus {
+[data-testid="stChatInput"] textarea:focus {{
     border-color: #cc0000 !important;
     background: #ffffff !important;
     outline: none !important;
-}
+}}
 
-[data-testid="stChatInput"] textarea::placeholder {
-    color: #666666 !important;
-}
+[data-testid="stChatInput"] textarea::placeholder {{
+    color: #8a8a8a !important;
+}}
 
-/* ── Mobile ── */
-@media (max-width: 768px) {
-    .header-container {
-        padding: 20px 0 0 20px;
-    }
-    .logo  { width: 44px; }
-    .senpai-title { font-size: 26px; letter-spacing: 2px; }
-    .wave  { width: 240px; }
-}
-
+@media (max-width: 768px) {{
+    .header-container {{
+        padding: 16px 20px;
+    }}
+    .logo {{ width: 48px; }}
+    .senpai-title {{ font-size: 28px; letter-spacing: 2px; }}
+    .wave {{ width: 260px; }}
+}}
 </style>
-""", unsafe_allow_html=True)
+"""
+st.markdown(css, unsafe_allow_html=True)
+
+# show wave image with fallback if file missing
+if os.path.exists(WAVE_PATH):
+    st.markdown(f'<img src="{WAVE_PATH}" class="wave">', unsafe_allow_html=True)
+
+# Header: owl logo + title
+logo_html = f"""
+<div class="header-container">
+    <img src="{OWL_PATH}" class="logo" alt="Senpai owl logo">
+    <div class="senpai-title">SENPAI</div>
+</div>
+"""
+st.markdown(logo_html, unsafe_allow_html=True)
 
 # ════════════════════════════════════════════════════════════════
 # 1. DATA LOADING
