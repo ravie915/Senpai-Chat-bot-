@@ -868,8 +868,8 @@ active_mission = (
             "GENERAL ADVISING"
         )
 
-        # ── G. SYSTEM PROMPT ──────────────────────────────────────────────
-        system_prompt = f"""
+    # ── G. SYSTEM PROMPT ──────────────────────────────────────────────
+    system_prompt = f"""
 You are Senpai, the official AI academic advisor for E-JUST (Egypt-Japan University of Science and Technology).
 You are friendly, direct, and trustworthy. Students depend on you for accurate information.
 
