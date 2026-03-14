@@ -215,7 +215,7 @@ TRACK_MAP: dict[str, tuple[str, str, str]] = {
     "mpe":               ("EECE", "MPE", "⚙️  Mechanical Power & Energy Engineering (MPE)"),
     "mechanical":        ("EECE", "MPE", "⚙️  Mechanical Power & Energy Engineering (MPE)"),
 }
- TRACK_MENU = (
+TRACK_MENU = (
     "Please choose your track by typing one of the keywords:\n\n"
     "| Track | Department | Say |\n"
     "| :--- | :--- | :--- |\n"
