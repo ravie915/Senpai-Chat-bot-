@@ -15,7 +15,7 @@ st.markdown("""
 
 @font-face {
     font-family: 'LemonMilk';
-    src: url('main/fonts/LEMONMILK-Bold.otf') format('opentype');
+    src: url('fonts/LEMONMILK-Bold.otf') format('opentype');
     font-weight: bold;
 }
 
@@ -108,9 +108,9 @@ section[data-testid="stSidebar"],
 
 # ── Header HTML ──
 st.markdown("""
-<img src="main/assets/wave.png" class="wave" alt="">
+<img src="assets/wave.png" class="wave" alt="">
 <div class="header-container">
-    <img src="main/assets/owl.png" class="logo" alt="Senpai Owl">
+    <img src="assets/owl.png" class="logo" alt="Senpai Owl">
     <div class="senpai-title">SENPAI</div>
 </div>
 """, unsafe_allow_html=True)
