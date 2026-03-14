@@ -791,7 +791,9 @@ if prompt:
                 scored.sort(key=lambda x: x[0], reverse=True)
                 top_score    = scored[0][0]
                 matched_rows = [row for s, row in scored if s >= top_score - 1]
-                matched_rows = matched_rows[:5]if not matched_rows:
+                matched_rows = matched_rows[:5]  # Limit to top 5 matches
+                
+            if not matched_rows:  # If still no matches, try department matching
                 dept_keywords = {
                     'computer': 'Computer', 'cse': 'Computer',
                     'mechatronics': 'Mechatronics', 'mtr': 'Mechatronics', 'robotics': 'Mechatronics',
@@ -814,8 +816,7 @@ if prompt:
                             faculty_val = str(row.get('Faculty', '')).lower()
                             if dept_kw.lower() in dept_val or dept_kw.lower() in faculty_val:
                                 matched_rows.append(row)
-                        break
-
+                        break  # Stop after first matching keyword
             if matched_rows:
                 parts = []
                 for row in matched_rows:
