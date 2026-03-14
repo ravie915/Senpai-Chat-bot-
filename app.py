@@ -51,10 +51,10 @@ vdb      = process_pdf("Full_HandBook.pdf")
 def get_student_status(cgpa: float) -> tuple[str, int]:
     if cgpa < 2.0:
         return "Half-Load (Academic Probation)", 14
-    elif cgpa < 3.0:
-        return "Regular Load", 19
-    else:
+    elif cgpa > 3.0:
         return "Over-Achiever (Honors)", 21
+    else:
+        return "Regular Load", 19
 
 # ════════════════════════════════════════════════════════════════
 # 3. TRACK MAP
