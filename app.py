@@ -1,4 +1,5 @@
 import streamlit as st
+import base64
 import json
 import pandas as pd
 import os
@@ -518,8 +519,85 @@ INSTRUCTION FOR SENPAI:
 # 9. PAGE CONFIG & SESSION STATE
 # ════════════════════════════════════════════════════════════════
 
-st.set_page_config(page_title="Senpai — E-JUST Advisor", layout="wide", page_icon="🎓")
-st.title("🎓 Senpai — E-JUST Academic Advisor")
+def load_font():
+    with open("fonts/LEMONMILK-Bold.otf", "rb") as f:
+        font = base64.b64encode(f.read()).decode()
+
+    st.markdown(f"""
+    <style>
+
+    @font-face {{
+        font-family: 'LemonMilk';
+        src: url(data:font/otf;base64,{font}) format('opentype');
+    }}
+
+    html, body, [class*="css"] {{
+        font-family: 'LemonMilk', sans-serif;
+    }}
+
+    .main {{
+        background-color:#f6f6f6;
+    }}
+
+    .header-container {{
+        display:flex;
+        align-items:center;
+        gap:15px;
+        margin-top:40px;
+        margin-left:40px;
+    }}
+
+    .senpai-title {{
+        font-size:38px;
+        font-weight:bold;
+        letter-spacing:2px;
+    }}
+
+    .sen {{
+        color:white;
+    }}
+
+    .pai {{
+        color:red;
+    }}
+
+    .logo {{
+        width:60px;
+    }}
+
+    .wave {{
+        position:fixed;
+        top:0;
+        right:0;
+        width:420px;
+        opacity:0.8;
+        z-index:-1;
+    }}
+
+    .chatbox {{
+        width:60%;
+        margin:auto;
+        margin-top:150px;
+    }}
+
+    </style>
+    """, unsafe_allow_html=True)
+
+load_font()
+st.markdown("""
+<img src="assets/wave.png" class="wave">
+
+<div class="header-container">
+
+<img src="assets/owl.png" class="logo">
+
+<div class="senpai-title">
+<span class="sen">SEN</span><span class="pai">PAI</span>
+</div>
+
+</div>
+""", unsafe_allow_html=True)
+
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "sk-hc-v1-3d0b21306ebd475c92404d9870d890a39a0c4a6a345945f7a5287bd75c595050")
 client = OpenAI(
@@ -540,7 +618,9 @@ for msg in st.session_state.messages:
 # 10. MAIN CHAT HANDLER
 # ════════════════════════════════════════════════════════════════
 
-if prompt := st.chat_input("Ask Senpai …"):
+st.markdown('<div class="chatbox">', unsafe_allow_html=True)
+prompt = st.chat_input("Ask Senpai...")
+st.markdown('</div>', unsafe_allow_html=True)
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
