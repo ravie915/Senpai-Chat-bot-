@@ -707,7 +707,7 @@ if prompt:
                 'graduation', 'department', 'which department',
             ]))
         )
-if needs_track and not track_info:
+        if needs_track and not track_info:
             adv_ctx = ctx_ask_track(max_ch)
             if sem_num:
                 adv_ctx += (
