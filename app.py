@@ -77,8 +77,8 @@ section[data-testid="stSidebar"],
 /* Wave decoration (top-right) */
 .wave {{
     position: fixed;
-    top: -350px;
-    right: -350px;
+    top: -300px;
+    right: -300px;
     width: 1000px;
     z-index: 0;
     pointer-events: none;
