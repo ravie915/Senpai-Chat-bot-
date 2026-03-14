@@ -522,8 +522,10 @@ st.set_page_config(page_title="Senpai — E-JUST Advisor", layout="wide", page_i
 st.title("🎓 Senpai — E-JUST Academic Advisor")
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "sk-hc-v1-3d0b21306ebd475c92404d9870d890a39a0c4a6a345945f7a5287bd75c595050")
-client = OpenAI(api_key=OPENAI_API_KEY)
-
+client = OpenAI(
+    api_key=OPENAI_API_KEY,
+    base_url="https://ai.hackclub.com/proxy/v1"
+)
 if "messages"   not in st.session_state: st.session_state.messages   = []
 if "user_cgpa"  not in st.session_state: st.session_state.user_cgpa  = None
 if "track_info" not in st.session_state: st.session_state.track_info = None
