@@ -8,6 +8,140 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
+import time
+import base64
+
+def load_file_b64(path, mime):
+    if os.path.exists(path):
+        with open(path, "rb") as f:
+            return f"data:{mime};base64,{base64.b64encode(f.read()).decode()}"
+    return ""
+
+font_b64 = load_file_b64("fonts/LEMONMILK-Bold.otf", "font/otf")
+owl_b64  = load_file_b64("assets/owl.png", "image/png")
+wave_b64 = load_file_b64("assets/wave.png", "image/png")
+# ---------------------------
+# CSS + font-face + layout
+# ---------------------------
+css = f"""
+<style>
+
+@font-face {{
+    font-family: 'LemonMilk';
+    src: url('{font_b64}') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}}
+
+/* Reset & Global */
+html, body,
+[data-testid="stAppViewContainer"],
+[data-testid="stApp"],
+section[data-testid="stSidebar"],
+.main {{
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;
+}}
+
+* {{
+    color: #1a1a1a !important;
+}}
+
+#MainMenu, footer, header {{ visibility: hidden; }}
+
+/* Header */
+.header-container {{
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 28px 48px;
+    position: relative;
+    z-index: 3;
+}}
+
+.logo {{
+    width: 72px;
+    height: auto;
+    display: block;
+}}
+
+.senpai-title {{
+    font-family: 'LemonMilk', 'Arial Black', sans-serif;
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #1a1a1a;
+    line-height: 1;
+}}
+
+/* Wave decoration (top-right) */
+.wave {{
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 480px;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.95;
+}}
+
+/* Chat messages */
+[data-testid="stChatMessage"] {{
+    background: #ffffff !important;
+    border-radius: 14px !important;
+    padding: 14px 18px !important;
+    margin-bottom: 10px !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06) !important;
+    position: relative;
+    z-index: 1;
+    color: #1a1a1a !important;
+}}
+
+/* Chat input bubble styling */
+[data-testid="stChatInput"] textarea {{
+    border-radius: 28px !important;
+    border: 2px solid #223344 !important;
+    padding: 18px 22px !important;
+    font-size: 15px !important;
+    background: #f2f2f2 !important;
+    box-shadow: none !important;
+    color: #1a1a1a !important;
+}}
+
+[data-testid="stChatInput"] textarea:focus {{
+    border-color: #cc0000 !important;
+    background: #ffffff !important;
+    outline: none !important;
+}}
+
+[data-testid="stChatInput"] textarea::placeholder {{
+    color: #8a8a8a !important;
+}}
+
+@media (max-width: 768px) {{
+    .header-container {{
+        padding: 16px 20px;
+    }}
+    .logo {{ width: 48px; }}
+    .senpai-title {{ font-size: 28px; letter-spacing: 2px; }}
+    .wave {{ width: 260px; }}
+}}
+</style>
+"""
+st.markdown(css, unsafe_allow_html=True)
+
+# show wave image with fallback if file missing
+if wave_b64:
+    st.markdown(f'<img src="{wave_b64}" class="wave">', unsafe_allow_html=True)
+
+# Header: owl logo + title
+logo_html = f"""
+<div class="header-container">
+    <img src="{owl_b64}" class="logo" alt="Senpai owl logo">
+    <div class="senpai-title">SENPAI</div>
+</div>
+"""
+st.markdown(logo_html, unsafe_allow_html=True)
 
 # ════════════════════════════════════════════════════════════════
 # 1. DATA LOADING
@@ -52,9 +186,9 @@ def get_student_status(cgpa: float) -> tuple[str, int]:
     if cgpa < 2.0:
         return "Half-Load (Academic Probation)", 14
     elif cgpa < 3.0:
-        return "Regular Load", 19
+        return "Over Achiever", 21
     else:
-        return "Over-Achiever (Honors)", 21
+        return "Regular Load", 19
 
 # ════════════════════════════════════════════════════════════════
 # 3. TRACK MAP
@@ -515,586 +649,262 @@ INSTRUCTION FOR SENPAI:
 
 
 # ════════════════════════════════════════════════════════════════
-# 9. PAGE CONFIG, CUSTOM UI & SESSION STATE
+# 9. PAGE CONFIG & SESSION STATE
 # ════════════════════════════════════════════════════════════════
 
-st.set_page_config(
-    page_title="Senpai — E-JUST Advisor",
-    layout="wide",
-    page_icon="🦉",
-    initial_sidebar_state="collapsed"
+##st.set_page_config(page_title="Senpai — E-JUST Advisor", layout="wide", page_icon="🎓")
+##st.title("🎓 Senpai — E-JUST Academic Advisor")
+
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "sk-hc-v1-3d0b21306ebd475c92404d9870d890a39a0c4a6a345945f7a5287bd75c595050")
+client = OpenAI(
+    api_key=OPENAI_API_KEY,
+    base_url="https://ai.hackclub.com/proxy/v1"
 )
 
-import base64
 
-def get_image_b64(path: str) -> str | None:
-    if os.path.exists(path):
-        with open(path, "rb") as f:
-            ext  = path.rsplit(".", 1)[-1].lower()
-            mime = {"jpg": "image/jpeg", "jpeg": "image/jpeg",
-                    "png": "image/png",  "svg": "image/svg+xml"}.get(ext, "image/png")
-            return f"data:{mime};base64,{base64.b64encode(f.read()).decode()}"
-    return None
-
-def get_font_b64(path: str) -> str | None:
-    if os.path.exists(path):
-        with open(path, "rb") as f:
-            return base64.b64encode(f.read()).decode()
-    return None
-
-# ── Load assets (place these files in repo root) ──────────────────
-logo_b64  = get_image_b64("senpai_logo.png") or get_image_b64("senpai_logo.jpg")
-wave_b64  = get_image_b64("wave.png") or get_image_b64("wave.svg")
-font_b64  = get_font_b64("LemonMilk.otf") or get_font_b64("LemonMilk.woff2") or get_font_b64("LemonMilk.ttf")
-
-# ── Font face ─────────────────────────────────────────────────────
-if font_b64:
-    font_css = f"""
-    @font-face {{
-        font-family: 'LemonMilk';
-        src: url('data:font/otf;base64,{font_b64}') format('opentype');
-        font-weight: normal;
-    }}
-    """
-else:
-    # Fallback: Bebas Neue from Google Fonts
-    font_css = "@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');"
-
-brand_font = "'LemonMilk'" if font_b64 else "'Bebas Neue'"
-
-# ── Logo HTML ─────────────────────────────────────────────────────
-if logo_b64:
-    logo_html = f'<img src="{logo_b64}" class="senpai-logo" />'
-else:
-    logo_html = '<span class="senpai-logo-fallback">🦉</span>'
-
-# ── Wave HTML ─────────────────────────────────────────────────────
-if wave_b64:
-    wave_html = f'<img src="{wave_b64}" class="senpai-wave" />'
-else:
-    # SVG fallback wave
-    wave_html = """
-    <svg class="senpai-wave" viewBox="0 0 900 340" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g opacity="0.9">
-        <path d="M900 0 Q 580 80 200 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 600 90 240 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 620 100 280 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 640 110 320 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 660 120 360 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 680 130 400 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 700 140 440 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 720 150 480 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 740 160 520 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 760 170 560 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 780 180 600 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 800 190 640 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 820 200 680 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 840 215 720 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 860 230 760 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M900 0 Q 875 245 800 340" stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M500 0 Q 680 80 900 130"  stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M540 0 Q 700 72 900 110"  stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M580 0 Q 720 62 900 88"   stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M620 0 Q 740 52 900 66"   stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M660 0 Q 760 40 900 48"   stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M700 0 Q 780 28 900 32"   stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M740 0 Q 800 18 900 18"   stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M780 0 Q 840 10 900 8"    stroke="#c8291a" stroke-width="0.9" fill="none"/>
-        <path d="M820 0 Q 860 4  900 2"    stroke="#c8291a" stroke-width="0.9" fill="none"/>
-      </g>
-    </svg>"""
-
-# ── Full CSS ──────────────────────────────────────────────────────
-st.markdown(f"""
-<style>
-{font_css}
-
-/* ── Reset Streamlit chrome ── */
-#MainMenu, footer, header {{ visibility: hidden; }}
-.stApp {{ background: #ffffff !important; }}
-.block-container {{ padding: 0 !important; max-width: 100% !important; }}
-section[data-testid="stSidebar"] {{ display: none; }}
-.stChatMessage {{ background: transparent !important; border: none !important; }}
-
-/* ── Wave — full top-right corner, bigger and denser ── */
-.senpai-wave {{
-    position: fixed;
-    top: -10px; right: -10px;
-    width: 65%;
-    height: 340px;
-    object-fit: fill;
-    object-position: top right;
-    pointer-events: none;
-    z-index: 0;
-}}
-
-/* ── Header — top-left, compact ── */
-.senpai-header {{
-    position: fixed;
-    top: 0; left: 0;
-    z-index: 10;
-    padding: 22px 40px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}}
-.senpai-logo {{
-    width: 56px;
-    height: 56px;
-    object-fit: contain;
-}}
-.senpai-logo-fallback {{
-    font-size: 46px;
-    line-height: 1;
-}}
-.senpai-brand {{
-    font-family: {brand_font}, 'Bebas Neue', 'Impact', sans-serif;
-    font-size: 46px;
-    letter-spacing: 6px;
-    color: #1a1a1a;
-    line-height: 1;
-    font-weight: 400;
-}}
-
-/* ── Chat area — push down below fixed header ── */
-.senpai-chat {{
-    position: relative;
-    z-index: 5;
-    padding: 110px 52px 170px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}}
-
-/* ── Empty state ── */
-.senpai-empty {{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 0 20px;
-    gap: 10px;
-    opacity: 0.3;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    color: #555;
-    text-align: center;
-}}
-
-/* ── Message rows ── */
-.msg-row {{
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    animation: fadeUp 0.2s ease both;
-}}
-.msg-row.user {{ flex-direction: row-reverse; }}
-@keyframes fadeUp {{
-    from {{ opacity: 0; transform: translateY(6px); }}
-    to   {{ opacity: 1; transform: translateY(0); }}
-}}
-
-/* ── Avatars ── */
-.msg-avatar {{
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 600;
-    flex-shrink: 0; margin-top: 2px;
-    letter-spacing: 0.5px;
-}}
-.msg-avatar.bot  {{
-    background: #1a1a1a; color: #fff;
-    font-family: {brand_font}, sans-serif;
-    font-size: 8px; letter-spacing: 1px;
-}}
-.msg-avatar.user {{ background: #c8291a; color: #fff; font-size: 11px; }}
-
-/* ── Bubbles ── */
-.msg-bubble {{
-    max-width: 68%;
-    padding: 12px 18px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14.5px;
-    line-height: 1.65;
-    white-space: pre-wrap;
-    word-break: break-word;
-}}
-.msg-bubble.bot  {{
-    background: #f3f2f0;
-    color: #1a1a1a;
-    border-radius: 18px 18px 18px 4px;
-}}
-.msg-bubble.user {{
-    background: #c8291a;
-    color: #ffffff;
-    border-radius: 18px 18px 4px 18px;
-}}
-
-/* ── Fixed bottom input area — full width, white bg ── */
-.senpai-input-area {{
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 16px 40px 28px;
-    background: linear-gradient(to top, #ffffff 75%, rgba(255,255,255,0));
-}}
-
-/* ── Chips ── */
-.senpai-chips {{
-    display: flex; gap: 8px; flex-wrap: wrap;
-    margin-bottom: 10px;
-}}
-.senpai-chip {{
-    padding: 6px 16px;
-    border-radius: 50px;
-    border: 1.5px solid #e0e0e0;
-    background: #fff;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12.5px; color: #555;
-    cursor: default;
-    white-space: nowrap;
-}}
-
-/* ── Input pill — full width, white, red border on focus ── */
-.senpai-pill {{
-    display: flex; align-items: center;
-    background: #ffffff;
-    border: 2px solid #d2d2d2;
-    border-radius: 50px;
-    padding: 10px 10px 10px 24px;
-    gap: 10px;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-    transition: border-color 0.2s, box-shadow 0.2s;
-}}
-.senpai-pill:focus-within {{
-    border-color: #c8291a;
-    box-shadow: 0 0 0 3px rgba(200,41,26,0.08);
-}}
-.senpai-pill input {{
-    flex: 1; border: none; background: transparent;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px; color: #1a1a1a; outline: none;
-    padding: 4px 0;
-}}
-.senpai-pill input::placeholder {{ color: #aaa; }}
-.senpai-send {{
-    width: 40px; height: 40px; border-radius: 50%;
-    background: #c8291a; border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    color: white; font-size: 16px; flex-shrink: 0;
-    transition: background 0.18s, transform 0.12s;
-}}
-.senpai-send:hover {{ background: #a82215; }}
-
-/* ── Make real st.chat_input overlay the pill — full width ── */
-div[data-testid="stChatInput"] {{
-    position: fixed !important;
-    bottom: 28px !important;
-    left: 40px !important;
-    right: 40px !important;
-    z-index: 200 !important;
-    opacity: 0.01 !important;
-    pointer-events: all !important;
-}}
-div[data-testid="stChatInput"] textarea {{
-    border-radius: 50px !important;
-    height: 56px !important;
-}}
-</style>
-""", unsafe_allow_html=True)
-
-# ── API Client ────────────────────────────────────────────────────
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
-client = OpenAI(api_key=OPENAI_API_KEY)
-
-# ── Session state ─────────────────────────────────────────────────
 if "messages"   not in st.session_state: st.session_state.messages   = []
 if "user_cgpa"  not in st.session_state: st.session_state.user_cgpa  = None
 if "track_info" not in st.session_state: st.session_state.track_info = None
 
-# ── Render header ─────────────────────────────────────────────────
-st.markdown(f"""
-<div>
-  {wave_html}
-  <div class="senpai-header">
-    {logo_html}
-    <span class="senpai-brand">SENPAI</span>
-  </div>
-</div>
-""", unsafe_allow_html=True)
-
-# ── Render chat history ───────────────────────────────────────────
-chat_html = '<div class="senpai-chat">'
-if not st.session_state.messages:
-    chat_html += """
-    <div class="senpai-empty">
-      <div style="font-size:40px">🦉</div>
-      <div>Ask me about courses, professors, schedules, or academic rules</div>
-    </div>"""
-else:
-    for msg in st.session_state.messages:
-        role    = msg["role"]
-        content = msg["content"].replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
-        if role == "assistant":
-            chat_html += f"""
-            <div class="msg-row bot">
-              <div class="msg-avatar bot">SP</div>
-              <div class="msg-bubble bot">{content}</div>
-            </div>"""
-        else:
-            chat_html += f"""
-            <div class="msg-row user">
-              <div class="msg-avatar user">ME</div>
-              <div class="msg-bubble user">{content}</div>
-            </div>"""
-chat_html += "</div>"
-st.markdown(chat_html, unsafe_allow_html=True)
-
-# ── Render input area (decorative — real input is st.chat_input) ──
-chips_html = ""
-if not st.session_state.messages:
-    chips_html = """
-    <div class="senpai-chips">
-      <span class="senpai-chip">📚 Semester 3 courses</span>
-      <span class="senpai-chip">👨‍🏫 Find a professor</span>
-      <span class="senpai-chip">📋 How to register</span>
-      <span class="senpai-chip">📊 GPA rules</span>
-    </div>"""
-
-st.markdown(f"""
-<div class="senpai-input-area">
-  {chips_html}
-  <div class="senpai-pill">
-    <span style="font-size:15px;color:#aaa">💬</span>
-    <input type="text" placeholder="Ask Senpai...." disabled />
-    <button class="senpai-send">➤</button>
-  </div>
-</div>
-""", unsafe_allow_html=True)
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
 
 # ════════════════════════════════════════════════════════════════
 # 10. MAIN CHAT HANDLER
 # ════════════════════════════════════════════════════════════════
 
-if prompt := st.chat_input("Ask Senpai...."):
+if prompt := st.chat_input("Ask Senpai …"):
     st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
 
-    # ── A. EXTRACT & PERSIST CGPA ────────────────────────────────────
-    gpa_match = re.search(r'\b(?:cgpa|gpa)\s*[:=]?\s*(\d(?:\.\d+)?)\b', prompt.lower())
-    if not gpa_match:
-        gpa_match = re.search(r'\b([0-3](?:\.\d+)?)\b', prompt)
-    if gpa_match:
-        candidate = float(gpa_match.group(1))
-        if 0.0 <= candidate <= 4.0:
-            st.session_state.user_cgpa = candidate
+    with st.chat_message("assistant"):
 
-    user_cgpa  = st.session_state.user_cgpa if st.session_state.user_cgpa is not None else 3.0
-    status_lbl, max_ch = get_student_status(user_cgpa)
-    is_half    = user_cgpa < 2.0
+        # ── A. EXTRACT & PERSIST CGPA ────────────────────────────────────
+        gpa_match = re.search(r'\b(?:cgpa|gpa)\s*[:=]?\s*(\d(?:\.\d+)?)\b', prompt.lower())
+        if not gpa_match:
+            gpa_match = re.search(r'\b([0-3](?:\.\d+)?)\b', prompt)
+        if gpa_match:
+            candidate = float(gpa_match.group(1))
+            if 0.0 <= candidate <= 4.0:
+                st.session_state.user_cgpa = candidate
 
-    # ── B. DETECT & PERSIST TRACK ─────────────────────────────────────
-    detected = detect_track(prompt)
-    if detected:
-        st.session_state.track_info = detected
-    track_info  = st.session_state.track_info
-    school      = track_info[0] if track_info else None
-    dept        = track_info[1] if track_info else None
-    track_label = track_info[2] if track_info else "Not chosen yet"
+        user_cgpa  = st.session_state.user_cgpa if st.session_state.user_cgpa is not None else 3.0
+        status_lbl, max_ch = get_student_status(user_cgpa)
+        is_half    = user_cgpa < 2.0
 
-    # ── C. PDF RAG — only for handbook/rules questions, never for courses ──
-    pdf_ctx = ""
-    _pl = prompt.lower()
-    if vdb and not any(kw in _pl for kw in [
-        'course', 'semester', 'courses', 'curriculum', 'subject',
-        'credit', 'prereq', 'prerequisite', 'schedule', 'plan'
-    ]):
-        docs    = vdb.similarity_search(prompt, k=3)
-        pdf_ctx = "\n".join(d.page_content for d in docs)
+        # ── B. DETECT & PERSIST TRACK ─────────────────────────────────────
+        detected = detect_track(prompt)
+        if detected:
+            st.session_state.track_info = detected
+        track_info  = st.session_state.track_info
+        school      = track_info[0] if track_info else None
+        dept        = track_info[1] if track_info else None
+        track_label = track_info[2] if track_info else "Not chosen yet"
 
-    # ── D. BUILD ADVISOR CONTEXT ──────────────────────────────────────
-    p_lower   = prompt.lower()
-    sem_match = re.search(r'\b(?:semester|sem)\s*(\d)\b', p_lower)
-    adv_ctx   = ""
+        # ── C. PDF RAG — only for handbook/rules questions, never for courses ──
+        pdf_ctx = ""
+        _pl = prompt.lower()
+        if vdb and not any(kw in _pl for kw in [
+            'course', 'semester', 'courses', 'curriculum', 'subject',
+            'credit', 'prereq', 'prerequisite', 'schedule', 'plan'
+        ]):
+            docs    = vdb.similarity_search(prompt, k=3)
+            pdf_ctx = "\n".join(d.page_content for d in docs)
 
-    sem_num            = sem_match.group(1) if sem_match else None
-    foundation_sem     = sem_num in ('1', '2', '3')
-    track_specific_sem = sem_num in ('4', '5', '6', '7', '8')
+        # ── D. BUILD ADVISOR CONTEXT ──────────────────────────────────────
+        p_lower   = prompt.lower()
+        sem_match = re.search(r'\b(?:semester|sem)\s*(\d)\b', p_lower)
+        adv_ctx   = ""
 
-    needs_track = (
-        track_specific_sem
-        or (not sem_num and any(kw in p_lower for kw in [
-            'schedule', 'plan', 'recommend', 'which courses', 'what courses',
-            'my track', 'which track', 'what track', 'track advice',
-            'graduation', 'department', 'which department',
-        ]))
-    )
+        sem_num            = sem_match.group(1) if sem_match else None
+        foundation_sem     = sem_num in ('1', '2', '3')
+        track_specific_sem = sem_num in ('4', '5', '6', '7', '8')
 
-    if needs_track and not track_info:
-        adv_ctx = ctx_ask_track(max_ch)
-        if sem_num:
-            adv_ctx += (
-                f"\n\nNOTE: Student asked about Semester {sem_num}. "
-                f"This semester is track-specific. Once they choose a track, "
-                f"immediately show their semester {sem_num} plan."
-            )
-
-    elif sem_num:
-        if foundation_sem:
-            courses, title = load_semester(school or 'ECCE', dept or 'CSE', sem_num)
-            if courses:
-                adv_ctx = ctx_semester_plan(
-                    courses, title, sem_num,
-                    school or 'ECCE', dept or 'CSE', track_label,
-                    max_ch, is_half
-                )
-                if not track_info:
-                    adv_ctx += (
-                        "\n\n[SOFT NUDGE FOR SENPAI]: After answering, casually ask "
-                        "which track the student plans to pursue."
-                    )
-            else:
-                adv_ctx = f"[No data found for Foundation Semester {sem_num}]"
-
-        elif track_info:
-            courses, title = load_semester(school, dept, sem_num)
-            if courses:
-                adv_ctx = ctx_semester_plan(
-                    courses, title, sem_num,
-                    school, dept, track_label,
-                    max_ch, is_half
-                )
-            else:
-                adv_ctx = (
-                    f"[No course data yet for {track_label} Semester {sem_num}. "
-                    f"This department's curriculum may still be incomplete.]"
-                )
-        else:
-            adv_ctx = ctx_ask_track(max_ch)
-            adv_ctx += (
-                f"\n\nNOTE: Student asked about Semester {sem_num} which varies by track. "
-                f"Ask for their track first, then show the semester plan."
-            )
-
-    elif track_info:
-        adv_ctx = ctx_track_overview(school, dept, track_label, max_ch, is_half)
-
-    else:
-        adv_ctx = (
-            "[GENERAL QUESTION — No semester or track-specific data required]\n"
-            "Answer the student's question using the handbook context and your general "
-            "E-JUST knowledge. You may mention the available tracks and invite them to "
-            "share their track if relevant, but do NOT block the answer."
+        needs_track = (
+            track_specific_sem
+            or (not sem_num and any(kw in p_lower for kw in [
+                'schedule', 'plan', 'recommend', 'which courses', 'what courses',
+                'my track', 'which track', 'what track', 'track advice',
+                'graduation', 'department', 'which department',
+            ]))
         )
 
-    # ── E. PROFESSOR CONTEXT ──────────────────────────────────────────
-    prof_ctx  = ""
-    asks_prof = any(kw in p_lower for kw in [
-        'professor', 'prof', 'doctor', 'dr ', 'dr.', 'instructor',
-        'email', 'office', 'contact', 'research', 'faculty',
-        'who teaches', 'who is', 'find professor', 'department professor',
-        'مين', 'دكتور', 'استاذ'
-    ])
-
-    if profs_df is not None:
-        matched_rows = []
-        query_words = [w for w in p_lower.split() if len(w) > 2]
-
-        scored = []
-        for _, row in profs_df.iterrows():
-            pname = str(row.get('Name', '')).lower()
-            pname_parts = [p for p in pname.split() if len(p) > 2]
-            score = 0
-            score += sum(1 for qw in query_words if qw in pname) * 2
-            score += sum(1 for pp in pname_parts if pp in p_lower)
-            if score > 0:
-                scored.append((score, row))
-
-        if scored:
-            scored.sort(key=lambda x: x[0], reverse=True)
-            top_score = scored[0][0]
-            matched_rows = [row for s, row in scored if s >= top_score - 1]
-            matched_rows = matched_rows[:5]
-
-        if not matched_rows:
-            dept_keywords = {
-                'computer': 'Computer', 'cse': 'Computer',
-                'mechatronics': 'Mechatronics', 'mtr': 'Mechatronics', 'robotics': 'Mechatronics',
-                'aerospace': 'Aerospace', 'ase': 'Aerospace',
-                'materials': 'Materials', 'mse': 'Materials',
-                'industrial': 'Industrial', 'manufacturing': 'Industrial', 'ime': 'Industrial',
-                'energy': 'Energy', 'ere': 'Energy', 'mpe': 'Energy',
-                'chemical': 'Chemical', 'cpe': 'Chemical',
-                'electrical': 'Electrical', 'epe': 'Electrical',
-                'environmental': 'Environmental', 'env': 'Environmental',
-                'biomedical': 'Biomedical', 'mie': 'Biomedical',
-                'electronics': 'Electronics', 'ece': 'Electronics',
-                'accounting': 'Accounting', 'business': 'Business',
-                'architecture': 'Architecture', 'art': 'Art & Design',
-            }
-            for kw, dept_kw in dept_keywords.items():
-                if kw in p_lower:
-                    for _, row in profs_df.iterrows():
-                        dept_val = str(row.get('Department', '')).lower()
-                        faculty_val = str(row.get('Faculty', '')).lower()
-                        if dept_kw.lower() in dept_val or dept_kw.lower() in faculty_val:
-                            matched_rows.append(row)
-                    break
-
-        if matched_rows:
-            parts = []
-            for row in matched_rows:
-                name     = row.get('Name', 'Unknown')
-                title    = row.get('Job Title', 'N/A')
-                dept     = row.get('Department', 'N/A')
-                faculty  = row.get('Faculty', 'N/A')
-                office   = row.get('Office Location', 'N/A')
-                email    = row.get('Email', 'N/A')
-                research = row.get('Research Fields', 'N/A')
-                parts.append(
-                    f"• {name} | {title}\n"
-                    f"  Department: {dept} | Faculty: {faculty}\n"
-                    f"  Office: {office} | Email: {email}\n"
-                    f"  Research: {research}"
+        if needs_track and not track_info:
+            adv_ctx = ctx_ask_track(max_ch)
+            if sem_num:
+                adv_ctx += (
+                    f"\n\nNOTE: Student asked about Semester {sem_num}. "
+                    f"This semester is track-specific. Once they choose a track, "
+                    f"immediately show their semester {sem_num} plan."
                 )
-            prof_ctx = "[PROFESSOR DATA]\n" + "\n\n".join(parts)
 
-        elif asks_prof:
-            rows = []
+        elif sem_num:
+            if foundation_sem:
+                courses, title = load_semester(school or 'ECCE', dept or 'CSE', sem_num)
+                if courses:
+                    adv_ctx = ctx_semester_plan(
+                        courses, title, sem_num,
+                        school or 'ECCE', dept or 'CSE', track_label,
+                        max_ch, is_half
+                    )
+                    if not track_info:
+                        adv_ctx += (
+                            "\n\n[SOFT NUDGE FOR SENPAI]: After answering, casually ask "
+                            "which track the student plans to pursue."
+                        )
+                else:
+                    adv_ctx = f"[No data found for Foundation Semester {sem_num}]"
+
+            elif track_info:
+                courses, title = load_semester(school, dept, sem_num)
+                if courses:
+                    adv_ctx = ctx_semester_plan(
+                        courses, title, sem_num,
+                        school, dept, track_label,
+                        max_ch, is_half
+                    )
+                else:
+                    adv_ctx = (
+                        f"[No course data yet for {track_label} Semester {sem_num}. "
+                        f"This department's curriculum may still be incomplete.]"
+                    )
+            else:
+                adv_ctx = ctx_ask_track(max_ch)
+                adv_ctx += (
+                    f"\n\nNOTE: Student asked about Semester {sem_num} which varies by track. "
+                    f"Ask for their track first, then show the semester plan."
+                )
+
+        elif track_info:
+            adv_ctx = ctx_track_overview(school, dept, track_label, max_ch, is_half)
+
+        else:
+            adv_ctx = (
+                "[GENERAL QUESTION — No semester or track-specific data required]\n"
+                "Answer the student's question using the handbook context and your general "
+                "E-JUST knowledge. You may mention the available tracks and invite them to "
+                "share their track if relevant, but do NOT block the answer."
+            )
+
+        # ── E. PROFESSOR CONTEXT ──────────────────────────────────────────
+        prof_ctx  = ""
+        asks_prof = any(kw in p_lower for kw in [
+            'professor', 'prof', 'doctor', 'dr ', 'dr.', 'instructor',
+            'email', 'office', 'contact', 'research', 'faculty',
+            'who teaches', 'who is', 'find professor', 'department professor',
+            'مين', 'دكتور', 'استاذ'
+        ])
+
+        if profs_df is not None:
+            # ── Try to match a specific professor name ────────────────────
+            matched_rows = []
+            query_words = [w for w in p_lower.split() if len(w) > 2]
+
+            scored = []
             for _, row in profs_df.iterrows():
-                name   = row.get('Name', 'Unknown')
-                title  = row.get('Job Title', 'N/A')
-                dept   = row.get('Department', 'N/A')
-                email  = row.get('Email', 'N/A')
-                rows.append(f"  • {name} | {title} | Dept: {dept} | {email}")
-            prof_ctx = "[ALL PROFESSORS]\n" + "\n".join(rows)
+                pname = str(row.get('Name', '')).lower()
+                pname_parts = [p for p in pname.split() if len(p) > 2]
+                score = 0
+                # Score: how many query words appear in professor name
+                score += sum(1 for qw in query_words if qw in pname) * 2
+                # Score: how many professor name parts appear in query
+                score += sum(1 for pp in pname_parts if pp in p_lower)
+                if score > 0:
+                    scored.append((score, row))
 
-    # ── F. MISSION DETECTION ──────────────────────────────────────────
-    asks_registration = any(kw in p_lower for kw in [
-        'register', 'registration', 'add course', 'drop course', 'enroll',
-        'sign up', 'how to register', 'course registration', 'add/drop',
-        'portal', 'student system', 'sis', 'how do i add'
-    ])
-    asks_handbook = any(kw in p_lower for kw in [
-        'rule', 'policy', 'regulation', 'graduate', 'graduation', 'gpa requirement',
-        'academic', 'probation', 'dismissal', 'appeal', 'leave', 'transfer',
-        'credit', 'handbook', 'bylaw', 'attendance', 'exam', 'retake', 'withdraw'
-    ])
-    asks_schedule = any(kw in p_lower for kw in [
-        'schedule', 'plan', 'roadmap', 'semester', 'courses', 'credit hours',
-        'what should i take', 'which courses', 'next semester'
-    ])
+            if scored:
+                # Sort by score descending
+                scored.sort(key=lambda x: x[0], reverse=True)
+                top_score = scored[0][0]
+                # Only keep rows within 1 point of the best score
+                matched_rows = [row for s, row in scored if s >= top_score - 1]
+                # Cap at 5 results to avoid flooding
+                matched_rows = matched_rows[:5]
 
-    active_mission = (
-        "COURSE REGISTRATION ASSISTANCE"      if asks_registration else
-        "PROFESSOR REVIEWS & RECOMMENDATIONS"  if (asks_prof and prof_ctx) else
-        "HANDBOOK / ACADEMIC RULES"            if asks_handbook else
-        "COURSE SCHEDULE & PLANNING"           if asks_schedule else
-        "GENERAL ADVISING"
-    )
+            # ── Try to match by department ────────────────────────────────
+            if not matched_rows:
+                dept_keywords = {
+                    'computer': 'Computer', 'cse': 'Computer',
+                    'mechatronics': 'Mechatronics', 'mtr': 'Mechatronics', 'robotics': 'Mechatronics',
+                    'aerospace': 'Aerospace', 'ase': 'Aerospace',
+                    'materials': 'Materials', 'mse': 'Materials',
+                    'industrial': 'Industrial', 'manufacturing': 'Industrial', 'ime': 'Industrial',
+                    'energy': 'Energy', 'ere': 'Energy', 'mpe': 'Energy',
+                    'chemical': 'Chemical', 'cpe': 'Chemical',
+                    'electrical': 'Electrical', 'epe': 'Electrical',
+                    'environmental': 'Environmental', 'env': 'Environmental',
+                    'biomedical': 'Biomedical', 'mie': 'Biomedical',
+                    'electronics': 'Electronics', 'ece': 'Electronics',
+                    'accounting': 'Accounting', 'business': 'Business',
+                    'architecture': 'Architecture', 'art': 'Art & Design',
+                }
+                for kw, dept_kw in dept_keywords.items():
+                    if kw in p_lower:
+                        for _, row in profs_df.iterrows():
+                            dept_val = str(row.get('Department', '')).lower()
+                            faculty_val = str(row.get('Faculty', '')).lower()
+                            if dept_kw.lower() in dept_val or dept_kw.lower() in faculty_val:
+                                matched_rows.append(row)
+                        break
 
-    # ── G. SYSTEM PROMPT ──────────────────────────────────────────────
-    system_prompt = f"""
+            if matched_rows:
+                # Format matched professors
+                parts = []
+                for row in matched_rows:
+                    name     = row.get('Name', 'Unknown')
+                    title    = row.get('Job Title', 'N/A')
+                    dept     = row.get('Department', 'N/A')
+                    faculty  = row.get('Faculty', 'N/A')
+                    office   = row.get('Office Location', 'N/A')
+                    email    = row.get('Email', 'N/A')
+                    research = row.get('Research Fields', 'N/A')
+                    parts.append(
+                        f"• {name} | {title}\n"
+                        f"  Department: {dept} | Faculty: {faculty}\n"
+                        f"  Office: {office} | Email: {email}\n"
+                        f"  Research: {research}"
+                    )
+                prof_ctx = "[PROFESSOR DATA]\n" + "\n\n".join(parts)
+
+            elif asks_prof:
+                # General professor query — provide full list
+                rows = []
+                for _, row in profs_df.iterrows():
+                    name   = row.get('Name', 'Unknown')
+                    title  = row.get('Job Title', 'N/A')
+                    dept   = row.get('Department', 'N/A')
+                    email  = row.get('Email', 'N/A')
+                    rows.append(f"  • {name} | {title} | Dept: {dept} | {email}")
+                prof_ctx = "[ALL PROFESSORS]\n" + "\n".join(rows)
+
+        # ── F. MISSION DETECTION ──────────────────────────────────────────
+        asks_registration = any(kw in p_lower for kw in [
+            'register', 'registration', 'add course', 'drop course', 'enroll',
+            'sign up', 'how to register', 'course registration', 'add/drop',
+            'portal', 'student system', 'sis', 'how do i add'
+        ])
+        asks_handbook = any(kw in p_lower for kw in [
+            'rule', 'policy', 'regulation', 'graduate', 'graduation', 'gpa requirement',
+            'academic', 'probation', 'dismissal', 'appeal', 'leave', 'transfer',
+            'credit', 'handbook', 'bylaw', 'attendance', 'exam', 'retake', 'withdraw'
+        ])
+        asks_schedule = any(kw in p_lower for kw in [
+            'schedule', 'plan', 'roadmap', 'semester', 'courses', 'credit hours',
+            'what should i take', 'which courses', 'next semester'
+        ])
+
+        active_mission = (
+            "COURSE REGISTRATION ASSISTANCE"      if asks_registration else
+            "PROFESSOR REVIEWS & RECOMMENDATIONS"  if (asks_prof and prof_ctx) else
+            "HANDBOOK / ACADEMIC RULES"            if asks_handbook else
+            "COURSE SCHEDULE & PLANNING"           if asks_schedule else
+            "GENERAL ADVISING"
+        )
+
+        # ── G. SYSTEM PROMPT ──────────────────────────────────────────────
+        system_prompt = f"""
 You are **Senpai**, the official AI academic advisor for E-JUST (Egypt-Japan University of Science and Technology).
 You are friendly, direct, and trustworthy. Students depend on you for accurate information.
 
@@ -1111,9 +921,10 @@ You are friendly, direct, and trustworthy. Students depend on you for accurate i
 
 ━━━ STUDENT PROFILE ━━━
   • CGPA: {user_cgpa} | Status: {status_lbl} | Limit: {max_ch} CH | Track: {track_label}
-  • Half-Load: {'YES — Academic Probation (max 14 CH)' if is_half else 'No'}
 
-━━━ CREDIT RULES ━━━
+
+
+━━ CREDIT RULES ━━━
   • CGPA < 2.0 → Half-Load — max 14 CH
   • 2.0–2.99   → Regular   — max 19 CH
   • ≥ 3.0      → Honors    — max 21 CH
@@ -1148,24 +959,23 @@ You are friendly, direct, and trustworthy. Students depend on you for accurate i
 {prof_ctx if prof_ctx else "No professor data matched this query."}
 """.strip()
 
-    # ── H. CALL OPENAI ────────────────────────────────────────────────
-    try:
-        history = [
-            {"role": m["role"], "content": m["content"]}
-            for m in st.session_state.messages[:-1]
-        ]
-        resp = client.chat.completions.create(
-            model="gpt-4.1",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                *history,
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0.2,
-        )
-        answer = resp.choices[0].message.content
-        st.session_state.messages.append({"role": "assistant", "content": answer})
-        st.rerun()
-    except Exception as e:
-        st.session_state.messages.append({"role": "assistant", "content": f"⚠️ Error: {e}"})
-        st.rerun()
+        # ── H. CALL OPENAI ────────────────────────────────────────────────
+        try:
+            history = [
+                {"role": m["role"], "content": m["content"]}
+                for m in st.session_state.messages[:-1]
+            ]
+            resp = client.chat.completions.create(
+                model="gpt-4.1",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    *history,
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.2,
+            )
+            answer = resp.choices[0].message.content
+            st.markdown(answer)
+            st.session_state.messages.append({"role": "assistant", "content": answer})
+        except Exception as e:
+            st.error(f"OpenRouter API Error: {e}")
