@@ -9,13 +9,26 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
+import time
+
+def typing_animation(text):
+    placeholder = st.empty()
+    typed = ""
+
+    for char in text:
+        typed += char
+        placeholder.markdown(typed)
+        time.sleep(0.01)
+
+    return typed
+
 # ════════════════════════════════════════════════════════════════
 # 1. DATA LOADING
 # ════════════════════════════════════════════════════════════════
 
 def load_ejust_data():
     if os.path.exists('Tracks.json'):
-        with open('Tracks.json', 'r', encoding='utf-8') as f:  # Added encoding
+        with open('Tracks.json', 'r') as f:
             return json.load(f)
     return None
 
@@ -27,27 +40,22 @@ def load_professor_data():
         return None
     try:
         return pd.read_excel('Professors_Data.xlsx', engine='openpyxl')
-    except Exception as e:
-        st.warning(f"Could not load professor data: {e}")  # Added error handling
+    except Exception:
         return None
 
 @st.cache_resource
 def process_pdf(path):
     if not os.path.exists(path):
         return None
-    try:
-        loader = PyPDFLoader(path)
-        docs = loader.load()
-        splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
-        chunks = splitter.split_documents(docs)
-        embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-        return Chroma.from_documents(documents=chunks, embedding=embeddings)
-    except Exception as e:
-        st.warning(f"Could not process PDF: {e}")
-        return None
+    loader   = PyPDFLoader(path)
+    docs     = loader.load()
+    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
+    chunks   = splitter.split_documents(docs)
+    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    return Chroma.from_documents(documents=chunks, embedding=embeddings)
 
 profs_df = load_professor_data()
-vdb = process_pdf("Full_HandBook.pdf")
+vdb      = process_pdf("Full_HandBook.pdf")
 
 # ════════════════════════════════════════════════════════════════
 # 2. CGPA → STATUS
@@ -66,38 +74,38 @@ def get_student_status(cgpa: float) -> tuple[str, int]:
 # ════════════════════════════════════════════════════════════════
 
 TRACK_MAP: dict[str, tuple[str, str, str]] = {
-    "cse": ("ECCE", "CSE", "💻 Computer Engineering (CSE)"),
-    "computer": ("ECCE", "CSE", "💻 Computer Engineering (CSE)"),
-    "software": ("ECCE", "CSE", "💻 Computer Engineering (CSE)"),
-    "ece": ("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
-    "electronics": ("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
-    "communications": ("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
+    "cse":           ("ECCE", "CSE", "💻 Computer Engineering (CSE)"),
+    "computer":      ("ECCE", "CSE", "💻 Computer Engineering (CSE)"),
+    "software":      ("ECCE", "CSE", "💻 Computer Engineering (CSE)"),
+    "ece":           ("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
+    "electronics":   ("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
+    "communications":("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
     "communication": ("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
-    "epe": ("ECCE", "EPE", "⚡ Electrical Power Engineering (EPE)"),
-    "power": ("ECCE", "EPE", "⚡ Electrical Power Engineering (EPE)"),
-    "electrical": ("ECCE", "EPE", "⚡ Electrical Power Engineering (EPE)"),
-    "mie": ("ECCE", "MIE", "🧬 Biomedical & Bioinformatics Engineering (MIE)"),
-    "biomedical": ("ECCE", "MIE", "🧬 Biomedical & Bioinformatics Engineering (MIE)"),
-    "bioinformatics": ("ECCE", "MIE", "🧬 Biomedical & Bioinformatics Engineering (MIE)"),
-    "mtr": ("IDE", "MTR", "🤖 Mechatronics Engineering (MTR)"),
-    "mechatronics": ("IDE", "MTR", "🤖 Mechatronics Engineering (MTR)"),
-    "robotics": ("IDE", "MTR", "🤖 Mechatronics Engineering (MTR)"),
-    "ase": ("IDE", "ASE", "✈️ Aerospace Engineering (ASE)"),
-    "aerospace": ("IDE", "ASE", "✈️ Aerospace Engineering (ASE)"),
-    "mse": ("IDE", "MSE", "🔬 Materials Science and Engineering (MSE)"),
-    "materials": ("IDE", "MSE", "🔬 Materials Science and Engineering (MSE)"),
-    "ime": ("IDE", "IME", "🏭 Industrial & Manufacturing Engineering (IME)"),
-    "industrial": ("IDE", "IME", "🏭 Industrial & Manufacturing Engineering (IME)"),
-    "manufacturing": ("IDE", "IME", "🏭 Industrial & Manufacturing Engineering (IME)"),
-    "cpe": ("EECE", "CPE", "⚗️ Chemical & Petrochemical Engineering (CPE)"),
-    "chemical": ("EECE", "CPE", "⚗️ Chemical & Petrochemical Engineering (CPE)"),
-    "petrochemical": ("EECE", "CPE", "⚗️ Chemical & Petrochemical Engineering (CPE)"),
-    "env": ("EECE", "ENV", "🌿 Environmental Engineering (ENV)"),
-    "environmental": ("EECE", "ENV", "🌿 Environmental Engineering (ENV)"),
-    "eme": ("EECE", "EME", "🏗️ Electromechanical Buildings Systems (EME)"),
-    "electromechanical": ("EECE", "EME", "🏗️ Electromechanical Buildings Systems (EME)"),
-    "mpe": ("EECE", "MPE", "⚙️ Mechanical Power & Energy Engineering (MPE)"),
-    "mechanical": ("EECE", "MPE", "⚙️ Mechanical Power & Energy Engineering (MPE)"),
+    "epe":           ("ECCE", "EPE", "⚡ Electrical Power Engineering (EPE)"),
+    "power":         ("ECCE", "EPE", "⚡ Electrical Power Engineering (EPE)"),
+    "electrical":    ("ECCE", "EPE", "⚡ Electrical Power Engineering (EPE)"),
+    "mie":           ("ECCE", "MIE", "🧬 Biomedical & Bioinformatics Engineering (MIE)"),
+    "biomedical":    ("ECCE", "MIE", "🧬 Biomedical & Bioinformatics Engineering (MIE)"),
+    "bioinformatics":("ECCE", "MIE", "🧬 Biomedical & Bioinformatics Engineering (MIE)"),
+    "mtr":              ("IDE",  "MTR", "🤖 Mechatronics Engineering (MTR)"),
+    "mechatronics":     ("IDE",  "MTR", "🤖 Mechatronics Engineering (MTR)"),
+    "robotics":         ("IDE",  "MTR", "🤖 Mechatronics Engineering (MTR)"),
+    "ase":              ("IDE",  "ASE", "✈️  Aerospace Engineering (ASE)"),
+    "aerospace":        ("IDE",  "ASE", "✈️  Aerospace Engineering (ASE)"),
+    "mse":              ("IDE",  "MSE", "🔬 Materials Science and Engineering (MSE)"),
+    "materials":        ("IDE",  "MSE", "🔬 Materials Science and Engineering (MSE)"),
+    "ime":              ("IDE",  "IME", "🏭 Industrial & Manufacturing Engineering (IME)"),
+    "industrial":       ("IDE",  "IME", "🏭 Industrial & Manufacturing Engineering (IME)"),
+    "manufacturing":    ("IDE",  "IME", "🏭 Industrial & Manufacturing Engineering (IME)"),
+    "cpe":              ("EECE", "CPE", "⚗️  Chemical & Petrochemical Engineering (CPE)"),
+    "chemical":         ("EECE", "CPE", "⚗️  Chemical & Petrochemical Engineering (CPE)"),
+    "petrochemical":    ("EECE", "CPE", "⚗️  Chemical & Petrochemical Engineering (CPE)"),
+    "env":              ("EECE", "ENV", "🌿 Environmental Engineering (ENV)"),
+    "environmental":    ("EECE", "ENV", "🌿 Environmental Engineering (ENV)"),
+    "eme":              ("EECE", "EME", "🏗️  Electromechanical Buildings Systems (EME)"),
+    "electromechanical":("EECE", "EME", "🏗️  Electromechanical Buildings Systems (EME)"),
+    "mpe":              ("EECE", "MPE", "⚙️  Mechanical Power & Energy Engineering (MPE)"),
+    "mechanical":       ("EECE", "MPE", "⚙️  Mechanical Power & Energy Engineering (MPE)"),
 }
 
 TRACK_MENU = (
@@ -130,9 +138,6 @@ def detect_track(text: str) -> tuple | None:
 # ════════════════════════════════════════════════════════════════
 
 def build_catalog(data: dict) -> dict:
-    if not data:
-        return {}
-    
     cat = {}
     shared_opts = data['curriculum'].get('shared_elective_options', {})
 
@@ -158,31 +163,27 @@ def build_catalog(data: dict) -> dict:
         if not code or code in cat:
             return
         cat[code] = {
-            'code': code,
-            'name': c.get('name', ''),
-            'ch': get_ch(c),
-            'prereq': c.get('prereq') or None,
-            'type': (c.get('Type') or c.get('type') or '').lower().strip(),
-            'source': source,
+            'code':    code,
+            'name':    c.get('name', ''),
+            'ch':      get_ch(c),
+            'prereq':  c.get('prereq') or None,
+            'type':    (c.get('Type') or c.get('type') or '').lower().strip(),
+            'source':  source,
             'options': resolve_options(c),
         }
 
-    # FIX: Check if 'PHASE_1_FOUNDATION' exists
-    if 'PHASE_1_FOUNDATION' in data['curriculum']:
-        found = data['curriculum']['PHASE_1_FOUNDATION']
-        for sem in ['semester_1', 'semester_2', 'semester_3']:
-            for c in found.get(sem, []):
-                add(c, f'Foundation/{sem}')
+    found = data['curriculum']['PHASE_1_FOUNDATION']
+    for sem in ['semester_1', 'semester_2', 'semester_3']:
+        for c in found.get(sem, []):
+            add(c, f'Foundation/{sem}')
 
-    # FIX: Check if 'PHASE_2_SCHOOLS' exists
-    if 'PHASE_2_SCHOOLS' in data['curriculum']:
-        for sk, school in data['curriculum']['PHASE_2_SCHOOLS'].items():
-            for c in school.get('semester_4_core', []):
-                add(c, f'{sk}/semester_4')
-            for dk, dept in school.get('departments', {}).items():
-                for semk, courses in dept.get('semesters', {}).items():
-                    for c in courses:
-                        add(c, f'{sk}/{dk}/{semk}')
+    for sk, school in data['curriculum']['PHASE_2_SCHOOLS'].items():
+        for c in school.get('semester_4_core', []):
+            add(c, f'{sk}/semester_4')
+        for dk, dept in school.get('departments', {}).items():
+            for semk, courses in dept.get('semesters', {}).items():
+                for c in courses:
+                    add(c, f'{sk}/{dk}/{semk}')
     return cat
 
 CATALOG = build_catalog(ejust_data) if ejust_data else {}
@@ -197,7 +198,7 @@ def trace_chain(code: str, cat: dict, visited: set = None) -> list:
     if not code or code not in cat or code in visited:
         return []
     visited.add(code)
-    c = cat[code]
+    c     = cat[code]
     chain = trace_chain(c.get('prereq'), cat, visited)
     chain.append(c)
     return chain
@@ -207,18 +208,14 @@ def get_track_prereqs(school: str, dept: str) -> dict:
     if not ejust_data:
         return {}
 
-    # FIX: Check if curriculum structure exists
-    if 'curriculum' not in ejust_data or 'PHASE_2_SCHOOLS' not in ejust_data['curriculum']:
-        return {}
-
-    school_data = ejust_data['curriculum']['PHASE_2_SCHOOLS'].get(school, {})
-    dept_data = school_data.get('departments', {}).get(dept, {})
-    sems = dept_data.get('semesters', {})
+    school_data   = ejust_data['curriculum']['PHASE_2_SCHOOLS'].get(school, {})
+    dept_data     = school_data.get('departments', {}).get(dept, {})
+    sems          = dept_data.get('semesters', {})
     entry_courses = [c for c in sems.get('semester_5', []) if c.get('code')]
-    sem4_all = school_data.get('semester_4_core', [])
-    sem4_courses = [c for c in sem4_all if c.get('Type', '').lower() in ('core', 'school')]
+    sem4_all      = school_data.get('semester_4_core', [])
+    sem4_courses  = [c for c in sem4_all if c.get('Type', '').lower() in ('core', 'school')]
 
-    seen_codes = set()
+    seen_codes  = set()
     all_prereqs = []
 
     src_courses = entry_courses + [c for c in sem4_all if c.get('Type', '').lower() == 'school']
@@ -228,59 +225,49 @@ def get_track_prereqs(school: str, dept: str) -> dict:
                 seen_codes.add(step['code'])
                 all_prereqs.append(step)
 
-    # FIX: Check if PHASE_1_FOUNDATION exists
-    if 'PHASE_1_FOUNDATION' in ejust_data['curriculum']:
-        found_data = ejust_data['curriculum']['PHASE_1_FOUNDATION']
-        sem3_core_elective_prereqs: dict[str, dict] = {}
+    found_data = ejust_data['curriculum']['PHASE_1_FOUNDATION']
+    sem3_core_elective_prereqs: dict[str, dict] = {}
 
-        for c3 in found_data.get('semester_3', []):
-            if c3.get('Type', '').lower() != 'core':
-                continue
-            prereq_code = c3.get('prereq')
-            if not prereq_code:
-                continue
-            prereq_course = CATALOG.get(prereq_code)
-            if not prereq_course:
-                continue
-            if prereq_course.get('type') == 'elective' and 'Foundation' in prereq_course.get('source', ''):
-                sem3_core_elective_prereqs[c3['code']] = {
-                    'course': c3,
-                    'blocked_by': prereq_course,
+    for c3 in found_data.get('semester_3', []):
+        if c3.get('Type', '').lower() != 'core':
+            continue
+        prereq_code = c3.get('prereq')
+        if not prereq_code:
+            continue
+        prereq_course = CATALOG.get(prereq_code)
+        if not prereq_course:
+            continue
+        if prereq_course.get('type') == 'elective' and 'Foundation' in prereq_course.get('source', ''):
+            sem3_core_elective_prereqs[c3['code']] = {
+                'course':     c3,
+                'blocked_by': prereq_course,
+            }
+            if prereq_code not in seen_codes:
+                seen_codes.add(prereq_code)
+                all_prereqs.append(prereq_course)
+
+    elective_prereqs = [c for c in all_prereqs
+                        if 'Foundation' in c.get('source', '') and c['type'] == 'elective']
+
+    sem3_impact: dict[str, dict] = {}
+    sem3_impact.update(sem3_core_elective_prereqs)
+
+    for c3 in found_data.get('semester_3', []):
+        if c3.get('Type', '').lower() == 'core' and c3.get('prereq'):
+            blocked_by = [ep for ep in elective_prereqs if ep['code'] == c3['prereq']]
+            if blocked_by and c3['code'] not in sem3_impact:
+                sem3_impact[c3['code']] = {
+                    'course':     c3,
+                    'blocked_by': blocked_by[0],
                 }
-                if prereq_code not in seen_codes:
-                    seen_codes.add(prereq_code)
-                    all_prereqs.append(prereq_course)
 
-        elective_prereqs = [c for c in all_prereqs
-                            if 'Foundation' in c.get('source', '') and c['type'] == 'elective']
-
-        sem3_impact: dict[str, dict] = {}
-        sem3_impact.update(sem3_core_elective_prereqs)
-
-        for c3 in found_data.get('semester_3', []):
-            if c3.get('Type', '').lower() == 'core' and c3.get('prereq'):
-                blocked_by = [ep for ep in elective_prereqs if ep['code'] == c3['prereq']]
-                if blocked_by and c3['code'] not in sem3_impact:
-                    sem3_impact[c3['code']] = {
-                        'course': c3,
-                        'blocked_by': blocked_by[0],
-                    }
-
-        return {
-            'entry_courses': entry_courses,
-            'sem4_courses': sem4_courses,
-            'all_prereqs': all_prereqs,
-            'elective_prereqs': elective_prereqs,
-            'sem3_impact': sem3_impact,
-        }
-    else:
-        return {
-            'entry_courses': entry_courses,
-            'sem4_courses': sem4_courses,
-            'all_prereqs': all_prereqs,
-            'elective_prereqs': [],
-            'sem3_impact': {},
-        }
+    return {
+        'entry_courses':    entry_courses,
+        'sem4_courses':     sem4_courses,
+        'all_prereqs':      all_prereqs,
+        'elective_prereqs': elective_prereqs,
+        'sem3_impact':      sem3_impact,
+    }
 
 # ════════════════════════════════════════════════════════════════
 # 6. SEMESTER DATA LOADER
@@ -290,12 +277,8 @@ def load_semester(school: str, dept: str, sem_num: str) -> tuple[list, str]:
     if not ejust_data:
         return [], "Data unavailable"
 
-    # FIX: Check if curriculum structure exists
-    if 'curriculum' not in ejust_data:
-        return [], "Curriculum data unavailable"
-
-    found = ejust_data['curriculum'].get('PHASE_1_FOUNDATION', {})
-    schools = ejust_data['curriculum'].get('PHASE_2_SCHOOLS', {})
+    found   = ejust_data['curriculum']['PHASE_1_FOUNDATION']
+    schools = ejust_data['curriculum']['PHASE_2_SCHOOLS']
     shared_opts = ejust_data['curriculum'].get('shared_elective_options', {})
 
     def normalize(c):
@@ -316,20 +299,20 @@ def load_semester(school: str, dept: str, sem_num: str) -> tuple[list, str]:
     if sem_num in ('1', '2', '3'):
         sem_key = f'semester_{sem_num}'
         courses = [normalize(c) for c in found.get(sem_key, [])]
-        title = f'Foundation — Semester {sem_num}'
+        title   = f'Foundation — Semester {sem_num}'
         return courses, title
 
     if sem_num == '4':
         school_data = schools.get(school, {})
         courses = [normalize(c) for c in school_data.get('semester_4_core', [])]
-        title = f'{school} — Semester 4 (School Core)'
+        title   = f'{school} — Semester 4 (School Core)'
         return courses, title
 
-    sem_key = f'semester_{sem_num}'
+    sem_key     = f'semester_{sem_num}'
     school_data = schools.get(school, {})
-    dept_data = school_data.get('departments', {}).get(dept, {})
-    courses = [normalize(c) for c in dept_data.get('semesters', {}).get(sem_key, []) if c.get('code')]
-    title = f'{dept} — Semester {sem_num}'
+    dept_data   = school_data.get('departments', {}).get(dept, {})
+    courses     = [normalize(c) for c in dept_data.get('semesters', {}).get(sem_key, []) if c.get('code')]
+    title       = f'{dept} — Semester {sem_num}'
     return courses, title
 
 # ════════════════════════════════════════════════════════════════
@@ -361,12 +344,12 @@ def ctx_ask_track(max_ch: int) -> str:
 
 
 def ctx_track_overview(school: str, dept: str, label: str,
-                       max_ch: int, is_half: bool) -> str:
+                        max_ch: int, is_half: bool) -> str:
     info = get_track_prereqs(school, dept)
     if not info:
         return f"[Could not load prereq data for {label}]"
 
-    if info.get('elective_prereqs'):
+    if info['elective_prereqs']:
         lines = []
         for ep in info['elective_prereqs']:
             sem_label = ep['source'].replace('Foundation/', 'Semester ').replace('semester_', '')
@@ -384,10 +367,10 @@ def ctx_track_overview(school: str, dept: str, label: str,
         elec_block = "━━━ ELECTIVE PREREQUISITES ━━━\n  None — no electives are hard prerequisites for this track."
 
     sem3_block = ""
-    if info.get('sem3_impact'):
+    if info['sem3_impact']:
         lines = []
         for code, imp in info['sem3_impact'].items():
-            c3 = imp['course']
+            c3  = imp['course']
             blk = imp['blocked_by']
             lines.append(
                 f"  ❌ If you skip {blk['code']} ({blk['name']}) → "
@@ -402,31 +385,29 @@ def ctx_track_overview(school: str, dept: str, label: str,
     sem4_lines = "\n".join([
         f"  [{c.get('Type','?')}] {c['code']} — {c['name']} "
         f"({c.get('credit hours','?')} CH) | prereq: {c.get('prereq','None')}"
-        for c in info.get('sem4_courses', [])
+        for c in info['sem4_courses']
     ]) or "  (none listed)"
 
     sem5_lines = "\n".join([
         f"  ➡️  {c['code']} — {c['name']} | prereq: {c.get('prereq','None')}"
-        for c in info.get('entry_courses', [])
+        for c in info['entry_courses']
     ]) or "  (no data yet)"
 
     half_warn = ""
     if is_half:
-        elec_codes = [ep['code'] for ep in info.get('elective_prereqs', [])]
-        if elec_codes:
-            half_warn = (
-                "\n━━━ 🔴 HALF-LOAD STUDENT ALERT ━━━\n"
-                f"You are on Academic Probation (max {max_ch} CH).\n"
-                f"Despite the tight budget, you MUST fit these elective prerequisites into your schedule:\n"
-                + "\n".join(f"  • {c}" for c in elec_codes)
-                + "\nSkipping them delays your track entry by a FULL YEAR."
-            )
-        else:
-            half_warn = (
+        elec_codes = [ep['code'] for ep in info['elective_prereqs']]
+        half_warn = (
+            "\n━━━ 🔴 HALF-LOAD STUDENT ALERT ━━━\n"
+            f"You are on Academic Probation (max {max_ch} CH).\n"
+            f"Despite the tight budget, you MUST fit these elective prerequisites into your schedule:\n"
+            + "\n".join(f"  • {c}" for c in elec_codes)
+            + "\nSkipping them delays your track entry by a FULL YEAR."
+            if elec_codes else (
                 "\n━━━ HALF-LOAD STUDENT NOTE ━━━\n"
                 f"You are on Academic Probation (max {max_ch} CH). "
                 "Good news: no hidden elective prerequisites for this track."
             )
+        )
 
     return f"""
 [TRACK SELECTED: {label}]
@@ -454,29 +435,29 @@ INSTRUCTION FOR SENPAI:
 
 
 def ctx_semester_plan(courses: list, title: str, sem_num: str,
-                      school: str, dept: str, label: str,
-                      max_ch: int, is_half: bool) -> str:
-    track_info = get_track_prereqs(school, dept)
+                       school: str, dept: str, label: str,
+                       max_ch: int, is_half: bool) -> str:
+    track_info        = get_track_prereqs(school, dept)
     elec_prereq_codes = {ep['code'] for ep in track_info.get('elective_prereqs', [])}
 
-    core_courses = [c for c in courses if (c.get('Type', '').lower() in ('core', 'school')) and c.get('code')]
-    elec_courses = [c for c in courses if c.get('Type', '').lower() == 'elective' and c.get('code')]
-    core_ch = sum(int(c.get('credit hours') or 0) for c in core_courses)
-    total_ch = sum(int(c.get('credit hours') or 0) for c in courses if c.get('code'))
+    core_courses = [c for c in courses if (c.get('Type','').lower() in ('core','school')) and c.get('code')]
+    elec_courses = [c for c in courses if c.get('Type','').lower() == 'elective' and c.get('code')]
+    core_ch      = sum(int(c.get('credit hours') or 0) for c in core_courses)
+    total_ch     = sum(int(c.get('credit hours') or 0) for c in courses if c.get('code'))
 
     def annotate(c):
-        ch = int(c.get('credit hours') or 0)
-        code = c.get('code', '?')
-        name = c.get('name', '?')
-        prereq = c.get('prereq') or 'None'
-        ctype = c.get('Type', '?')
-        tag = " 🔑 [TRACK PREREQ — must not skip]" if code in elec_prereq_codes else ""
-        opts = c.get('options', [])
-        opt_str = (" (choose one: " + ", ".join(o.get('name', '?') for o in opts) + ")") if opts else ""
+        ch      = int(c.get('credit hours') or 0)
+        code    = c.get('code','?')
+        name    = c.get('name','?')
+        prereq  = c.get('prereq') or 'None'
+        ctype   = c.get('Type','?')
+        tag     = " 🔑 [TRACK PREREQ — must not skip]" if code in elec_prereq_codes else ""
+        opts    = c.get('options', [])
+        opt_str = (" (choose one: " + ", ".join(o['name'] for o in opts) + ")") if opts else ""
         return f"  [{ctype}] {code} — {name}{opt_str} ({ch} CH) | prereq: {prereq}{tag}"
 
     all_lines = "\n".join(annotate(c) for c in courses if c.get('code'))
-    safety = workload_check(total_ch, max_ch)
+    safety    = workload_check(total_ch, max_ch)
 
     if not is_half:
         return (
@@ -487,7 +468,7 @@ def ctx_semester_plan(courses: list, title: str, sem_num: str,
             f"Total: {total_ch} CH"
         )
 
-    budget = max_ch - core_ch
+    budget     = max_ch - core_ch
     elec_sorted = sorted(elec_courses,
                          key=lambda c: (0 if c.get('code') in elec_prereq_codes else 1,
                                         int(c.get('credit hours') or 0)))
@@ -496,15 +477,14 @@ def ctx_semester_plan(courses: list, title: str, sem_num: str,
     for e in elec_sorted:
         ch = int(e.get('credit hours') or 0)
         if running + ch <= budget:
-            recommended.append(e)
-            running += ch
+            recommended.append(e); running += ch
         else:
             deferred.append(e)
 
     deferred_track_prereqs = [e for e in deferred if e.get('code') in elec_prereq_codes]
     core_lines = "\n".join(annotate(c) for c in core_courses) or "  (none)"
-    rec_lines = "\n".join(annotate(e) for e in recommended) or "  (no elective budget remaining)"
-    def_lines = "\n".join(annotate(e) for e in deferred) or "  None"
+    rec_lines  = "\n".join(annotate(e) for e in recommended)  or "  (no elective budget remaining)"
+    def_lines  = "\n".join(annotate(e) for e in deferred)     or "  None"
 
     if budget == 0:
         budget_note = f"📌 Core courses exactly fill the 14 CH limit. No elective budget this semester."
@@ -552,53 +532,134 @@ INSTRUCTION FOR SENPAI:
 # ════════════════════════════════════════════════════════════════
 
 st.set_page_config(page_title="Senpai — E-JUST Advisor", layout="wide", page_icon="🎓")
-st.title("🎓 Senpai — E-JUST Academic Advisor")
 
-# FIX: Better API key handling
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-if not OPENAI_API_KEY:
-    # Fallback to hardcoded key (but warn in development)
-    OPENAI_API_KEY = "sk-hc-v1-3d0b21306ebd475c92404d9870d890a39a0c4a6a345945f7a5287bd75c595050"
-    st.sidebar.warning("Using default API key. Set OPENAI_API_KEY environment variable for production.")
+st.markdown("""
+<style>
 
-try:
-    client = OpenAI(
-        api_key=OPENAI_API_KEY,
-        base_url="https://ai.hackclub.com/proxy/v1"
-    )
-except Exception as e:
-    st.error(f"Failed to initialize OpenAI client: {e}")
-    st.stop()
+.main{
+background:#f6f6f6;
+}
+
+/* Header */
+
+.header-container{
+display:flex;
+align-items:center;
+gap:15px;
+margin-top:40px;
+margin-left:40px;
+}
+
+.logo{
+width:60px;
+}
+
+.senpai-title{
+font-size:40px;
+font-weight:bold;
+letter-spacing:2px;
+}
+
+.sen{
+color:white;
+}
+
+.pai{
+color:red;
+}
+
+/* Wave graphic */
+
+.wave{
+position:fixed;
+top:0;
+right:0;
+width:420px;
+z-index:-1;
+opacity:0.9;
+}
+
+/* Chat center */
+
+.chatbox{
+width:60%;
+margin:auto;
+margin-top:120px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<img src="assets/wave.png" class="wave">
+
+<div class="header-container">
+
+<img src="assets/owl.png" class="logo">
+
+<div class="senpai-title">
+<span class="sen">SEN</span><span class="pai">PAI</span>
+</div>
+
+</div>
+""", unsafe_allow_html=True)
 
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-if "user_cgpa" not in st.session_state:
-    st.session_state.user_cgpa = None
-if "track_info" not in st.session_state:
-    st.session_state.track_info = None
+st.markdown("""
+<style>
 
-# Display sidebar with current status
-with st.sidebar:
-    st.header("Student Status")
-    if st.session_state.user_cgpa is not None:
-        status, limit = get_student_status(st.session_state.user_cgpa)
-        st.metric("CGPA", f"{st.session_state.user_cgpa:.2f}")
-        st.metric("Status", status)
-        st.metric("Credit Limit", f"{limit} CH")
-    else:
-        st.info("No CGPA set yet. Tell me your CGPA!")
-    
-    if st.session_state.track_info:
-        st.metric("Track", st.session_state.track_info[2])
-    else:
-        st.info("No track selected yet.")
+/* Mobile layout */
 
-    if st.button("Clear Chat History"):
-        st.session_state.messages = []
-        st.session_state.user_cgpa = None
-        st.session_state.track_info = None
-        st.rerun()
+@media (max-width:768px){
+
+.header-container{
+margin-left:20px;
+margin-top:20px;
+}
+
+.logo{
+width:45px;
+}
+
+.senpai-title{
+font-size:26px;
+}
+
+.chatbox{
+width:92%;
+margin-top:120px;
+}
+
+}
+
+/* Chat bubbles */
+
+[data-testid="stChatMessage"]{
+background:white;
+padding:12px 16px;
+border-radius:14px;
+margin-bottom:10px;
+box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+
+textarea{
+border-radius:30px !important;
+padding:14px !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "sk-hc-v1-3d0b21306ebd475c92404d9870d890a39a0c4a6a345945f7a5287bd75c595050")
+client = OpenAI(
+    api_key=OPENAI_API_KEY,
+    base_url="https://ai.hackclub.com/proxy/v1"
+)
+
+
+if "messages"   not in st.session_state: st.session_state.messages   = []
+if "user_cgpa"  not in st.session_state: st.session_state.user_cgpa  = None
+if "track_info" not in st.session_state: st.session_state.track_info = None
 
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
@@ -614,231 +675,231 @@ if prompt := st.chat_input("Ask Senpai …"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        try:
-            # ── A. EXTRACT & PERSIST CGPA ────────────────────────────────────
-            gpa_match = re.search(r'\b(?:cgpa|gpa)\s*[:=]?\s*(\d(?:\.\d+)?)\b', prompt.lower())
-            if not gpa_match:
-                gpa_match = re.search(r'\b([0-3](?:\.\d+)?)\b', prompt)
-            if gpa_match:
-                candidate = float(gpa_match.group(1))
-                if 0.0 <= candidate <= 4.0:
-                    st.session_state.user_cgpa = candidate
 
-            user_cgpa = st.session_state.user_cgpa if st.session_state.user_cgpa is not None else 3.0
-            status_lbl, max_ch = get_student_status(user_cgpa)
-            is_half = user_cgpa < 2.0
+        # ── A. EXTRACT & PERSIST CGPA ────────────────────────────────────
+        gpa_match = re.search(r'\b(?:cgpa|gpa)\s*[:=]?\s*(\d(?:\.\d+)?)\b', prompt.lower())
+        if not gpa_match:
+            gpa_match = re.search(r'\b([0-3](?:\.\d+)?)\b', prompt)
+        if gpa_match:
+            candidate = float(gpa_match.group(1))
+            if 0.0 <= candidate <= 4.0:
+                st.session_state.user_cgpa = candidate
 
-            # ── B. DETECT & PERSIST TRACK ─────────────────────────────────────
-            detected = detect_track(prompt)
-            if detected:
-                st.session_state.track_info = detected
-            track_info = st.session_state.track_info
-            school = track_info[0] if track_info else None
-            dept = track_info[1] if track_info else None
-            track_label = track_info[2] if track_info else "Not chosen yet"
+        user_cgpa  = st.session_state.user_cgpa if st.session_state.user_cgpa is not None else 3.0
+        status_lbl, max_ch = get_student_status(user_cgpa)
+        is_half    = user_cgpa < 2.0
 
-            # ── C. PDF RAG — only for handbook/rules questions, never for courses ──
-            pdf_ctx = ""
-            _pl = prompt.lower()
-            if vdb and not any(kw in _pl for kw in [
-                'course', 'semester', 'courses', 'curriculum', 'subject',
-                'credit', 'prereq', 'prerequisite', 'schedule', 'plan'
-            ]):
-                docs = vdb.similarity_search(prompt, k=3)
-                pdf_ctx = "\n".join(d.page_content for d in docs)
+        # ── B. DETECT & PERSIST TRACK ─────────────────────────────────────
+        detected = detect_track(prompt)
+        if detected:
+            st.session_state.track_info = detected
+        track_info  = st.session_state.track_info
+        school      = track_info[0] if track_info else None
+        dept        = track_info[1] if track_info else None
+        track_label = track_info[2] if track_info else "Not chosen yet"
 
-            # ── D. BUILD ADVISOR CONTEXT ──────────────────────────────────────
-            p_lower = prompt.lower()
-            sem_match = re.search(r'\b(?:semester|sem)\s*(\d)\b', p_lower)
-            adv_ctx = ""
+        # ── C. PDF RAG — only for handbook/rules questions, never for courses ──
+        pdf_ctx = ""
+        _pl = prompt.lower()
+        if vdb and not any(kw in _pl for kw in [
+            'course', 'semester', 'courses', 'curriculum', 'subject',
+            'credit', 'prereq', 'prerequisite', 'schedule', 'plan'
+        ]):
+            docs    = vdb.similarity_search(prompt, k=3)
+            pdf_ctx = "\n".join(d.page_content for d in docs)
 
-            sem_num = sem_match.group(1) if sem_match else None
-            foundation_sem = sem_num in ('1', '2', '3')
-            track_specific_sem = sem_num in ('4', '5', '6', '7', '8')
+        # ── D. BUILD ADVISOR CONTEXT ──────────────────────────────────────
+        p_lower   = prompt.lower()
+        sem_match = re.search(r'\b(?:semester|sem)\s*(\d)\b', p_lower)
+        adv_ctx   = ""
 
-            needs_track = (
-                track_specific_sem
-                or (not sem_num and any(kw in p_lower for kw in [
-                    'schedule', 'plan', 'recommend', 'which courses', 'what courses',
-                    'my track', 'which track', 'what track', 'track advice',
-                    'graduation', 'department', 'which department',
-                ]))
-            )
+        sem_num            = sem_match.group(1) if sem_match else None
+        foundation_sem     = sem_num in ('1', '2', '3')
+        track_specific_sem = sem_num in ('4', '5', '6', '7', '8')
 
-            if needs_track and not track_info:
-                adv_ctx = ctx_ask_track(max_ch)
-                if sem_num:
-                    adv_ctx += (
-                        f"\n\nNOTE: Student asked about Semester {sem_num}. "
-                        f"This semester is track-specific. Once they choose a track, "
-                        f"immediately show their semester {sem_num} plan."
-                    )
+        needs_track = (
+            track_specific_sem
+            or (not sem_num and any(kw in p_lower for kw in [
+                'schedule', 'plan', 'recommend', 'which courses', 'what courses',
+                'my track', 'which track', 'what track', 'track advice',
+                'graduation', 'department', 'which department',
+            ]))
+        )
 
-            elif sem_num:
-                if foundation_sem:
-                    courses, title = load_semester(school or 'ECCE', dept or 'CSE', sem_num)
-                    if courses:
-                        adv_ctx = ctx_semester_plan(
-                            courses, title, sem_num,
-                            school or 'ECCE', dept or 'CSE', track_label,
-                            max_ch, is_half
-                        )
-                        if not track_info:
-                            adv_ctx += (
-                                "\n\n[SOFT NUDGE FOR SENPAI]: After answering, casually ask "
-                                "which track the student plans to pursue."
-                            )
-                    else:
-                        adv_ctx = f"[No data found for Foundation Semester {sem_num}]"
-
-                elif track_info:
-                    courses, title = load_semester(school, dept, sem_num)
-                    if courses:
-                        adv_ctx = ctx_semester_plan(
-                            courses, title, sem_num,
-                            school, dept, track_label,
-                            max_ch, is_half
-                        )
-                    else:
-                        adv_ctx = (
-                            f"[No course data yet for {track_label} Semester {sem_num}. "
-                            f"This department's curriculum may still be incomplete.]"
-                        )
-                else:
-                    adv_ctx = ctx_ask_track(max_ch)
-                    adv_ctx += (
-                        f"\n\nNOTE: Student asked about Semester {sem_num} which varies by track. "
-                        f"Ask for their track first, then show the semester plan."
-                    )
-
-            elif track_info:
-                adv_ctx = ctx_track_overview(school, dept, track_label, max_ch, is_half)
-
-            else:
-                adv_ctx = (
-                    "[GENERAL QUESTION — No semester or track-specific data required]\n"
-                    "Answer the student's question using the handbook context and your general "
-                    "E-JUST knowledge. You may mention the available tracks and invite them to "
-                    "share their track if relevant, but do NOT block the answer."
+        if needs_track and not track_info:
+            adv_ctx = ctx_ask_track(max_ch)
+            if sem_num:
+                adv_ctx += (
+                    f"\n\nNOTE: Student asked about Semester {sem_num}. "
+                    f"This semester is track-specific. Once they choose a track, "
+                    f"immediately show their semester {sem_num} plan."
                 )
 
-            # ── E. PROFESSOR CONTEXT ──────────────────────────────────────────
-            prof_ctx = ""
-            asks_prof = any(kw in p_lower for kw in [
-                'professor', 'prof', 'doctor', 'dr ', 'dr.', 'instructor',
-                'email', 'office', 'contact', 'research', 'faculty',
-                'who teaches', 'who is', 'find professor', 'department professor',
-                'مين', 'دكتور', 'استاذ'
-            ])
-
-            if profs_df is not None and not profs_df.empty:
-                # ── Try to match a specific professor name ────────────────────
-                matched_rows = []
-                query_words = [w for w in p_lower.split() if len(w) > 2]
-
-                scored = []
-                for _, row in profs_df.iterrows():
-                    pname = str(row.get('Name', '')).lower()
-                    pname_parts = [p for p in pname.split() if len(p) > 2]
-                    score = 0
-                    # Score: how many query words appear in professor name
-                    score += sum(1 for qw in query_words if qw in pname) * 2
-                    # Score: how many professor name parts appear in query
-                    score += sum(1 for pp in pname_parts if pp in p_lower)
-                    if score > 0:
-                        scored.append((score, row))
-
-                if scored:
-                    # Sort by score descending
-                    scored.sort(key=lambda x: x[0], reverse=True)
-                    top_score = scored[0][0]
-                    # Only keep rows within 1 point of the best score
-                    matched_rows = [row for s, row in scored if s >= top_score - 1]
-                    # Cap at 5 results to avoid flooding
-                    matched_rows = matched_rows[:5]
-
-                # ── Try to match by department ────────────────────────────────
-                if not matched_rows:
-                    dept_keywords = {
-                        'computer': 'Computer', 'cse': 'Computer',
-                        'mechatronics': 'Mechatronics', 'mtr': 'Mechatronics', 'robotics': 'Mechatronics',
-                        'aerospace': 'Aerospace', 'ase': 'Aerospace',
-                        'materials': 'Materials', 'mse': 'Materials',
-                        'industrial': 'Industrial', 'manufacturing': 'Industrial', 'ime': 'Industrial',
-                        'energy': 'Energy', 'mpe': 'Energy',
-                        'chemical': 'Chemical', 'cpe': 'Chemical',
-                        'electrical': 'Electrical', 'epe': 'Electrical',
-                        'environmental': 'Environmental', 'env': 'Environmental',
-                        'biomedical': 'Biomedical', 'mie': 'Biomedical',
-                        'electronics': 'Electronics', 'ece': 'Electronics',
-                        'accounting': 'Accounting', 'business': 'Business',
-                        'architecture': 'Architecture', 'art': 'Art & Design',
-                    }
-                    for kw, dept_kw in dept_keywords.items():
-                        if kw in p_lower:
-                            for _, row in profs_df.iterrows():
-                                dept_val = str(row.get('Department', '')).lower()
-                                faculty_val = str(row.get('Faculty', '')).lower()
-                                if dept_kw.lower() in dept_val or dept_kw.lower() in faculty_val:
-                                    matched_rows.append(row)
-                            break
-
-                if matched_rows:
-                    # Format matched professors
-                    parts = []
-                    for row in matched_rows:
-                        name = row.get('Name', 'Unknown')
-                        title = row.get('Job Title', 'N/A')
-                        dept = row.get('Department', 'N/A')
-                        faculty = row.get('Faculty', 'N/A')
-                        office = row.get('Office Location', 'N/A')
-                        email = row.get('Email', 'N/A')
-                        research = row.get('Research Fields', 'N/A')
-                        parts.append(
-                            f"• {name} | {title}\n"
-                            f"  Department: {dept} | Faculty: {faculty}\n"
-                            f"  Office: {office} | Email: {email}\n"
-                            f"  Research: {research}"
+        elif sem_num:
+            if foundation_sem:
+                courses, title = load_semester(school or 'ECCE', dept or 'CSE', sem_num)
+                if courses:
+                    adv_ctx = ctx_semester_plan(
+                        courses, title, sem_num,
+                        school or 'ECCE', dept or 'CSE', track_label,
+                        max_ch, is_half
+                    )
+                    if not track_info:
+                        adv_ctx += (
+                            "\n\n[SOFT NUDGE FOR SENPAI]: After answering, casually ask "
+                            "which track the student plans to pursue."
                         )
-                    prof_ctx = "[PROFESSOR DATA]\n" + "\n\n".join(parts)
+                else:
+                    adv_ctx = f"[No data found for Foundation Semester {sem_num}]"
 
-                elif asks_prof:
-                    # General professor query — provide full list (limited to avoid huge context)
-                    rows = []
-                    for _, row in profs_df.head(20).iterrows():  # Limit to 20 professors
-                        name = row.get('Name', 'Unknown')
-                        title = row.get('Job Title', 'N/A')
-                        dept = row.get('Department', 'N/A')
-                        email = row.get('Email', 'N/A')
-                        rows.append(f"  • {name} | {title} | Dept: {dept} | {email}")
-                    prof_ctx = "[ALL PROFESSORS (first 20 shown)]\n" + "\n".join(rows)
+            elif track_info:
+                courses, title = load_semester(school, dept, sem_num)
+                if courses:
+                    adv_ctx = ctx_semester_plan(
+                        courses, title, sem_num,
+                        school, dept, track_label,
+                        max_ch, is_half
+                    )
+                else:
+                    adv_ctx = (
+                        f"[No course data yet for {track_label} Semester {sem_num}. "
+                        f"This department's curriculum may still be incomplete.]"
+                    )
+            else:
+                adv_ctx = ctx_ask_track(max_ch)
+                adv_ctx += (
+                    f"\n\nNOTE: Student asked about Semester {sem_num} which varies by track. "
+                    f"Ask for their track first, then show the semester plan."
+                )
 
-            # ── F. MISSION DETECTION ──────────────────────────────────────────
-            asks_registration = any(kw in p_lower for kw in [
-                'register', 'registration', 'add course', 'drop course', 'enroll',
-                'sign up', 'how to register', 'course registration', 'add/drop',
-                'portal', 'student system', 'sis', 'how do i add'
-            ])
-            asks_handbook = any(kw in p_lower for kw in [
-                'rule', 'policy', 'regulation', 'graduate', 'graduation', 'gpa requirement',
-                'academic', 'probation', 'dismissal', 'appeal', 'leave', 'transfer',
-                'credit', 'handbook', 'bylaw', 'attendance', 'exam', 'retake', 'withdraw'
-            ])
-            asks_schedule = any(kw in p_lower for kw in [
-                'schedule', 'plan', 'roadmap', 'semester', 'courses', 'credit hours',
-                'what should i take', 'which courses', 'next semester'
-            ])
+        elif track_info:
+            adv_ctx = ctx_track_overview(school, dept, track_label, max_ch, is_half)
 
-            active_mission = (
-                "COURSE REGISTRATION ASSISTANCE" if asks_registration else
-                "PROFESSOR REVIEWS & RECOMMENDATIONS" if (asks_prof and prof_ctx) else
-                "HANDBOOK / ACADEMIC RULES" if asks_handbook else
-                "COURSE SCHEDULE & PLANNING" if asks_schedule else
-                "GENERAL ADVISING"
+        else:
+            adv_ctx = (
+                "[GENERAL QUESTION — No semester or track-specific data required]\n"
+                "Answer the student's question using the handbook context and your general "
+                "E-JUST knowledge. You may mention the available tracks and invite them to "
+                "share their track if relevant, but do NOT block the answer."
             )
 
-            # ── G. SYSTEM PROMPT ──────────────────────────────────────────────
-            system_prompt = f"""
+        # ── E. PROFESSOR CONTEXT ──────────────────────────────────────────
+        prof_ctx  = ""
+        asks_prof = any(kw in p_lower for kw in [
+            'professor', 'prof', 'doctor', 'dr ', 'dr.', 'instructor',
+            'email', 'office', 'contact', 'research', 'faculty',
+            'who teaches', 'who is', 'find professor', 'department professor',
+            'مين', 'دكتور', 'استاذ'
+        ])
+
+        if profs_df is not None:
+            # ── Try to match a specific professor name ────────────────────
+            matched_rows = []
+            query_words = [w for w in p_lower.split() if len(w) > 2]
+
+            scored = []
+            for _, row in profs_df.iterrows():
+                pname = str(row.get('Name', '')).lower()
+                pname_parts = [p for p in pname.split() if len(p) > 2]
+                score = 0
+                # Score: how many query words appear in professor name
+                score += sum(1 for qw in query_words if qw in pname) * 2
+                # Score: how many professor name parts appear in query
+                score += sum(1 for pp in pname_parts if pp in p_lower)
+                if score > 0:
+                    scored.append((score, row))
+
+            if scored:
+                # Sort by score descending
+                scored.sort(key=lambda x: x[0], reverse=True)
+                top_score = scored[0][0]
+                # Only keep rows within 1 point of the best score
+                matched_rows = [row for s, row in scored if s >= top_score - 1]
+                # Cap at 5 results to avoid flooding
+                matched_rows = matched_rows[:5]
+
+            # ── Try to match by department ────────────────────────────────
+            if not matched_rows:
+                dept_keywords = {
+                    'computer': 'Computer', 'cse': 'Computer',
+                    'mechatronics': 'Mechatronics', 'mtr': 'Mechatronics', 'robotics': 'Mechatronics',
+                    'aerospace': 'Aerospace', 'ase': 'Aerospace',
+                    'materials': 'Materials', 'mse': 'Materials',
+                    'industrial': 'Industrial', 'manufacturing': 'Industrial', 'ime': 'Industrial',
+                    'energy': 'Energy', 'ere': 'Energy', 'mpe': 'Energy',
+                    'chemical': 'Chemical', 'cpe': 'Chemical',
+                    'electrical': 'Electrical', 'epe': 'Electrical',
+                    'environmental': 'Environmental', 'env': 'Environmental',
+                    'biomedical': 'Biomedical', 'mie': 'Biomedical',
+                    'electronics': 'Electronics', 'ece': 'Electronics',
+                    'accounting': 'Accounting', 'business': 'Business',
+                    'architecture': 'Architecture', 'art': 'Art & Design',
+                }
+                for kw, dept_kw in dept_keywords.items():
+                    if kw in p_lower:
+                        for _, row in profs_df.iterrows():
+                            dept_val = str(row.get('Department', '')).lower()
+                            faculty_val = str(row.get('Faculty', '')).lower()
+                            if dept_kw.lower() in dept_val or dept_kw.lower() in faculty_val:
+                                matched_rows.append(row)
+                        break
+
+            if matched_rows:
+                # Format matched professors
+                parts = []
+                for row in matched_rows:
+                    name     = row.get('Name', 'Unknown')
+                    title    = row.get('Job Title', 'N/A')
+                    dept     = row.get('Department', 'N/A')
+                    faculty  = row.get('Faculty', 'N/A')
+                    office   = row.get('Office Location', 'N/A')
+                    email    = row.get('Email', 'N/A')
+                    research = row.get('Research Fields', 'N/A')
+                    parts.append(
+                        f"• {name} | {title}\n"
+                        f"  Department: {dept} | Faculty: {faculty}\n"
+                        f"  Office: {office} | Email: {email}\n"
+                        f"  Research: {research}"
+                    )
+                prof_ctx = "[PROFESSOR DATA]\n" + "\n\n".join(parts)
+
+            elif asks_prof:
+                # General professor query — provide full list
+                rows = []
+                for _, row in profs_df.iterrows():
+                    name   = row.get('Name', 'Unknown')
+                    title  = row.get('Job Title', 'N/A')
+                    dept   = row.get('Department', 'N/A')
+                    email  = row.get('Email', 'N/A')
+                    rows.append(f"  • {name} | {title} | Dept: {dept} | {email}")
+                prof_ctx = "[ALL PROFESSORS]\n" + "\n".join(rows)
+
+        # ── F. MISSION DETECTION ──────────────────────────────────────────
+        asks_registration = any(kw in p_lower for kw in [
+            'register', 'registration', 'add course', 'drop course', 'enroll',
+            'sign up', 'how to register', 'course registration', 'add/drop',
+            'portal', 'student system', 'sis', 'how do i add'
+        ])
+        asks_handbook = any(kw in p_lower for kw in [
+            'rule', 'policy', 'regulation', 'graduate', 'graduation', 'gpa requirement',
+            'academic', 'probation', 'dismissal', 'appeal', 'leave', 'transfer',
+            'credit', 'handbook', 'bylaw', 'attendance', 'exam', 'retake', 'withdraw'
+        ])
+        asks_schedule = any(kw in p_lower for kw in [
+            'schedule', 'plan', 'roadmap', 'semester', 'courses', 'credit hours',
+            'what should i take', 'which courses', 'next semester'
+        ])
+
+        active_mission = (
+            "COURSE REGISTRATION ASSISTANCE"      if asks_registration else
+            "PROFESSOR REVIEWS & RECOMMENDATIONS"  if (asks_prof and prof_ctx) else
+            "HANDBOOK / ACADEMIC RULES"            if asks_handbook else
+            "COURSE SCHEDULE & PLANNING"           if asks_schedule else
+            "GENERAL ADVISING"
+        )
+
+        # ── G. SYSTEM PROMPT ──────────────────────────────────────────────
+        system_prompt = f"""
 You are **Senpai**, the official AI academic advisor for E-JUST (Egypt-Japan University of Science and Technology).
 You are friendly, direct, and trustworthy. Students depend on you for accurate information.
 
@@ -886,36 +947,29 @@ You are friendly, direct, and trustworthy. Students depend on you for accurate i
 {adv_ctx}
 
 ━━━ HANDBOOK CONTEXT (ONLY FOR RULES/POLICIES) ━━━
-{pdf_ctx if pdf_ctx else "No handbook context available."}
+{pdf_ctx}
 
 ━━━ PROFESSOR DATA ━━━
 {prof_ctx if prof_ctx else "No professor data matched this query."}
 """.strip()
 
-            # ── H. CALL OPENAI ────────────────────────────────────────────────
-            try:
-                history = [
-                    {"role": m["role"], "content": m["content"]}
-                    for m in st.session_state.messages[:-1]
-                ]
-                resp = client.chat.completions.create(
-                    model="gpt-4o-mini",  # FIX: Use a more widely available model
-                    messages=[
-                        {"role": "system", "content": system_prompt},
-                        *history,
-                        {"role": "user", "content": prompt},
-                    ],
-                    temperature=0.2,
-                    max_tokens=2000,  # Added token limit
-                )
-                answer = resp.choices[0].message.content
-                st.markdown(answer)
-                st.session_state.messages.append({"role": "assistant", "content": answer})
-            except Exception as e:
-                st.error(f"OpenAI API Error: {e}")
-                # Fallback response
-                fallback = "I'm having trouble connecting to my AI service right now. Please try again in a moment."
-                st.markdown(fallback)
-                st.session_state.messages.append({"role": "assistant", "content": fallback})
+        # ── H. CALL OPENAI ────────────────────────────────────────────────
+        try:
+            history = [
+                {"role": m["role"], "content": m["content"]}
+                for m in st.session_state.messages[:-1]
+            ]
+            resp = client.chat.completions.create(
+                model="gpt-4.1",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    *history,
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.2,
+            )
+            answer = resp.choices[0].message.content
+            st.markdown(answer)
+            st.session_state.messages.append({"role": "assistant", "content": answer})
         except Exception as e:
-            st.error(f"Unexpected error: {e}")
+            st.error(f"OpenRouter API Error: {e}")
