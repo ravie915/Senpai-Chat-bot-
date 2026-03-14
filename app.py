@@ -921,7 +921,7 @@ You are friendly, direct, and trustworthy. Students depend on you for accurate i
 
 ━━━ PROFESSOR DATA ━━━
 {prof_ctx if prof_ctx else "No professor data matched this query."}
-""".strip()
+        """.strip()
 
         # ── H. CALL OPENAI ────────────────────────────────────────────────
         try:
