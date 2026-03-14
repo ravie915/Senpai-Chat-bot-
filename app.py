@@ -60,14 +60,14 @@ section[data-testid="stSidebar"],
 }}
 
 .logo {{
-    width: 72px;
+    width: 90px;
     height: auto;
     display: block;
 }}
 
 .senpai-title {{
     font-family: 'LemonMilk', 'Arial Black', sans-serif;
-    font-size: 44px;
+    font-size: 70px;
     font-weight: 700;
     letter-spacing: 4px;
     color: #1a1a1a;
@@ -79,7 +79,7 @@ section[data-testid="stSidebar"],
     position: fixed;
     top: 0;
     right: 0;
-    width: 480px;
+    width: 800px;
     z-index: 0;
     pointer-events: none;
     opacity: 0.95;
