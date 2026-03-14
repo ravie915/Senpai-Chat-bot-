@@ -98,36 +98,67 @@ section[data-testid="stSidebar"],
     color: #1a1a1a !important;
 }}
 
-/* ── Input pill — full width, white, red border on focus ── */
+/* ── Input container — remove dark background ── */
+[data-testid="stBottom"] {{
+    background: linear-gradient(to top, #ffffff 80%, rgba(255,255,255,0)) !important;
+    padding: 16px 60px 28px !important;
+    border: none !important;
+}}
+
+[data-testid="stBottom"] > div {{
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}}
+
+/* ── Input pill ── */
 [data-testid="stChatInput"] {{
-    position: fixed !important;
-    bottom: 28px !important;
-    left: 40px !important;
-    right: 40px !important;
-    z-index: 200 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
 }}
 
 [data-testid="stChatInput"] textarea {{
     border-radius: 50px !important;
     border: 2px solid #d2d2d2 !important;
-    padding: 18px 26px !important;
+    padding: 16px 26px !important;
     font-size: 15px !important;
     background: #ffffff !important;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.06) !important;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08) !important;
     color: #1a1a1a !important;
-    height: 56px !important;
     transition: border-color 0.2s, box-shadow 0.2s !important;
 }}
 
 [data-testid="stChatInput"] textarea:focus {{
     border-color: #c8291a !important;
-    box-shadow: 0 0 0 3px rgba(200,41,26,0.08) !important;
-    background: #ffffff !important;
+    box-shadow: 0 0 0 3px rgba(200,41,26,0.1) !important;
     outline: none !important;
 }}
 
 [data-testid="stChatInput"] textarea::placeholder {{
     color: #aaa !important;
+    font-size: 15px !important;
+}}
+
+/* ── Send button — red circle ── */
+[data-testid="stChatInput"] button {{
+    background: #c8291a !important;
+    border-radius: 50% !important;
+    width: 42px !important;
+    height: 42px !important;
+    border: none !important;
+    color: white !important;
+}}
+
+[data-testid="stChatInput"] button:hover {{
+    background: #a82215 !important;
+    transform: scale(1.05) !important;
+}}
+
+[data-testid="stChatInput"] button svg {{
+    fill: white !important;
+    color: white !important;
 }}
 
 /* ── White gradient behind input so chat doesn't show through ── */
