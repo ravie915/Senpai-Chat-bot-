@@ -11,191 +11,179 @@ from langchain_huggingface import HuggingFaceEmbeddings
 import time
 import base64
 
-# Page config
-st.set_page_config(page_title="Senpai — E-JUST Advisor", layout="wide", page_icon="🎓")
-
 def load_file_b64(path, mime):
     if os.path.exists(path):
         with open(path, "rb") as f:
             return f"data:{mime};base64,{base64.b64encode(f.read()).decode()}"
     return ""
 
-# Load assets as data-URIs so paths don't break on deployment
 font_b64 = load_file_b64("fonts/LEMONMILK-Bold.otf", "font/otf")
 owl_b64  = load_file_b64("assets/owl.png", "image/png")
 wave_b64 = load_file_b64("assets/wave.png", "image/png")
-
 # ---------------------------
-# Responsive full-screen CSS
+# CSS + font-face + layout
 # ---------------------------
 css = f"""
 <style>
-/* Embedded LemonMilk font (base64) */
+
 @font-face {{
-  font-family: 'LemonMilk';
-  src: url('{font_b64}') format('opentype');
-  font-weight: 700;
-  font-style: normal;
+    font-family: 'LemonMilk';
+    src: url('{font_b64}') format('opentype');
+    font-weight: 700;
+    font-style: normal;
 }}
 
-/* Global reset + full-height layout */
+/* Reset & Global */
 html, body,
 [data-testid="stAppViewContainer"],
 [data-testid="stApp"],
 section[data-testid="stSidebar"],
 .main {{
-  background-color: #ffffff !important;
-  color: #1a1a1a !important;
-  height: 100%;
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;
 }}
 
-[data-testid="stAppViewContainer"] > div {{
-  min-height: 100vh !important;
-  display: flex;
-  flex-direction: column;
+* {{
+    color: #1a1a1a !important;
 }}
 
-/* Ensure main area has bottom padding so messages don't hide behind input */
-.main > div {{
-  padding-bottom: 180px !important; /* adjust if you change input height */
-}}
-
-/* Hide Streamlit chrome */
 #MainMenu, footer, header {{ visibility: hidden; }}
 
-/* Header */
+ /* Header */
 .header-container {{
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 20px 28px;
-  position: relative;
-  z-index: 3;
-  margin: 0 auto;
-  max-width: 1200px;
-  width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 28px 48px;
+    position: relative;
+    top: -100px;
+    left: -300px;
+    z-index: 3;
 }}
-
 .logo {{
-  width: 64px;
-  height: auto;
-  display: block;
+    width: 60px;
+    height: auto;
+    display: block;
 }}
-
 .senpai-title {{
-  font-family: 'LemonMilk', 'Arial Black', sans-serif;
-  font-size: 44px;
-  font-weight: 700;
-  letter-spacing: 4px;
-  color: #1a1a1a;
-  line-height: 1;
+    font-family: 'LemonMilk', 'Arial Black', sans-serif;
+    font-size: 50px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: 
+#1a1a1a;
+    line-height: 1;
 }}
 
-/* Decorative wave */
+/* Wave decoration (top-right) */
 .wave {{
-  position: fixed;
-  top: -80px;
-  right: -40px;
-  width: 540px;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.9;
+    position: fixed;
+    top: -300px;
+    right: -320px;
+    width: 1000px;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.95;
 }}
 
-/* Chat messages: center and constrain width for readability */
+/* Chat messages */
 [data-testid="stChatMessage"] {{
-  background: #ffffff !important;
-  border-radius: 14px !important;
-  padding: 14px 18px !important;
-  margin-bottom: 18px !important;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.06) !important;
-  position: relative;
-  z-index: 1;
-  color: #1a1a1a !important;
-  max-width: 1100px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  box-sizing: border-box;
+    background: #ffffff !important;
+    border-radius: 14px !important;
+    padding: 14px 18px !important;
+    margin-bottom: 10px !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06) !important;
+    position: relative;
+    z-index: 1;
+    color: #1a1a1a !important;
 }}
 
-/* Bottom input fixed and responsive */
+/* ── Input container — remove dark background ── */
 [data-testid="stBottom"] {{
-  position: fixed !important;
-  left: 0;
-  right: 0;
-  bottom: 14px;
-  display: flex;
-  justify-content: center;
-  z-index: 9999;
-  pointer-events: auto;
-  background: transparent !important;
-  padding: 0 12px;
+    background: linear-gradient(to top, #ffffff 80%, rgba(255,255,255,0)) !important;
+    padding: 16px 60px 28px !important;
+    border: none !important;
 }}
 
-/* Chat input wrapper */
+[data-testid="stBottom"] > div {{
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}}
+
+/* ── Input pill ── */
 [data-testid="stChatInput"] {{
-  width: 100%;
-  max-width: 1100px;
-  box-sizing: border-box;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
 }}
 
 [data-testid="stChatInput"] textarea {{
-  width: 100% !important;
-  box-sizing: border-box;
-  border-radius: 50px !important;
-  border: 2px solid #d2d2d2 !important;
-  padding: 16px 22px !important;
-  font-size: 15px !important;
-  background: #ffffff !important;
-  box-shadow: 0 2px 20px rgba(0,0,0,0.08) !important;
-  transition: border-color 0.2s, box-shadow 0.2s !important;
-  color: #1a1a1a !important;
+    border-radius: 50px !important;
+    border: 2px solid #d2d2d2 !important;
+    padding: 16px 26px !important;
+    font-size: 15px !important;
+    background: #ffffff !important;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08) !important;
+    color: #1a1a1a !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
 }}
 
 [data-testid="stChatInput"] textarea:focus {{
-  border-color: #c8291a !important;
-  box-shadow: 0 0 0 3px rgba(200,41,26,0.08) !important;
-  outline: none !important;
+    border-color: #c8291a !important;
+    box-shadow: 0 0 0 3px rgba(200,41,26,0.1) !important;
+    outline: none !important;
 }}
 
 [data-testid="stChatInput"] textarea::placeholder {{
-  color: #8a8a8a !important;
+    color: #aaa !important;
+    font-size: 15px !important;
 }}
 
-/* Send button */
+/* ── Send button — red circle ── */
 [data-testid="stChatInput"] button {{
-  background: #c8291a !important;
-  border-radius: 50% !important;
-  width: 42px !important;
-  height: 42px !important;
-  border: none !important;
-  color: white !important;
-  margin-left: 8px;
+    background: #c8291a !important;
+    border-radius: 50% !important;
+    width: 42px !important;
+    height: 42px !important;
+    border: none !important;
+    color: white !important;
 }}
 
 [data-testid="stChatInput"] button:hover {{
-  background: #a82215 !important;
-  transform: scale(1.05) !important;
+    background: #a82215 !important;
+    transform: scale(1.05) !important;
 }}
 
-/* Mobile adjustments */
+[data-testid="stChatInput"] button svg {{
+    fill: white !important;
+    color: white !important;
+}}
+
+/* ── White gradient behind input so chat doesn't show through ── */
+[data-testid="stBottom"] {{
+    background: linear-gradient(to top, #ffffff 75%, rgba(255,255,255,0)) !important;
+    padding: 16px 40px 28px !important;
+}}
+
 @media (max-width: 768px) {{
-  .header-container {{ padding: 12px 16px; }}
-  .logo {{ width: 48px; }}
-  .senpai-title {{ font-size: 28px; letter-spacing: 2px; }}
-  .wave {{ width: 320px; top: -40px; right: -20px; }}
-  [data-testid="stChatMessage"] {{ max-width: calc(100% - 28px) !important; margin-left: 14px !important; margin-right: 14px !important; }}
-  [data-testid="stChatInput"] {{ max-width: 100% !important; }}
-  [data-testid="stChatInput"] textarea {{ font-size: 16px !important; padding: 14px 16px !important; }}
+    .header-container {{
+        padding: 16px 20px;
+    }}
+    .logo {{ width: 48px; }}
+    .senpai-title {{ font-size: 28px; letter-spacing: 2px; }}
+    .wave {{ width: 260px; }}
 }}
 </style>
 """
 st.markdown(css, unsafe_allow_html=True)
 
-# Decorative wave (data-URI) and header (owl + title)
+# show wave image with fallback if file missing
 if wave_b64:
-    st.markdown(f'<img src="{wave_b64}" class="wave" alt="wave">', unsafe_allow_html=True)
+    st.markdown(f'<img src="{wave_b64}" class="wave">', unsafe_allow_html=True)
 
+# Header: owl logo + title
 logo_html = f"""
 <div class="header-container">
     <img src="{owl_b64}" class="logo" alt="Senpai owl logo">
@@ -242,18 +230,19 @@ vdb      = process_pdf("Full_HandBook.pdf")
 # ════════════════════════════════════════════════════════════════
 # 2. CGPA → STATUS
 # ════════════════════════════════════════════════════════════════
+
 def get_student_status(cgpa: float) -> tuple[str, int]:
-    # Restored mapping: <2.0 half-load, 2.0-2.99 regular, >=3.0 honors
     if cgpa < 2.0:
         return "Half-Load (Academic Probation)", 14
     elif cgpa < 3.0:
-        return "Regular Load", 19
+        return "Over Achiever", 21
     else:
-        return "Over-Achiever (Honors)", 21
+        return "Regular Load", 19
 
 # ════════════════════════════════════════════════════════════════
-# 3. TRACK MAP (unchanged)
+# 3. TRACK MAP
 # ════════════════════════════════════════════════════════════════
+
 TRACK_MAP: dict[str, tuple[str, str, str]] = {
     "cse":           ("ECCE", "CSE", "💻 Computer Engineering (CSE)"),
     "computer":      ("ECCE", "CSE", "💻 Computer Engineering (CSE)"),
@@ -315,8 +304,7 @@ def detect_track(text: str) -> tuple | None:
     return None
 
 # ════════════════════════════════════════════════════════════════
-# 4–8. Course catalog, prereq engine, semester loader, helpers
-# (kept same as your original code, unchanged logic)
+# 4. COURSE CATALOG
 # ════════════════════════════════════════════════════════════════
 
 def build_catalog(data: dict) -> dict:
@@ -324,6 +312,7 @@ def build_catalog(data: dict) -> dict:
     shared_opts = data['curriculum'].get('shared_elective_options', {})
 
     def resolve_options(c):
+        """Options can be a string ref like 'LRA_elective_1' or an inline list."""
         opts = c.get('options', [])
         if isinstance(opts, str):
             return shared_opts.get(opts, [])
@@ -332,6 +321,7 @@ def build_catalog(data: dict) -> dict:
         return []
 
     def get_ch(c):
+        """Handle both 'credit hours' (space) and 'credit_hours' (underscore)."""
         val = c.get('credit hours') or c.get('credit_hours') or 0
         try:
             return int(val)
@@ -368,6 +358,10 @@ def build_catalog(data: dict) -> dict:
 
 CATALOG = build_catalog(ejust_data) if ejust_data else {}
 
+# ════════════════════════════════════════════════════════════════
+# 5. PREREQUISITE ENGINE
+# ════════════════════════════════════════════════════════════════
+
 def trace_chain(code: str, cat: dict, visited: set = None) -> list:
     if visited is None:
         visited = set()
@@ -378,6 +372,7 @@ def trace_chain(code: str, cat: dict, visited: set = None) -> list:
     chain = trace_chain(c.get('prereq'), cat, visited)
     chain.append(c)
     return chain
+
 
 def get_track_prereqs(school: str, dept: str) -> dict:
     if not ejust_data:
@@ -444,6 +439,10 @@ def get_track_prereqs(school: str, dept: str) -> dict:
         'sem3_impact':      sem3_impact,
     }
 
+# ════════════════════════════════════════════════════════════════
+# 6. SEMESTER DATA LOADER
+# ════════════════════════════════════════════════════════════════
+
 def load_semester(school: str, dept: str, sem_num: str) -> tuple[list, str]:
     if not ejust_data:
         return [], "Data unavailable"
@@ -453,11 +452,15 @@ def load_semester(school: str, dept: str, sem_num: str) -> tuple[list, str]:
     shared_opts = ejust_data['curriculum'].get('shared_elective_options', {})
 
     def normalize(c):
+        """Normalize a course dict — unify credit hours field and resolve options."""
         c = dict(c)
+        # Unify credit hours
         if 'credit_hours' in c and 'credit hours' not in c:
             c['credit hours'] = c['credit_hours']
+        # Unify Type field
         if 'type' in c and 'Type' not in c:
             c['Type'] = c['type']
+        # Resolve string options
         opts = c.get('options', [])
         if isinstance(opts, str):
             c['options'] = shared_opts.get(opts, [])
@@ -482,6 +485,10 @@ def load_semester(school: str, dept: str, sem_num: str) -> tuple[list, str]:
     title       = f'{dept} — Semester {sem_num}'
     return courses, title
 
+# ════════════════════════════════════════════════════════════════
+# 7. WORKLOAD SAFETY
+# ════════════════════════════════════════════════════════════════
+
 def workload_check(total_ch: int, limit: int) -> str:
     if total_ch > limit:
         return (
@@ -489,6 +496,10 @@ def workload_check(total_ch: int, limit: int) -> str:
             f"Must drop {total_ch - limit} CH."
         )
     return f"✅ Within limit: {total_ch} / {limit} CH."
+
+# ════════════════════════════════════════════════════════════════
+# 8. CONTEXT BUILDERS
+# ════════════════════════════════════════════════════════════════
 
 def ctx_ask_track(max_ch: int) -> str:
     return (
@@ -501,8 +512,9 @@ def ctx_ask_track(max_ch: int) -> str:
         "Do NOT show any courses, schedule, or semester info until they choose."
     )
 
+
 def ctx_track_overview(school: str, dept: str, label: str,
-                       max_ch: int, is_half: bool) -> str:
+                        max_ch: int, is_half: bool) -> str:
     info = get_track_prereqs(school, dept)
     if not info:
         return f"[Could not load prereq data for {label}]"
@@ -590,6 +602,7 @@ INSTRUCTION FOR SENPAI:
 5. If half-load, stress they MUST budget for the elective prereqs within 14 CH.
 6. Encourage them: knowing the path early gives a huge advantage.
 """.strip()
+
 
 def ctx_semester_plan(courses: list, title: str, sem_num: str,
                        school: str, dept: str, label: str,
@@ -683,21 +696,25 @@ INSTRUCTION FOR SENPAI:
 5. Tone: supportive coach, not alarming.
 """.strip()
 
+
 # ════════════════════════════════════════════════════════════════
-# 9. PAGE CONFIG & SESSION STATE (OpenAI client)
+# 9. PAGE CONFIG & SESSION STATE
 # ════════════════════════════════════════════════════════════════
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+##st.set_page_config(page_title="Senpai — E-JUST Advisor", layout="wide", page_icon="🎓")
+##st.title("🎓 Senpai — E-JUST Academic Advisor")
+
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "sk-hc-v1-3d0b21306ebd475c92404d9870d890a39a0c4a6a345945f7a5287bd75c595050")
 client = OpenAI(
     api_key=OPENAI_API_KEY,
     base_url="https://ai.hackclub.com/proxy/v1"
 )
 
+
 if "messages"   not in st.session_state: st.session_state.messages   = []
 if "user_cgpa"  not in st.session_state: st.session_state.user_cgpa  = None
 if "track_info" not in st.session_state: st.session_state.track_info = None
 
-# Render existing conversation
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
@@ -712,17 +729,15 @@ if prompt := st.chat_input("Ask Senpai …"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
+
         # ── A. EXTRACT & PERSIST CGPA ────────────────────────────────────
         gpa_match = re.search(r'\b(?:cgpa|gpa)\s*[:=]?\s*(\d(?:\.\d+)?)\b', prompt.lower())
         if not gpa_match:
             gpa_match = re.search(r'\b([0-3](?:\.\d+)?)\b', prompt)
         if gpa_match:
-            try:
-                candidate = float(gpa_match.group(1))
-                if 0.0 <= candidate <= 4.0:
-                    st.session_state.user_cgpa = candidate
-            except Exception:
-                pass
+            candidate = float(gpa_match.group(1))
+            if 0.0 <= candidate <= 4.0:
+                st.session_state.user_cgpa = candidate
 
         user_cgpa  = st.session_state.user_cgpa if st.session_state.user_cgpa is not None else 3.0
         status_lbl, max_ch = get_student_status(user_cgpa)
@@ -832,6 +847,7 @@ if prompt := st.chat_input("Ask Senpai …"):
         ])
 
         if profs_df is not None:
+            # ── Try to match a specific professor name ────────────────────
             matched_rows = []
             query_words = [w for w in p_lower.split() if len(w) > 2]
 
@@ -840,17 +856,23 @@ if prompt := st.chat_input("Ask Senpai …"):
                 pname = str(row.get('Name', '')).lower()
                 pname_parts = [p for p in pname.split() if len(p) > 2]
                 score = 0
+                # Score: how many query words appear in professor name
                 score += sum(1 for qw in query_words if qw in pname) * 2
+                # Score: how many professor name parts appear in query
                 score += sum(1 for pp in pname_parts if pp in p_lower)
                 if score > 0:
                     scored.append((score, row))
 
             if scored:
+                # Sort by score descending
                 scored.sort(key=lambda x: x[0], reverse=True)
                 top_score = scored[0][0]
+                # Only keep rows within 1 point of the best score
                 matched_rows = [row for s, row in scored if s >= top_score - 1]
+                # Cap at 5 results to avoid flooding
                 matched_rows = matched_rows[:5]
 
+            # ── Try to match by department ────────────────────────────────
             if not matched_rows:
                 dept_keywords = {
                     'computer': 'Computer', 'cse': 'Computer',
@@ -877,6 +899,7 @@ if prompt := st.chat_input("Ask Senpai …"):
                         break
 
             if matched_rows:
+                # Format matched professors
                 parts = []
                 for row in matched_rows:
                     name     = row.get('Name', 'Unknown')
@@ -895,6 +918,7 @@ if prompt := st.chat_input("Ask Senpai …"):
                 prof_ctx = "[PROFESSOR DATA]\n" + "\n\n".join(parts)
 
             elif asks_prof:
+                # General professor query — provide full list
                 rows = []
                 for _, row in profs_df.iterrows():
                     name   = row.get('Name', 'Unknown')
@@ -946,6 +970,8 @@ You are friendly, direct, and trustworthy. Students depend on you for accurate i
 
 ━━━ STUDENT PROFILE ━━━
   • CGPA: {user_cgpa} | Status: {status_lbl} | Limit: {max_ch} CH | Track: {track_label}
+
+
 
 ━━ CREDIT RULES ━━━
   • CGPA < 2.0 → Half-Load — max 14 CH
