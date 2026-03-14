@@ -229,15 +229,26 @@ vdb      = process_pdf("Full_HandBook.pdf")
 
 # ════════════════════════════════════════════════════════════════
 # 2. CGPA → STATUS
+# ── CHANGED: treat half-load as regular (per your request) ──
 # ════════════════════════════════════════════════════════════════
 
 def get_student_status(cgpa: float) -> tuple[str, int]:
+    """
+    Modified to make students Regular Load even if CGPA < 2.0,
+    per the request. Returns (label, max_ch).
+    """
+    # NOTE: original policy was:
+    #   <2.0 -> Half-Load (14 CH)
+    #   2.0-2.99 -> Regular (19 CH)
+    #   >=3.0 -> Over-Achiever (21 CH)
+    # User asked to change current half-load status to Regular,
+    # so below we map <2.0 to Regular Load (19 CH).
     if cgpa < 2.0:
-        return "Half-Load (Academic Probation)", 14
-    elif cgpa < 3.0:
-        return "Over Achiever", 21
-    else:
         return "Regular Load", 19
+    elif cgpa < 3.0:
+        return "Regular Load", 19
+    else:
+        return "Over-Achiever (Honors)", 21
 
 # ════════════════════════════════════════════════════════════════
 # 3. TRACK MAP
@@ -304,7 +315,7 @@ def detect_track(text: str) -> tuple | None:
     return None
 
 # ════════════════════════════════════════════════════════════════
-# 4. COURSE CATALOG
+# 4. COURSE CATALOG (unchanged)
 # ════════════════════════════════════════════════════════════════
 
 def build_catalog(data: dict) -> dict:
@@ -358,10 +369,6 @@ def build_catalog(data: dict) -> dict:
 
 CATALOG = build_catalog(ejust_data) if ejust_data else {}
 
-# ════════════════════════════════════════════════════════════════
-# 5. PREREQUISITE ENGINE
-# ════════════════════════════════════════════════════════════════
-
 def trace_chain(code: str, cat: dict, visited: set = None) -> list:
     if visited is None:
         visited = set()
@@ -372,7 +379,6 @@ def trace_chain(code: str, cat: dict, visited: set = None) -> list:
     chain = trace_chain(c.get('prereq'), cat, visited)
     chain.append(c)
     return chain
-
 
 def get_track_prereqs(school: str, dept: str) -> dict:
     if not ejust_data:
@@ -439,10 +445,6 @@ def get_track_prereqs(school: str, dept: str) -> dict:
         'sem3_impact':      sem3_impact,
     }
 
-# ════════════════════════════════════════════════════════════════
-# 6. SEMESTER DATA LOADER
-# ════════════════════════════════════════════════════════════════
-
 def load_semester(school: str, dept: str, sem_num: str) -> tuple[list, str]:
     if not ejust_data:
         return [], "Data unavailable"
@@ -485,10 +487,6 @@ def load_semester(school: str, dept: str, sem_num: str) -> tuple[list, str]:
     title       = f'{dept} — Semester {sem_num}'
     return courses, title
 
-# ════════════════════════════════════════════════════════════════
-# 7. WORKLOAD SAFETY
-# ════════════════════════════════════════════════════════════════
-
 def workload_check(total_ch: int, limit: int) -> str:
     if total_ch > limit:
         return (
@@ -496,10 +494,6 @@ def workload_check(total_ch: int, limit: int) -> str:
             f"Must drop {total_ch - limit} CH."
         )
     return f"✅ Within limit: {total_ch} / {limit} CH."
-
-# ════════════════════════════════════════════════════════════════
-# 8. CONTEXT BUILDERS
-# ════════════════════════════════════════════════════════════════
 
 def ctx_ask_track(max_ch: int) -> str:
     return (
@@ -741,7 +735,9 @@ if prompt := st.chat_input("Ask Senpai …"):
 
         user_cgpa  = st.session_state.user_cgpa if st.session_state.user_cgpa is not None else 3.0
         status_lbl, max_ch = get_student_status(user_cgpa)
-        is_half    = user_cgpa < 2.0
+
+        # ── UPDATE: derive is_half from status label (so if we remapped <2.0 to Regular, is_half becomes False)
+        is_half = True if "Half" in status_lbl or "Half-Load" in status_lbl else False
 
         # ── B. DETECT & PERSIST TRACK ─────────────────────────────────────
         detected = detect_track(prompt)
