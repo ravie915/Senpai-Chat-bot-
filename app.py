@@ -181,9 +181,9 @@ def get_student_status(cgpa: float) -> tuple[str, int]:
     if cgpa < 2.0:
         return "Half-Load (Academic Probation)", 14
     elif cgpa < 3.0:
-        return "Regular Load", 19
+        return "Over Achiever", 21
     else:
-        return "Over-Achiever (Honors)", 21
+        return "Regular Load", 19
 
 # ════════════════════════════════════════════════════════════════
 # 3. TRACK MAP
@@ -916,9 +916,10 @@ You are friendly, direct, and trustworthy. Students depend on you for accurate i
 
 ━━━ STUDENT PROFILE ━━━
   • CGPA: {user_cgpa} | Status: {status_lbl} | Limit: {max_ch} CH | Track: {track_label}
-  • Half-Load: {'YES — Academic Probation (max 14 CH)' if is_half else 'No'}
 
-━━━ CREDIT RULES ━━━
+
+
+━━ CREDIT RULES ━━━
   • CGPA < 2.0 → Half-Load — max 14 CH
   • 2.0–2.99   → Regular   — max 19 CH
   • ≥ 3.0      → Honors    — max 21 CH
