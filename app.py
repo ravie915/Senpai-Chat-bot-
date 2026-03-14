@@ -97,25 +97,42 @@ section[data-testid="stSidebar"],
     color: #1a1a1a !important;
 }}
 
-/* Chat input bubble styling */
+/* ── Input pill — full width, white, red border on focus ── */
+[data-testid="stChatInput"] {{
+    position: fixed !important;
+    bottom: 28px !important;
+    left: 40px !important;
+    right: 40px !important;
+    z-index: 200 !important;
+}}
+
 [data-testid="stChatInput"] textarea {{
-    border-radius: 28px !important;
-    border: 2px solid #223344 !important;
-    padding: 18px 22px !important;
+    border-radius: 50px !important;
+    border: 2px solid #d2d2d2 !important;
+    padding: 18px 26px !important;
     font-size: 15px !important;
-    background: #f2f2f2 !important;
-    box-shadow: none !important;
+    background: #ffffff !important;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06) !important;
     color: #1a1a1a !important;
+    height: 56px !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
 }}
 
 [data-testid="stChatInput"] textarea:focus {{
-    border-color: #cc0000 !important;
+    border-color: #c8291a !important;
+    box-shadow: 0 0 0 3px rgba(200,41,26,0.08) !important;
     background: #ffffff !important;
     outline: none !important;
 }}
 
 [data-testid="stChatInput"] textarea::placeholder {{
-    color: #8a8a8a !important;
+    color: #aaa !important;
+}}
+
+/* ── White gradient behind input so chat doesn't show through ── */
+[data-testid="stBottom"] {{
+    background: linear-gradient(to top, #ffffff 75%, rgba(255,255,255,0)) !important;
+    padding: 16px 40px 28px !important;
 }}
 
 @media (max-width: 768px) {{
