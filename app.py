@@ -527,6 +527,7 @@ client = OpenAI(
     base_url="https://ai.hackclub.com/proxy/v1"
 )
 
+
 if "messages"   not in st.session_state: st.session_state.messages   = []
 if "user_cgpa"  not in st.session_state: st.session_state.user_cgpa  = None
 if "track_info" not in st.session_state: st.session_state.track_info = None
@@ -665,11 +666,28 @@ if prompt := st.chat_input("Ask Senpai …"):
         if profs_df is not None:
             # ── Try to match a specific professor name ────────────────────
             matched_rows = []
+            query_words = [w for w in p_lower.split() if len(w) > 2]
+
+            scored = []
             for _, row in profs_df.iterrows():
                 pname = str(row.get('Name', '')).lower()
-                name_parts = [p for p in pname.split() if len(p) > 2]
-                if any(part in p_lower for part in name_parts):
-                    matched_rows.append(row)
+                pname_parts = [p for p in pname.split() if len(p) > 2]
+                score = 0
+                # Score: how many query words appear in professor name
+                score += sum(1 for qw in query_words if qw in pname) * 2
+                # Score: how many professor name parts appear in query
+                score += sum(1 for pp in pname_parts if pp in p_lower)
+                if score > 0:
+                    scored.append((score, row))
+
+            if scored:
+                # Sort by score descending
+                scored.sort(key=lambda x: x[0], reverse=True)
+                top_score = scored[0][0]
+                # Only keep rows within 1 point of the best score
+                matched_rows = [row for s, row in scored if s >= top_score - 1]
+                # Cap at 5 results to avoid flooding
+                matched_rows = matched_rows[:5]
 
             # ── Try to match by department ────────────────────────────────
             if not matched_rows:
