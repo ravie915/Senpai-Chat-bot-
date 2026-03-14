@@ -527,6 +527,7 @@ client = OpenAI(
     base_url="https://ai.hackclub.com/proxy/v1"
 )
 
+
 if "messages"   not in st.session_state: st.session_state.messages   = []
 if "user_cgpa"  not in st.session_state: st.session_state.user_cgpa  = None
 if "track_info" not in st.session_state: st.session_state.track_info = None
@@ -570,7 +571,8 @@ if prompt := st.chat_input("Ask Senpai …"):
 
         # ── C. PDF RAG — only for handbook/rules questions, never for courses ──
         pdf_ctx = ""
-        if vdb and not any(kw in p_lower for kw in [
+        _pl = prompt.lower()
+        if vdb and not any(kw in _pl for kw in [
             'course', 'semester', 'courses', 'curriculum', 'subject',
             'credit', 'prereq', 'prerequisite', 'schedule', 'plan'
         ]):
