@@ -322,7 +322,7 @@ def get_track_prereqs(school: str, dept: str) -> dict:
 
     seen_codes  = set()
     all_prereqs = []
-src_courses = entry_courses + [c for c in sem4_all if c.get('Type', '').lower() == 'school']
+    src_courses = entry_courses + [c for c in sem4_all if c.get('Type', '').lower() == 'school']
     for ec in src_courses:
         for step in trace_chain(ec['code'], CATALOG):
             if step['code'] not in seen_codes and step['code'] != ec['code']:
