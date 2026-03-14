@@ -51,10 +51,10 @@ vdb      = process_pdf("Full_HandBook.pdf")
 def get_student_status(cgpa: float) -> tuple[str, int]:
     if cgpa < 2.0:
         return "Half-Load (Academic Probation)", 14
-    elif cgpa > 3.0:
-        return "Over-Achiever (Honors)", 21
-    else:
+    elif cgpa < 3.0:
         return "Regular Load", 19
+    else:
+        return "Over-Achiever (Honors)", 21
 
 # ════════════════════════════════════════════════════════════════
 # 3. TRACK MAP
@@ -527,7 +527,6 @@ client = OpenAI(
     base_url="https://ai.hackclub.com/proxy/v1"
 )
 
-
 if "messages"   not in st.session_state: st.session_state.messages   = []
 if "user_cgpa"  not in st.session_state: st.session_state.user_cgpa  = None
 if "track_info" not in st.session_state: st.session_state.track_info = None
@@ -658,40 +657,75 @@ if prompt := st.chat_input("Ask Senpai …"):
         prof_ctx  = ""
         asks_prof = any(kw in p_lower for kw in [
             'professor', 'prof', 'doctor', 'dr ', 'dr.', 'instructor',
-            'review', 'rating', 'rate', 'recommend a doctor', 'best doctor',
-            'who teaches', 'who is teaching', 'avoid', 'good teacher'
+            'email', 'office', 'contact', 'research', 'faculty',
+            'who teaches', 'who is', 'find professor', 'department professor',
+            'مين', 'دكتور', 'استاذ'
         ])
 
         if profs_df is not None:
+            # ── Try to match a specific professor name ────────────────────
             matched_rows = []
             for _, row in profs_df.iterrows():
                 pname = str(row.get('Name', '')).lower()
-                if any(part in p_lower for part in pname.split() if len(part) > 2):
+                name_parts = [p for p in pname.split() if len(p) > 2]
+                if any(part in p_lower for part in name_parts):
                     matched_rows.append(row)
 
+            # ── Try to match by department ────────────────────────────────
+            if not matched_rows:
+                dept_keywords = {
+                    'computer': 'Computer', 'cse': 'Computer',
+                    'mechatronics': 'Mechatronics', 'mtr': 'Mechatronics', 'robotics': 'Mechatronics',
+                    'aerospace': 'Aerospace', 'ase': 'Aerospace',
+                    'materials': 'Materials', 'mse': 'Materials',
+                    'industrial': 'Industrial', 'manufacturing': 'Industrial', 'ime': 'Industrial',
+                    'energy': 'Energy', 'ere': 'Energy', 'mpe': 'Energy',
+                    'chemical': 'Chemical', 'cpe': 'Chemical',
+                    'electrical': 'Electrical', 'epe': 'Electrical',
+                    'environmental': 'Environmental', 'env': 'Environmental',
+                    'biomedical': 'Biomedical', 'mie': 'Biomedical',
+                    'electronics': 'Electronics', 'ece': 'Electronics',
+                    'accounting': 'Accounting', 'business': 'Business',
+                    'architecture': 'Architecture', 'art': 'Art & Design',
+                }
+                for kw, dept_kw in dept_keywords.items():
+                    if kw in p_lower:
+                        for _, row in profs_df.iterrows():
+                            dept_val = str(row.get('Department', '')).lower()
+                            faculty_val = str(row.get('Faculty', '')).lower()
+                            if dept_kw.lower() in dept_val or dept_kw.lower() in faculty_val:
+                                matched_rows.append(row)
+                        break
+
             if matched_rows:
+                # Format matched professors
                 parts = []
                 for row in matched_rows:
+                    name     = row.get('Name', 'Unknown')
+                    title    = row.get('Job Title', 'N/A')
+                    dept     = row.get('Department', 'N/A')
+                    faculty  = row.get('Faculty', 'N/A')
+                    office   = row.get('Office Location', 'N/A')
+                    email    = row.get('Email', 'N/A')
+                    research = row.get('Research Fields', 'N/A')
                     parts.append(
-                        f"Professor: {row.get('Name')} | "
-                        f"Rating: {row.get('Rating (1-5)', 'N/A')}/5 | "
-                        f"Review: {row.get('Review', 'No review available')}"
+                        f"• {name} | {title}\n"
+                        f"  Department: {dept} | Faculty: {faculty}\n"
+                        f"  Office: {office} | Email: {email}\n"
+                        f"  Research: {research}"
                     )
-                prof_ctx = "\n".join(parts)
+                prof_ctx = "[PROFESSOR DATA]\n" + "\n\n".join(parts)
 
             elif asks_prof:
+                # General professor query — provide full list
                 rows = []
                 for _, row in profs_df.iterrows():
                     name   = row.get('Name', 'Unknown')
-                    rating = row.get('Rating (1-5)', 'N/A')
-                    review = str(row.get('Review', ''))[:120]
-                    rows.append(f"  • {name} | Rating: {rating}/5 | {review}")
-                prof_ctx = (
-                    "[ALL PROFESSOR REVIEWS]\n"
-                    + "\n".join(rows)
-                    + "\n\nSenpai: Use this list to answer questions about ratings, "
-                    "recommendations, or comparisons between professors."
-                )
+                    title  = row.get('Job Title', 'N/A')
+                    dept   = row.get('Department', 'N/A')
+                    email  = row.get('Email', 'N/A')
+                    rows.append(f"  • {name} | {title} | Dept: {dept} | {email}")
+                prof_ctx = "[ALL PROFESSORS]\n" + "\n".join(rows)
 
         # ── F. MISSION DETECTION ──────────────────────────────────────────
         asks_registration = any(kw in p_lower for kw in [
@@ -724,7 +758,9 @@ You are friendly, direct, and trustworthy. Students depend on you for accurate i
 
 ━━━ YOUR MISSIONS ━━━
 1. 📋 COURSE REGISTRATION HELP — explain how to register/add/drop, warn about prereqs and limits
-2. 👨‍🏫 PROFESSOR REVIEWS — share ratings and reviews from the professor database only
+2. 👨‍🏫 PROFESSOR INFO — answer questions about professors using ONLY the PROFESSOR DATA section below.
+   Available info per professor: Name, Job Title, Department, Faculty, Office Location, Email, Research Fields.
+   If asked about a professor not in the data, say they are not in the database.
 3. 📖 HANDBOOK & ACADEMIC RULES — answer policy/GPA/graduation questions from handbook only
 4. 🗓️ COURSE PLANNING — help plan semesters using ONLY the course data below
 
