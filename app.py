@@ -60,14 +60,14 @@ section[data-testid="stSidebar"],
 }}
 
 .logo {{
-    width: 90px;
+    width: 60px;
     height: auto;
     display: block;
 }}
 
 .senpai-title {{
     font-family: 'LemonMilk', 'Arial Black', sans-serif;
-    font-size: 70px;
+    font-size: 50px;
     font-weight: 700;
     letter-spacing: 4px;
     color: #1a1a1a;
