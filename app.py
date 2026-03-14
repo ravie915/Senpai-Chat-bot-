@@ -1,4 +1,4 @@
-[3/14/2026 3:23 PM] Halish: import streamlit as st
+import streamlit as st
 import json
 import pandas as pd
 import os
@@ -164,7 +164,8 @@ def process_pdf(path):
 
 profs_df = load_professor_data()
 vdb      = process_pdf("Full_HandBook.pdf")
-[3/14/2026 3:23 PM] Halish: # ════════════════════════════════════════════════════════════════
+
+# ════════════════════════════════════════════════════════════════
 # 2. CGPA → STATUS
 # ════════════════════════════════════════════════════════════════
 
@@ -214,7 +215,7 @@ TRACK_MAP: dict[str, tuple[str, str, str]] = {
     "mpe":               ("EECE", "MPE", "⚙️  Mechanical Power & Energy Engineering (MPE)"),
     "mechanical":        ("EECE", "MPE", "⚙️  Mechanical Power & Energy Engineering (MPE)"),
 }
-[3/14/2026 3:23 PM] Halish: TRACK_MENU = (
+ TRACK_MENU = (
     "Please choose your track by typing one of the keywords:\n\n"
     "| Track | Department | Say |\n"
     "| :--- | :--- | :--- |\n"
@@ -321,7 +322,7 @@ def get_track_prereqs(school: str, dept: str) -> dict:
 
     seen_codes  = set()
     all_prereqs = []
-[3/14/2026 3:23 PM] Halish: src_courses = entry_courses + [c for c in sem4_all if c.get('Type', '').lower() == 'school']
+src_courses = entry_courses + [c for c in sem4_all if c.get('Type', '').lower() == 'school']
     for ec in src_courses:
         for step in trace_chain(ec['code'], CATALOG):
             if step['code'] not in seen_codes and step['code'] != ec['code']:
@@ -417,7 +418,7 @@ def load_semester(school: str, dept: str, sem_num: str) -> tuple[list, str]:
 # ════════════════════════════════════════════════════════════════
 # 7. WORKLOAD SAFETY
 # ════════════════════════════════════════════════════════════════
-[3/14/2026 3:23 PM] Halish: def workload_check(total_ch: int, limit: int) -> str:
+def workload_check(total_ch: int, limit: int) -> str:
     if total_ch > limit:
         return (
             f"⚠️ OVER LIMIT: {total_ch} CH registered but limit is {limit} CH. "
@@ -521,7 +522,7 @@ School: {school} | Dept: {dept} | Credit Limit: {max_ch} CH
 ━━━ SEMESTER 5 ENTRY COURSES ━━━
 {sem5_lines}
 {half_warn}
-[3/14/2026 3:23 PM] Halish: INSTRUCTION FOR SENPAI:
+INSTRUCTION FOR SENPAI:
 1. Confirm the student's track choice warmly.
 2. Immediately highlight any elective prerequisites — these are the most common mistake.
 3. Explain the sem3 impact: skipping that elective blocks a core course.
@@ -610,7 +611,7 @@ Status: Academic Probation | Limit: {max_ch} CH | Plan Total: {core_ch + running
 
 ━━━ ✅ RECOMMENDED ELECTIVES (within budget, track prereqs first) ━━━
 {rec_lines}
-[3/14/2026 3:23 PM] Halish: ━━━ ⏳ DEFERRED ELECTIVES (take when CGPA recovers) ━━━
+━━━ ⏳ DEFERRED ELECTIVES (take when CGPA recovers) ━━━
 {def_lines}
 {prereq_warn}
 
@@ -706,7 +707,7 @@ if prompt:
                 'graduation', 'department', 'which department',
             ]))
         )
-[3/14/2026 3:23 PM] Halish: if needs_track and not track_info:
+if needs_track and not track_info:
             adv_ctx = ctx_ask_track(max_ch)
             if sem_num:
                 adv_ctx += (
@@ -790,8 +791,7 @@ if prompt:
                 scored.sort(key=lambda x: x[0], reverse=True)
                 top_score    = scored[0][0]
                 matched_rows = [row for s, row in scored if s >= top_score - 1]
-                matched_rows = matched_rows[:5]
-[3/14/2026 3:23 PM] Halish: if not matched_rows:
+                matched_rows = matched_rows[:5]if not matched_rows:
                 dept_keywords = {
                     'computer': 'Computer', 'cse': 'Computer',
                     'mechatronics': 'Mechatronics', 'mtr': 'Mechatronics', 'robotics': 'Mechatronics',
@@ -859,7 +859,7 @@ if prompt:
             'schedule', 'plan', 'roadmap', 'semester', 'courses', 'credit hours',
             'what should i take', 'which courses', 'next semester'
         ])
-[3/14/2026 3:23 PM] Halish: active_mission = (
+active_mission = (
             "COURSE REGISTRATION ASSISTANCE"       if asks_registration else
             "PROFESSOR REVIEWS & RECOMMENDATIONS"  if (asks_prof and prof_ctx) else
             "HANDBOOK / ACADEMIC RULES"            if asks_handbook else
