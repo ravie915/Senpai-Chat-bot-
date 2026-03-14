@@ -1,4 +1,4 @@
-import streamlit as st
+[3/14/2026 3:23 PM] Halish: import streamlit as st
 import json
 import pandas as pd
 import os
@@ -8,19 +8,127 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
-
 import time
 
-def typing_animation(text):
-    placeholder = st.empty()
-    typed = ""
+# ════════════════════════════════════════════════════════════════
+# PAGE CONFIG — must be first Streamlit call
+# ════════════════════════════════════════════════════════════════
 
-    for char in text:
-        typed += char
-        placeholder.markdown(typed)
-        time.sleep(0.01)
+st.set_page_config(
+    page_title="Senpai — E-JUST Advisor",
+    layout="wide",
+    page_icon="🎓"
+)
 
-    return typed
+# ════════════════════════════════════════════════════════════════
+# STYLES
+# ════════════════════════════════════════════════════════════════
+
+st.markdown("""
+<style>
+
+@font-face {
+    font-family: 'LemonMilk';
+    src: url('main/fonts/LEMONMILK-Bold.otf') format('opentype');
+    font-weight: bold;
+}
+
+/* ── Reset & Global ── */
+html, body,
+[data-testid="stAppViewContainer"],
+[data-testid="stApp"],
+section[data-testid="stSidebar"],
+.main {
+    background-color: #ffffff !important;
+}
+
+#MainMenu, footer, header { visibility: hidden; }
+
+
+/* ── Wave decoration ── */
+.wave {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 420px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ── Header ── */
+.header-container {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 32px 0 0 40px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 8px;
+}
+
+.logo {
+    width: 62px;
+    height: auto;
+}
+
+.senpai-title {
+    font-family: 'LemonMilk', 'Arial Black', sans-serif;
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: #1a1a1a;
+    line-height: 1;
+}
+
+/* ── Chat messages ── */
+[data-testid="stChatMessage"] {
+    background: #ffffff !important;
+    border-radius: 14px !important;
+    padding: 12px 18px !important;
+    margin-bottom: 10px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Chat input ── */
+[data-testid="stChatInput"] textarea {
+    border-radius: 30px !important;
+    border: 2px solid #d0d0d0 !important;
+    padding: 16px 24px !important;
+    font-size: 15px !important;
+    background: #f5f5f5 !important;
+    box-shadow: none !important;
+}
+
+[data-testid="stChatInput"] textarea:focus {
+    border-color: #cc0000 !important;
+    background: #ffffff !important;
+    outline: none !important;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+    .header-container {
+        padding: 20px 0 0 20px;
+    }
+    .logo  { width: 44px; }
+    .senpai-title { font-size: 26px; letter-spacing: 2px; }
+    .wave  { width: 240px; }
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ── Header HTML ──
+st.markdown("""
+<img src="main/assets/wave.png" class="wave" alt="">
+<div class="header-container">
+    <img src="main/assets/owl.png" class="logo" alt="Senpai Owl">
+    <div class="senpai-title">SENPAI</div>
+</div>
+""", unsafe_allow_html=True)
+
 
 # ════════════════════════════════════════════════════════════════
 # 1. DATA LOADING
@@ -47,17 +155,16 @@ def load_professor_data():
 def process_pdf(path):
     if not os.path.exists(path):
         return None
-    loader   = PyPDFLoader(path)
-    docs     = loader.load()
-    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
-    chunks   = splitter.split_documents(docs)
+    loader     = PyPDFLoader(path)
+    docs       = loader.load()
+    splitter   = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
+    chunks     = splitter.split_documents(docs)
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     return Chroma.from_documents(documents=chunks, embedding=embeddings)
 
 profs_df = load_professor_data()
 vdb      = process_pdf("Full_HandBook.pdf")
-
-# ════════════════════════════════════════════════════════════════
+[3/14/2026 3:23 PM] Halish: # ════════════════════════════════════════════════════════════════
 # 2. CGPA → STATUS
 # ════════════════════════════════════════════════════════════════
 
@@ -74,56 +181,55 @@ def get_student_status(cgpa: float) -> tuple[str, int]:
 # ════════════════════════════════════════════════════════════════
 
 TRACK_MAP: dict[str, tuple[str, str, str]] = {
-    "cse":           ("ECCE", "CSE", "💻 Computer Engineering (CSE)"),
-    "computer":      ("ECCE", "CSE", "💻 Computer Engineering (CSE)"),
-    "software":      ("ECCE", "CSE", "💻 Computer Engineering (CSE)"),
-    "ece":           ("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
-    "electronics":   ("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
-    "communications":("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
-    "communication": ("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
-    "epe":           ("ECCE", "EPE", "⚡ Electrical Power Engineering (EPE)"),
-    "power":         ("ECCE", "EPE", "⚡ Electrical Power Engineering (EPE)"),
-    "electrical":    ("ECCE", "EPE", "⚡ Electrical Power Engineering (EPE)"),
-    "mie":           ("ECCE", "MIE", "🧬 Biomedical & Bioinformatics Engineering (MIE)"),
-    "biomedical":    ("ECCE", "MIE", "🧬 Biomedical & Bioinformatics Engineering (MIE)"),
-    "bioinformatics":("ECCE", "MIE", "🧬 Biomedical & Bioinformatics Engineering (MIE)"),
-    "mtr":              ("IDE",  "MTR", "🤖 Mechatronics Engineering (MTR)"),
-    "mechatronics":     ("IDE",  "MTR", "🤖 Mechatronics Engineering (MTR)"),
-    "robotics":         ("IDE",  "MTR", "🤖 Mechatronics Engineering (MTR)"),
-    "ase":              ("IDE",  "ASE", "✈️  Aerospace Engineering (ASE)"),
-    "aerospace":        ("IDE",  "ASE", "✈️  Aerospace Engineering (ASE)"),
-    "mse":              ("IDE",  "MSE", "🔬 Materials Science and Engineering (MSE)"),
-    "materials":        ("IDE",  "MSE", "🔬 Materials Science and Engineering (MSE)"),
-    "ime":              ("IDE",  "IME", "🏭 Industrial & Manufacturing Engineering (IME)"),
-    "industrial":       ("IDE",  "IME", "🏭 Industrial & Manufacturing Engineering (IME)"),
-    "manufacturing":    ("IDE",  "IME", "🏭 Industrial & Manufacturing Engineering (IME)"),
-    "cpe":              ("EECE", "CPE", "⚗️  Chemical & Petrochemical Engineering (CPE)"),
-    "chemical":         ("EECE", "CPE", "⚗️  Chemical & Petrochemical Engineering (CPE)"),
-    "petrochemical":    ("EECE", "CPE", "⚗️  Chemical & Petrochemical Engineering (CPE)"),
-    "env":              ("EECE", "ENV", "🌿 Environmental Engineering (ENV)"),
-    "environmental":    ("EECE", "ENV", "🌿 Environmental Engineering (ENV)"),
-    "eme":              ("EECE", "EME", "🏗️  Electromechanical Buildings Systems (EME)"),
-    "electromechanical":("EECE", "EME", "🏗️  Electromechanical Buildings Systems (EME)"),
-    "mpe":              ("EECE", "MPE", "⚙️  Mechanical Power & Energy Engineering (MPE)"),
-    "mechanical":       ("EECE", "MPE", "⚙️  Mechanical Power & Energy Engineering (MPE)"),
+    "cse":               ("ECCE", "CSE", "💻 Computer Engineering (CSE)"),
+    "computer":          ("ECCE", "CSE", "💻 Computer Engineering (CSE)"),
+    "software":          ("ECCE", "CSE", "💻 Computer Engineering (CSE)"),
+    "ece":               ("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
+    "electronics":       ("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
+    "communications":    ("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
+    "communication":     ("ECCE", "ECE", "📡 Electronics & Communications (ECE)"),
+    "epe":               ("ECCE", "EPE", "⚡️ Electrical Power Engineering (EPE)"),
+    "power":             ("ECCE", "EPE", "⚡️ Electrical Power Engineering (EPE)"),
+    "electrical":        ("ECCE", "EPE", "⚡️ Electrical Power Engineering (EPE)"),
+    "mie":               ("ECCE", "MIE", "🧬 Biomedical & Bioinformatics Engineering (MIE)"),
+    "biomedical":        ("ECCE", "MIE", "🧬 Biomedical & Bioinformatics Engineering (MIE)"),
+    "bioinformatics":    ("ECCE", "MIE", "🧬 Biomedical & Bioinformatics Engineering (MIE)"),
+    "mtr":               ("IDE",  "MTR", "🤖 Mechatronics Engineering (MTR)"),
+    "mechatronics":      ("IDE",  "MTR", "🤖 Mechatronics Engineering (MTR)"),
+    "robotics":          ("IDE",  "MTR", "🤖 Mechatronics Engineering (MTR)"),
+    "ase":               ("IDE",  "ASE", "✈️  Aerospace Engineering (ASE)"),
+    "aerospace":         ("IDE",  "ASE", "✈️  Aerospace Engineering (ASE)"),
+    "mse":               ("IDE",  "MSE", "🔬 Materials Science and Engineering (MSE)"),
+    "materials":         ("IDE",  "MSE", "🔬 Materials Science and Engineering (MSE)"),
+    "ime":               ("IDE",  "IME", "🏭 Industrial & Manufacturing Engineering (IME)"),
+    "industrial":        ("IDE",  "IME", "🏭 Industrial & Manufacturing Engineering (IME)"),
+    "manufacturing":     ("IDE",  "IME", "🏭 Industrial & Manufacturing Engineering (IME)"),
+    "cpe":               ("EECE", "CPE", "⚗️  Chemical & Petrochemical Engineering (CPE)"),
+    "chemical":          ("EECE", "CPE", "⚗️  Chemical & Petrochemical Engineering (CPE)"),
+    "petrochemical":     ("EECE", "CPE", "⚗️  Chemical & Petrochemical Engineering (CPE)"),
+    "env":               ("EECE", "ENV", "🌿 Environmental Engineering (ENV)"),
+    "environmental":     ("EECE", "ENV", "🌿 Environmental Engineering (ENV)"),
+    "eme":               ("EECE", "EME", "🏗  Electromechanical Buildings Systems (EME)"),
+    "electromechanical": ("EECE", "EME", "🏗  Electromechanical Buildings Systems (EME)"),
+    "mpe":               ("EECE", "MPE", "⚙️  Mechanical Power & Energy Engineering (MPE)"),
+    "mechanical":        ("EECE", "MPE", "⚙️  Mechanical Power & Energy Engineering (MPE)"),
 }
-
-TRACK_MENU = (
+[3/14/2026 3:23 PM] Halish: TRACK_MENU = (
     "Please choose your track by typing one of the keywords:\n\n"
     "| Track | Department | Say |\n"
     "| :--- | :--- | :--- |\n"
-    "| 💻 Computer Engineering | CSE (ECCE) | `CSE` or `computer` |\n"
-    "| 📡 Electronics & Communications | ECE (ECCE) | `ECE` or `communications` |\n"
-    "| ⚡ Electrical Power | EPE (ECCE) | `EPE` or `power` |\n"
-    "| 🧬 Biomedical & Bioinformatics | MIE (ECCE) | `MIE` or `biomedical` |\n"
-    "| 🤖 Mechatronics | MTR (IDE) | `MTR` or `mechatronics` |\n"
-    "| ✈️ Aerospace | ASE (IDE) | `ASE` or `aerospace` |\n"
-    "| 🔬 Materials Science | MSE (IDE) | `MSE` or `materials` |\n"
-    "| 🏭 Industrial & Manufacturing | IME (IDE) | `IME` or `industrial` |\n"
-    "| ⚗️ Chemical & Petrochemical | CPE (EECE) | `CPE` or `chemical` |\n"
-    "| 🌿 Environmental | ENV (EECE) | `ENV` or `environmental` |\n"
-    "| 🏗️ Electromechanical Buildings | EME (EECE) | `EME` or `electromechanical` |\n"
-    "| ⚙️ Mechanical Power & Energy | MPE (EECE) | `MPE` or `mechanical` |"
+    "| 💻 Computer Engineering | CSE (ECCE) | CSE or computer |\n"
+    "| 📡 Electronics & Communications | ECE (ECCE) | ECE or communications |\n"
+    "| ⚡️ Electrical Power | EPE (ECCE) | EPE or power |\n"
+    "| 🧬 Biomedical & Bioinformatics | MIE (ECCE) | MIE or biomedical |\n"
+    "| 🤖 Mechatronics | MTR (IDE) | MTR or mechatronics |\n"
+    "| ✈️ Aerospace | ASE (IDE) | ASE or aerospace |\n"
+    "| 🔬 Materials Science | MSE (IDE) | MSE or materials |\n"
+    "| 🏭 Industrial & Manufacturing | IME (IDE) | IME or industrial |\n"
+    "| ⚗️ Chemical & Petrochemical | CPE (EECE) | CPE or chemical |\n"
+    "| 🌿 Environmental | ENV (EECE) | ENV or environmental |\n"
+    "| 🏗 Electromechanical Buildings | EME (EECE) | EME or electromechanical |\n"
+    "| ⚙️ Mechanical Power & Energy | MPE (EECE) | MPE or mechanical |"
 )
 
 def detect_track(text: str) -> tuple | None:
@@ -142,7 +248,6 @@ def build_catalog(data: dict) -> dict:
     shared_opts = data['curriculum'].get('shared_elective_options', {})
 
     def resolve_options(c):
-        """Options can be a string ref like 'LRA_elective_1' or an inline list."""
         opts = c.get('options', [])
         if isinstance(opts, str):
             return shared_opts.get(opts, [])
@@ -151,7 +256,6 @@ def build_catalog(data: dict) -> dict:
         return []
 
     def get_ch(c):
-        """Handle both 'credit hours' (space) and 'credit_hours' (underscore)."""
         val = c.get('credit hours') or c.get('credit_hours') or 0
         try:
             return int(val)
@@ -217,8 +321,7 @@ def get_track_prereqs(school: str, dept: str) -> dict:
 
     seen_codes  = set()
     all_prereqs = []
-
-    src_courses = entry_courses + [c for c in sem4_all if c.get('Type', '').lower() == 'school']
+[3/14/2026 3:23 PM] Halish: src_courses = entry_courses + [c for c in sem4_all if c.get('Type', '').lower() == 'school']
     for ec in src_courses:
         for step in trace_chain(ec['code'], CATALOG):
             if step['code'] not in seen_codes and step['code'] != ec['code']:
@@ -277,20 +380,16 @@ def load_semester(school: str, dept: str, sem_num: str) -> tuple[list, str]:
     if not ejust_data:
         return [], "Data unavailable"
 
-    found   = ejust_data['curriculum']['PHASE_1_FOUNDATION']
-    schools = ejust_data['curriculum']['PHASE_2_SCHOOLS']
+    found       = ejust_data['curriculum']['PHASE_1_FOUNDATION']
+    schools     = ejust_data['curriculum']['PHASE_2_SCHOOLS']
     shared_opts = ejust_data['curriculum'].get('shared_elective_options', {})
 
     def normalize(c):
-        """Normalize a course dict — unify credit hours field and resolve options."""
         c = dict(c)
-        # Unify credit hours
         if 'credit_hours' in c and 'credit hours' not in c:
             c['credit hours'] = c['credit_hours']
-        # Unify Type field
         if 'type' in c and 'Type' not in c:
             c['Type'] = c['type']
-        # Resolve string options
         opts = c.get('options', [])
         if isinstance(opts, str):
             c['options'] = shared_opts.get(opts, [])
@@ -318,11 +417,10 @@ def load_semester(school: str, dept: str, sem_num: str) -> tuple[list, str]:
 # ════════════════════════════════════════════════════════════════
 # 7. WORKLOAD SAFETY
 # ════════════════════════════════════════════════════════════════
-
-def workload_check(total_ch: int, limit: int) -> str:
+[3/14/2026 3:23 PM] Halish: def workload_check(total_ch: int, limit: int) -> str:
     if total_ch > limit:
         return (
-            f"⚠️ **OVER LIMIT:** {total_ch} CH registered but limit is {limit} CH. "
+            f"⚠️ OVER LIMIT: {total_ch} CH registered but limit is {limit} CH. "
             f"Must drop {total_ch - limit} CH."
         )
     return f"✅ Within limit: {total_ch} / {limit} CH."
@@ -423,8 +521,7 @@ School: {school} | Dept: {dept} | Credit Limit: {max_ch} CH
 ━━━ SEMESTER 5 ENTRY COURSES ━━━
 {sem5_lines}
 {half_warn}
-
-INSTRUCTION FOR SENPAI:
+[3/14/2026 3:23 PM] Halish: INSTRUCTION FOR SENPAI:
 1. Confirm the student's track choice warmly.
 2. Immediately highlight any elective prerequisites — these are the most common mistake.
 3. Explain the sem3 impact: skipping that elective blocks a core course.
@@ -468,7 +565,7 @@ def ctx_semester_plan(courses: list, title: str, sem_num: str,
             f"Total: {total_ch} CH"
         )
 
-    budget     = max_ch - core_ch
+    budget      = max_ch - core_ch
     elec_sorted = sorted(elec_courses,
                          key=lambda c: (0 if c.get('code') in elec_prereq_codes else 1,
                                         int(c.get('credit hours') or 0)))
@@ -513,8 +610,7 @@ Status: Academic Probation | Limit: {max_ch} CH | Plan Total: {core_ch + running
 
 ━━━ ✅ RECOMMENDED ELECTIVES (within budget, track prereqs first) ━━━
 {rec_lines}
-
-━━━ ⏳ DEFERRED ELECTIVES (take when CGPA recovers) ━━━
+[3/14/2026 3:23 PM] Halish: ━━━ ⏳ DEFERRED ELECTIVES (take when CGPA recovers) ━━━
 {def_lines}
 {prereq_warn}
 
@@ -526,136 +622,9 @@ INSTRUCTION FOR SENPAI:
 5. Tone: supportive coach, not alarming.
 """.strip()
 
-
 # ════════════════════════════════════════════════════════════════
-# 9. PAGE CONFIG & SESSION STATE
+# 9. SESSION STATE
 # ════════════════════════════════════════════════════════════════
-
-st.set_page_config(page_title="Senpai — E-JUST Advisor", layout="wide", page_icon="🎓")
-
-st.markdown("""
-<style>
-
-.main{
-background:#f6f6f6;
-}
-
-/* Header */
-
-.header-container{
-display:flex;
-align-items:center;
-gap:15px;
-margin-top:40px;
-margin-left:40px;
-}
-
-.logo{
-width:60px;
-}
-
-.senpai-title{
-font-size:40px;
-font-weight:bold;
-letter-spacing:2px;
-}
-
-.SENP{
-color:white;
-}
-
-.AI{
-color:red;
-}
-
-/* Wave graphic */
-
-.wave{
-position:fixed;
-top:0;
-right:0;
-width:420px;
-z-index:-1;
-opacity:0.9;
-}
-
-/* Chat center */
-
-.chatbox{
-width:60%;
-margin:auto;
-margin-top:120px;
-}
-
-</style>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-<img src="assets/wave.png" class="wave">
-
-<div class="header-container">
-
-<img src="assets/owl.png" class="logo">
-
-<div class="senpai-title">
-<span class="SEN">SENP</span><span class="AI">AI</span>
-</div>
-
-</div>
-""", unsafe_allow_html=True)
-
-
-st.markdown("""
-<style>
-
-/* Mobile layout */
-
-@media (max-width:768px){
-
-.header-container{
-margin-left:20px;
-margin-top:20px;
-}
-
-.logo{
-width:45px;
-}
-
-.senpai-title{
-font-size:26px;
-}
-
-.chatbox{
-width:92%;
-margin-top:120px;
-}
-
-}
-
-/* Chat bubbles */
-
-[data-testid="stChatMessage"]{
-background:white;
-padding:12px 16px;
-border-radius:14px;
-margin-bottom:10px;
-box-shadow:0 2px 6px rgba(0,0,0,0.05);
-}
-
-textarea{
-border-radius:30px !important;
-padding:14px !important;
-}
-
-</style>
-""", unsafe_allow_html=True)
-
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "sk-hc-v1-3d0b21306ebd475c92404d9870d890a39a0c4a6a345945f7a5287bd75c595050")
-client = OpenAI(
-    api_key=OPENAI_API_KEY,
-    base_url="https://ai.hackclub.com/proxy/v1"
-)
-
 
 if "messages"   not in st.session_state: st.session_state.messages   = []
 if "user_cgpa"  not in st.session_state: st.session_state.user_cgpa  = None
@@ -666,15 +635,22 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 # ════════════════════════════════════════════════════════════════
-# 10. MAIN CHAT HANDLER
+# 10. OPENAI CLIENT
 # ════════════════════════════════════════════════════════════════
 
-st.markdown('<div class="chatbox">', unsafe_allow_html=True)
-prompt = st.chat_input("Ask Senpai...")
-st.markdown('</div>', unsafe_allow_html=True)
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "sk-hc-v1-3d0b21306ebd475c92404d9870d890a39a0c4a6a345945f7a5287bd75c595050")
+client = OpenAI(
+    api_key=OPENAI_API_KEY,
+    base_url="https://ai.hackclub.com/proxy/v1"
+)
 
-if prompt: 
-    
+# ════════════════════════════════════════════════════════════════
+# 11. MAIN CHAT HANDLER
+# ════════════════════════════════════════════════════════════════
+
+prompt = st.chat_input("Ask Senpai...")
+
+if prompt:
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -703,7 +679,7 @@ if prompt:
         dept        = track_info[1] if track_info else None
         track_label = track_info[2] if track_info else "Not chosen yet"
 
-        # ── C. PDF RAG — only for handbook/rules questions, never for courses ──
+        # ── C. PDF RAG ────────────────────────────────────────────────────
         pdf_ctx = ""
         _pl = prompt.lower()
         if vdb and not any(kw in _pl for kw in [
@@ -730,8 +706,7 @@ if prompt:
                 'graduation', 'department', 'which department',
             ]))
         )
-
-        if needs_track and not track_info:
+[3/14/2026 3:23 PM] Halish: if needs_track and not track_info:
             adv_ctx = ctx_ask_track(max_ch)
             if sem_num:
                 adv_ctx += (
@@ -798,33 +773,25 @@ if prompt:
         ])
 
         if profs_df is not None:
-            # ── Try to match a specific professor name ────────────────────
             matched_rows = []
-            query_words = [w for w in p_lower.split() if len(w) > 2]
+            query_words  = [w for w in p_lower.split() if len(w) > 2]
 
             scored = []
             for _, row in profs_df.iterrows():
-                pname = str(row.get('Name', '')).lower()
+                pname       = str(row.get('Name', '')).lower()
                 pname_parts = [p for p in pname.split() if len(p) > 2]
-                score = 0
-                # Score: how many query words appear in professor name
+                score  = 0
                 score += sum(1 for qw in query_words if qw in pname) * 2
-                # Score: how many professor name parts appear in query
                 score += sum(1 for pp in pname_parts if pp in p_lower)
                 if score > 0:
                     scored.append((score, row))
 
             if scored:
-                # Sort by score descending
                 scored.sort(key=lambda x: x[0], reverse=True)
-                top_score = scored[0][0]
-                # Only keep rows within 1 point of the best score
+                top_score    = scored[0][0]
                 matched_rows = [row for s, row in scored if s >= top_score - 1]
-                # Cap at 5 results to avoid flooding
                 matched_rows = matched_rows[:5]
-
-            # ── Try to match by department ────────────────────────────────
-            if not matched_rows:
+[3/14/2026 3:23 PM] Halish: if not matched_rows:
                 dept_keywords = {
                     'computer': 'Computer', 'cse': 'Computer',
                     'mechatronics': 'Mechatronics', 'mtr': 'Mechatronics', 'robotics': 'Mechatronics',
@@ -843,40 +810,38 @@ if prompt:
                 for kw, dept_kw in dept_keywords.items():
                     if kw in p_lower:
                         for _, row in profs_df.iterrows():
-                            dept_val = str(row.get('Department', '')).lower()
+                            dept_val    = str(row.get('Department', '')).lower()
                             faculty_val = str(row.get('Faculty', '')).lower()
                             if dept_kw.lower() in dept_val or dept_kw.lower() in faculty_val:
                                 matched_rows.append(row)
                         break
 
             if matched_rows:
-                # Format matched professors
                 parts = []
                 for row in matched_rows:
                     name     = row.get('Name', 'Unknown')
                     title    = row.get('Job Title', 'N/A')
-                    dept     = row.get('Department', 'N/A')
+                    dept_r   = row.get('Department', 'N/A')
                     faculty  = row.get('Faculty', 'N/A')
                     office   = row.get('Office Location', 'N/A')
                     email    = row.get('Email', 'N/A')
                     research = row.get('Research Fields', 'N/A')
                     parts.append(
                         f"• {name} | {title}\n"
-                        f"  Department: {dept} | Faculty: {faculty}\n"
+                        f"  Department: {dept_r} | Faculty: {faculty}\n"
                         f"  Office: {office} | Email: {email}\n"
                         f"  Research: {research}"
                     )
                 prof_ctx = "[PROFESSOR DATA]\n" + "\n\n".join(parts)
 
             elif asks_prof:
-                # General professor query — provide full list
                 rows = []
                 for _, row in profs_df.iterrows():
-                    name   = row.get('Name', 'Unknown')
-                    title  = row.get('Job Title', 'N/A')
-                    dept   = row.get('Department', 'N/A')
-                    email  = row.get('Email', 'N/A')
-                    rows.append(f"  • {name} | {title} | Dept: {dept} | {email}")
+                    name  = row.get('Name', 'Unknown')
+                    title = row.get('Job Title', 'N/A')
+                    dept_r = row.get('Department', 'N/A')
+                    email = row.get('Email', 'N/A')
+                    rows.append(f"  • {name} | {title} | Dept: {dept_r} | {email}")
                 prof_ctx = "[ALL PROFESSORS]\n" + "\n".join(rows)
 
         # ── F. MISSION DETECTION ──────────────────────────────────────────
@@ -894,9 +859,8 @@ if prompt:
             'schedule', 'plan', 'roadmap', 'semester', 'courses', 'credit hours',
             'what should i take', 'which courses', 'next semester'
         ])
-
-        active_mission = (
-            "COURSE REGISTRATION ASSISTANCE"      if asks_registration else
+[3/14/2026 3:23 PM] Halish: active_mission = (
+            "COURSE REGISTRATION ASSISTANCE"       if asks_registration else
             "PROFESSOR REVIEWS & RECOMMENDATIONS"  if (asks_prof and prof_ctx) else
             "HANDBOOK / ACADEMIC RULES"            if asks_handbook else
             "COURSE SCHEDULE & PLANNING"           if asks_schedule else
@@ -905,7 +869,7 @@ if prompt:
 
         # ── G. SYSTEM PROMPT ──────────────────────────────────────────────
         system_prompt = f"""
-You are **Senpai**, the official AI academic advisor for E-JUST (Egypt-Japan University of Science and Technology).
+You are Senpai, the official AI academic advisor for E-JUST (Egypt-Japan University of Science and Technology).
 You are friendly, direct, and trustworthy. Students depend on you for accurate information.
 
 ━━━ YOUR MISSIONS ━━━
@@ -914,7 +878,7 @@ You are friendly, direct, and trustworthy. Students depend on you for accurate i
    Available info per professor: Name, Job Title, Department, Faculty, Office Location, Email, Research Fields.
    If asked about a professor not in the data, say they are not in the database.
 3. 📖 HANDBOOK & ACADEMIC RULES — answer policy/GPA/graduation questions from handbook only
-4. 🗓️ COURSE PLANNING — help plan semesters using ONLY the course data below
+4. 🗓 COURSE PLANNING — help plan semesters using ONLY the course data below
 
 ━━━ ACTIVE MISSION ━━━
 {active_mission}
@@ -977,4 +941,4 @@ You are friendly, direct, and trustworthy. Students depend on you for accurate i
             st.markdown(answer)
             st.session_state.messages.append({"role": "assistant", "content": answer})
         except Exception as e:
-            st.error(f"OpenRouter API Error: {e}")
+            st.error(f"API Error: {e}")
