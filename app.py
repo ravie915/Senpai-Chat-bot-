@@ -789,7 +789,7 @@ You are friendly, knowledgeable, and direct. Students rely on you for real help 
                 for m in st.session_state.messages[:-1]
             ]
             resp = client.chat.completions.create(
-                model="gpt-4o",
+                model="gpt-4.1",
                 messages=[
                     {"role": "system", "content": system_prompt},
                     *history,
