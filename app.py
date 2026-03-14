@@ -57,7 +57,7 @@ section[data-testid="stSidebar"],
     padding: 28px 48px;
     position: relative;
     top: -100px;
-    left: -100px;
+    left: -300px;
     z-index: 3;
 }}
 .logo {{
