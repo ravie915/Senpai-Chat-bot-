@@ -67,6 +67,7 @@ section[data-testid="stSidebar"],
 }}
 .senpai-title {{
     font-family: 'LemonMilk', 'Arial Black', sans-serif;
+    color: #c8291a !important;
     font-size: 50px;
     font-weight: 700;
     letter-spacing: 4px;
@@ -213,7 +214,7 @@ if wave_b64:
 logo_html = f"""
 <div class="header-container">
     <img src="{owl_b64}" class="logo" alt="Senpai owl logo">
-    <div class="senpai-title">SENPAI</div>
+    <div class="senpai-title">SENP<span>AI</span></div>
 </div>
 """
 st.markdown(logo_html, unsafe_allow_html=True)
