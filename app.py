@@ -185,11 +185,19 @@ section[data-testid="stSidebar"],
         top: -120px !important; 
     }}
 
-    .senpai-title {{ 
-        font-size: 28px !important; 
-        position: relative !important; 
-        top: -120px !important; 
+    .senpai-title {{
+        font-family: 'LemonMilk', sans-serif;
+        font-size: 50px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        color: #1a1a1a !important; /* SENP will be black */
+        line-height: 1;
     }}
+
+    /* The 'AI' Red Color */
+    .red-text {{
+        color: #c8291a !important;
+}}
     .wave {{ width: 900px; top: -120px; right: -100px; }}
 }}
   [data-testid="stChatMessage"] {{ max-width: calc(100% - 28px) !important; margin-left: 0px !important; margin-right: 0px !important; }}
@@ -214,7 +222,7 @@ if wave_b64:
 logo_html = f"""
 <div class="header-container">
     <img src="{owl_b64}" class="logo" alt="Senpai owl logo">
-    <div class="senpai-title">SENP<span style="color: #c8291a;">AI</span></div>
+    <div class="senpai-title">SENP<span class="red-text">AI</span></div>
 </div>
 """
 st.markdown(logo_html, unsafe_allow_html=True)
