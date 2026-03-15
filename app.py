@@ -76,11 +76,15 @@ section[data-testid="stSidebar"],
     color: #c8291a !important;
     font-size: 50px;
     font-weight: 700;
+     color: #1a1a1a !important; /* SENP will be black */
     letter-spacing: 4px;
     color: 
 #1a1a1a;
     line-height: 1;
 }}
+ .red-text {{
+        color: #c8291a !important;
+        }}
 
 /* Wave decoration (top-right) */
 .wave {{
