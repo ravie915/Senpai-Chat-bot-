@@ -167,14 +167,7 @@ section[data-testid="stSidebar"],
     padding: 16px 40px 28px !important;
 }}
 
-@media (max-width: 768px) {{
-    .header-container {{
-        padding: 1px 10px;
-    }}
-    .logo {{ width: 48px; }}
-    .senpai-title {{ font-size: 28px; letter-spacing: 2px; }}
-    .wave {{ width: 260px; }}
-}}
+
 
 /* Mobile adjustments */
 @media (max-width: 768px) {{
