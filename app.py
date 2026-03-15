@@ -182,7 +182,7 @@ section[data-testid="stSidebar"],
     .logo {{ 
         width: 60px !important; 
         position: relative !important; 
-        top: -120px !important; 
+        top: -100px !important; 
     }}
 
     .senpai-title {{
