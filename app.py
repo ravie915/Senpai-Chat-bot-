@@ -11,6 +11,12 @@ from langchain_huggingface import HuggingFaceEmbeddings
 import time
 import base64
 
+st.set_page_config(
+    page_title="SENPAI",
+    page_icon="assets/owl.png", # Path to your owl image
+    layout="wide"               # Optional: helps with your custom CSS layout
+)
+
 def load_file_b64(path, mime):
     if os.path.exists(path):
         with open(path, "rb") as f:
