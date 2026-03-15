@@ -214,7 +214,7 @@ if wave_b64:
 logo_html = f"""
 <div class="header-container">
     <img src="{owl_b64}" class="logo" alt="Senpai owl logo">
-    <div class="senpai-title">SENP<span>AI</span></div>
+    <div class="senpai-title">SENP<span style="color: #c8291a;">AI</span></div>
 </div>
 """
 st.markdown(logo_html, unsafe_allow_html=True)
