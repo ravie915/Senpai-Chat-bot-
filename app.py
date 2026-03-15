@@ -178,7 +178,7 @@ section[data-testid="stSidebar"],
 # inside an f-string css = f""" ... previously existing styles ...
 
 /* Mobile adjustments */
-@media (max-width: 768px) {{
+@media (max-width: 500px) {{
   .header-container {{ padding: 12px 16px; }}
   .logo {{ width: 48px; }}
   .senpai-title {{ font-size: 28px; letter-spacing: 2px; }}
