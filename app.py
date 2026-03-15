@@ -671,7 +671,7 @@ def ctx_semester_plan(courses: list, title: str, sem_num: str,
     if not is_half:
         return (
             f"[SEMESTER PLAN — {title} | Track: {label}]\n"
-            f"Status: Regular/Over-Achiever | Limit: {max_ch} CH\n"
+            f"Status: Regular | Limit: {max_ch} CH\n"
             f"{safety}\n\n"
             f"Courses:\n{all_lines}\n\n"
             f"Total: {total_ch} CH"
