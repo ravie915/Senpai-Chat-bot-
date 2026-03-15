@@ -61,7 +61,7 @@ section[data-testid="stSidebar"],
     z-index: 3;
 }}
 .logo {{
-    width: 60px;
+    width: 90px;
     height: auto;
     display: block;
 }}
