@@ -179,10 +179,10 @@ section[data-testid="stSidebar"],
 /* Mobile adjustments */
 @media (max-width: 768px) {{
   .header-container {{ padding: 12px 16px; }}
-  .logo {{ width: 60px; top: -200px; right: -200px;}}
+  .logo {{ width: 60px; top: -300px; right: -200px;}}
   .senpai-title {{ font-size: 28px; letter-spacing: 2px; }}
   .wave {{ width: 320px; top: -40px; right: -20px; }}
-  [data-testid="stChatMessage"] {{ max-width: calc(100% - 28px) !important; margin-left: 14px !important; margin-right: 14px !important; }}
+  [data-testid="stChatMessage"] {{ max-width: calc(100% - 28px) !important; margin-left: 0px !important; margin-right: 0px !important; }}
   [data-testid="stChatInput"] {{ max-width: 100% !important; }}
   [data-testid="stChatInput"] textarea {{ font-size: 16px !important; padding: 14px 16px !important; }}
 }}
