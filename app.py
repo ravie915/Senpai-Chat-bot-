@@ -992,6 +992,18 @@ if prompt := st.chat_input("Ask Senpai …"):
             "COURSE SCHEDULE & PLANNING"           if asks_schedule else
             "GENERAL ADVISING"
         )
+        # ── B. CREATOR DETECTION ───────────────────────────────────────────
+        creator_patterns = [
+            r'who (created|made|built|developed) you',
+            r'your creator',
+            r'who is your (creator|maker|developer)',
+            r'who are you created by',
+        ]
+        if any(re.search(pattern, prompt.lower()) for pattern in creator_patterns):
+            answer = "I was created by Ravie, a student at E-JUST. 🦉"
+            st.markdown(answer)
+            st.session_state.messages.append({"role": "assistant", "content": answer})
+            st.stop()  # Stop further execution to skip the API call        
 
         # ── G. SYSTEM PROMPT ──────────────────────────────────────────────
         system_prompt = f"""
