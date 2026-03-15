@@ -169,12 +169,36 @@ section[data-testid="stSidebar"],
 
 
 
-/* Mobile adjustments */
-@media (max-width: 768px) {{
-  .header-container {{ padding: 12px 16px; }}
-  .logo {{ width: 60px; position: relative; top: -120px; right: 50px;}}
-  .senpai-title {{ font-size: 28px; position: relative; letter-spacing: 2px; margin-top: -10px; margin-left: 20px; }}
-  .wave {{ width: 400px; top: -120px; right: -100px; }}
+@media (max-width: 768px) {
+    .header-container { 
+        padding: 0 !important; 
+        position: relative !important;
+        top: 0 !important;   /* Resets the -100px from desktop */
+        left: 0 !important;  /* Resets the -300px from desktop */
+        display: flex !important;
+        justify-content: center !important; /* Centers them on mobile */
+    }
+
+    .logo { 
+        width: 60px !important; 
+        position: relative !important; 
+        top: -120px !important;  /* Adjust this to move up/down */
+        left: -20px !important; /* Use LEFT instead of RIGHT for easier control */
+    }
+
+    .senpai-title { 
+        font-size: 28px !important; 
+        position: relative !important; 
+        letter-spacing: 2px !important; 
+        top: -120px !important; 
+        left: 10px !important; 
+    }
+
+    .wave { 
+        width: 400px !important; 
+        top: -120px !important; 
+        right: -100px !important; 
+    }
   [data-testid="stChatMessage"] {{ max-width: calc(100% - 28px) !important; margin-left: 0px !important; margin-right: 0px !important; }}
   [data-testid="stChatInput"] {{ max-width: 100% !important; }}
   [data-testid="stChatInput"] textarea {{ font-size: 16px !important; padding: 14px 16px !important; }}
