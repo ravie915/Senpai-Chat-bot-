@@ -290,10 +290,10 @@ def get_student_status(cgpa: float) -> tuple[str, int]:
     # so below we map <2.0 to Regular Load (19 CH).
     if cgpa < 2.0:
         return "Regular Load", 19
-    elif cgpa < 3.0:
-        return "Regular Load", 19
+    elif cgpa > 3.0:
+       return "Over-Achiever (Honors)", 21
     else:
-        return "Over-Achiever (Honors)", 21
+         return "Regular Load", 19
 
 # ════════════════════════════════════════════════════════════════
 # 3. TRACK MAP
