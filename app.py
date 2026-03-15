@@ -179,8 +179,8 @@ section[data-testid="stSidebar"],
 /* Mobile adjustments */
 @media (max-width: 768px) {{
   .header-container {{ padding: 12px 16px; }}
-  .logo {{ width: 60px; position: relative; top: -120px; right: 0px;}}
-  .senpai-title {{ font-size: 28px; position: relative; letter-spacing: 2px; top: 0px; right: 0px; }}
+  .logo {{ width: 60px; position: relative; top: -120px; right: 50px;}}
+  .senpai-title {{ font-size: 28px; position: relative; letter-spacing: 2px; top: -120px; right: 50px; }}
   .wave {{ width: 400px; top: -120px; right: -100px; }}
   [data-testid="stChatMessage"] {{ max-width: calc(100% - 28px) !important; margin-left: 0px !important; margin-right: 0px !important; }}
   [data-testid="stChatInput"] {{ max-width: 100% !important; }}
