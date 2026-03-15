@@ -189,7 +189,7 @@ section[data-testid="stSidebar"],
         position: relative !important; 
         top: -120px !important; 
     }}
-    .wave {{ width: 400px; top: -120px; right: -100px; }}
+    .wave {{ width: 700px; top: -100px; right: -100px; }}
 }}
   [data-testid="stChatMessage"] {{ max-width: calc(100% - 28px) !important; margin-left: 0px !important; margin-right: 0px !important; }}
   [data-testid="stChatInput"] {{ max-width: 100% !important; }}
