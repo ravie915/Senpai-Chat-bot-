@@ -193,7 +193,7 @@ section[data-testid="stSidebar"],
 }}
   [data-testid="stChatMessage"] {{ max-width: calc(100% - 28px) !important; margin-left: 0px !important; margin-right: 0px !important; }}
   [data-testid="stChatInput"] {{ max-width: 100% !important; }}
-  [data-testid="stChatInput"] textarea {{ font-size: 16px !important; padding: 14px 16px !important; }}
+  [data-testid="stChatInput"] textarea {{ font-size: 16px !important; padding: 2px 2px !important; }}
 }}
 
 /* Small screens / very short viewports: reduce bottom padding */
