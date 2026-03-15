@@ -671,7 +671,7 @@ def ctx_semester_plan(courses: list, title: str, sem_num: str,
     if not is_half:
         return (
             f"[SEMESTER PLAN — {title} | Track: {label}]\n"
-            f"Status: Regular | Limit: {max_ch} CH\n"
+            f"Status: Regular/Overachiever | Limit: {max_ch} CH\n"
             f"{safety}\n\n"
             f"Courses:\n{all_lines}\n\n"
             f"Total: {total_ch} CH"
@@ -751,7 +751,7 @@ client = OpenAI(
 
 
 if "messages"   not in st.session_state: st.session_state.messages   = []
-if "user_cgpa"  not in st.session_state: st.session_state.user_cgpa  = None
+if "user_cgpa"  not in st.session_state: st.session_state.user_cgpa  = 2.5
 if "track_info" not in st.session_state: st.session_state.track_info = None
 
 for msg in st.session_state.messages:
