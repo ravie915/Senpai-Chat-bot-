@@ -169,36 +169,27 @@ section[data-testid="stSidebar"],
 
 
 
-@media (max-width: 768px) {
-    .header-container { 
+
+@media (max-width: 768px) {{
+    .header-container {{ 
         padding: 0 !important; 
         position: relative !important;
-        top: 0 !important;   /* Resets the -100px from desktop */
-        left: 0 !important;  /* Resets the -300px from desktop */
-        display: flex !important;
-        justify-content: center !important; /* Centers them on mobile */
-    }
+        top: 0 !important;   
+        left: 0 !important;  
+    }}
 
-    .logo { 
+    .logo {{ 
         width: 60px !important; 
         position: relative !important; 
-        top: -120px !important;  /* Adjust this to move up/down */
-        left: -20px !important; /* Use LEFT instead of RIGHT for easier control */
-    }
+        top: -120px !important; 
+    }}
 
-    .senpai-title { 
+    .senpai-title {{ 
         font-size: 28px !important; 
         position: relative !important; 
-        letter-spacing: 2px !important; 
         top: -120px !important; 
-        left: 10px !important; 
-    }
-
-    .wave { 
-        width: 400px !important; 
-        top: -120px !important; 
-        right: -100px !important; 
-    }
+    }}
+}}
   [data-testid="stChatMessage"] {{ max-width: calc(100% - 28px) !important; margin-left: 0px !important; margin-right: 0px !important; }}
   [data-testid="stChatInput"] {{ max-width: 100% !important; }}
   [data-testid="stChatInput"] textarea {{ font-size: 16px !important; padding: 14px 16px !important; }}
