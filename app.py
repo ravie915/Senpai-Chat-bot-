@@ -1000,7 +1000,7 @@ if prompt := st.chat_input("Ask Senpai …"):
             r'who are you created by',
         ]
         if any(re.search(pattern, prompt.lower()) for pattern in creator_patterns):
-            answer = "I was created by Ravie, a student at E-JUST. 🦉"
+            answer = "I was created by Ravie and Omar Walid and Mahmoud Ahmed Sabry, students at E-JUST. 🦉"
             st.markdown(answer)
             st.session_state.messages.append({"role": "assistant", "content": answer})
             st.stop()  # Stop further execution to skip the API call        
