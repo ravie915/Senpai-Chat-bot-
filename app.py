@@ -766,7 +766,7 @@ for msg in st.session_state.messages:
 # 10. MAIN CHAT HANDLER
 # ════════════════════════════════════════════════════════════════
 
-if prompt = st.chat_input("Ask Senpai ...")
+if prompt := st.chat_input("Ask Senpai ..."):
     # Your chat logic here
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
@@ -1075,7 +1075,7 @@ You are friendly, direct, and trustworthy. Students depend on you for accurate i
                 for m in st.session_state.messages[:-1]
             ]
             resp = client.chat.completions.create(
-                model="gpt-4.1",
+                model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": system_prompt},
                     *history,
