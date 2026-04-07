@@ -1,4 +1,5 @@
 streamlit
+openai
 pandas
 openpyxl
 langchain
@@ -8,5 +9,4 @@ langchain-text-splitters
 pypdf
 chromadb==0.4.24
 sentence-transformers
-openai
- 
+numpy==1.26.4
