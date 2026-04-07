@@ -765,8 +765,9 @@ for msg in st.session_state.messages:
 # ════════════════════════════════════════════════════════════════
 # 10. MAIN CHAT HANDLER
 # ════════════════════════════════════════════════════════════════
-
-if prompt := st.chat_input("Ask Senpai …"):
+prompt = st.chat_input("Ask Senpai ...")
+if prompt:
+    # Your chat logic here
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
