@@ -1073,7 +1073,7 @@ You are friendly, direct, and trustworthy. Students depend on you for accurate i
                 for m in st.session_state.messages[:-1]
             ]
             resp = client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="gpt-4.1",
                 messages=[
                     {"role": "system", "content": system_prompt},
                     *history,
