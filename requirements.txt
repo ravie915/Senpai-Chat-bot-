@@ -3,7 +3,7 @@ openai
 pandas
 openpyxl
 numpy==1.26.4
-
+thefuzz
 langchain==0.2.6
 langchain-community
 langchain-huggingface
