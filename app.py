@@ -883,6 +883,7 @@ if prompt := st.chat_input("Ask Senpai ..."):
             )
 
         # ── E. PROFESSOR CONTEXT ──────────────────────────────────────────
+        
         prof_ctx  = ""
         asks_prof = any(kw in p_lower for kw in [
             'professor', 'prof', 'doctor', 'dr ', 'dr.', 'instructor',
