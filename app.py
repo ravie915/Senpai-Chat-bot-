@@ -12,6 +12,7 @@ from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 import time
 import base64
+from thefuzz import fuzz
 
 st.set_page_config(
     page_title="SENPAI",
@@ -941,6 +942,11 @@ if prompt := st.chat_input("Ask Senpai ..."):
                             if dept_kw.lower() in dept_val or dept_kw.lower() in faculty_val:
                                 matched_rows.append(row)
                         break
+                for _, row in profs_df.iterrows():
+                    pname = str(row.get('Name', '')).lower()
+                    similarity_score = fuzz.token_set_ratio(p_lower, pname)
+                    if similarity_score > 70:
+                        scored.append((similarity_score, row))
 
             if matched_rows:
                 # Format matched professors
@@ -971,6 +977,7 @@ if prompt := st.chat_input("Ask Senpai ..."):
                     email  = row.get('Email', 'N/A')
                     rows.append(f"  • {name} | {title} | Dept: {dept} | {email}")
                 prof_ctx = "[ALL PROFESSORS]\n" + "\n".join(rows)
+                
 
         # ── F. MISSION DETECTION ──────────────────────────────────────────
         asks_registration = any(kw in p_lower for kw in [
