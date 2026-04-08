@@ -884,100 +884,102 @@ if prompt := st.chat_input("Ask Senpai ..."):
 
         # ── E. PROFESSOR CONTEXT ──────────────────────────────────────────
         
-        prof_ctx  = ""
-        asks_prof = any(kw in p_lower for kw in [
-            'professor', 'prof', 'doctor', 'dr ', 'dr.', 'instructor',
-            'email', 'office', 'contact', 'research', 'faculty',
-            'who teaches', 'who is', 'find professor', 'department professor',
-            'مين', 'دكتور', 'استاذ'
-        ])
+   prof_ctx  = ""
+    asks_prof = any(kw in p_lower for kw in [
+        'professor', 'prof', 'doctor', 'dr ', 'dr.', 'instructor',
+        'email', 'office', 'contact', 'research', 'faculty',
+        'who teaches', 'who is', 'find professor', 'department professor',
+        'مين', 'دكتور', 'استاذ', 'فين', 'ايميل', 'اوفيس', 'مكتب'
+    ])
 
-        if profs_df is not None:
-            # ── Try to match a specific professor name ────────────────────
-            matched_rows = []
-            query_words = [w for w in p_lower.split() if len(w) > 2]
+    if profs_df is not None:
+        matched_rows = []
 
-            scored = []
+        # ── Strip Arabic prefix words to get the actual name ──────────
+        # e.g. "فين دكتور احمد حامد" → clean query is "احمد حامد"
+        # We search using BOTH the original prompt AND lowercase version
+        arabic_prefixes = ['دكتور', 'الدكتور', 'استاذ', 'الاستاذ', 'دكتوره',
+                           'فين', 'اين', 'عايز', 'محتاج', 'ابحث', 'عن']
+        clean_prompt = prompt
+        for prefix in arabic_prefixes:
+            clean_prompt = clean_prompt.replace(prefix, '').strip()
+
+        # Use words from both the cleaned prompt and lowercased prompt
+        query_words = [w for w in p_lower.split() if len(w) > 2]
+        query_words_orig = [w for w in clean_prompt.lower().split() if len(w) > 2]
+        all_query_words = list(set(query_words + query_words_orig))
+
+        scored = []
+        for _, row in profs_df.iterrows():
+            pname = str(row.get('Name', '')).lower()
+            pname_parts = [p for p in pname.split() if len(p) > 2]
+            score = 0
+            # Score: query words found in professor name (weight 2)
+            score += sum(1 for qw in all_query_words if qw in pname) * 2
+            # Score: professor name parts found in query (weight 1)
+            score += sum(1 for pp in pname_parts if pp in p_lower or pp in clean_prompt.lower())
+            if score > 0:
+                scored.append((score, row))
+
+        if scored:
+            scored.sort(key=lambda x: x[0], reverse=True)
+            top_score = scored[0][0]
+            matched_rows = [row for s, row in scored if s >= top_score - 1]
+            matched_rows = matched_rows[:5]
+
+        if not matched_rows:
+            dept_keywords = {
+                'computer': 'Computer', 'cse': 'Computer',
+                'mechatronics': 'Mechatronics', 'mtr': 'Mechatronics', 'robotics': 'Mechatronics',
+                'aerospace': 'Aerospace', 'ase': 'Aerospace',
+                'materials': 'Materials', 'mse': 'Materials',
+                'industrial': 'Industrial', 'manufacturing': 'Industrial', 'ime': 'Industrial',
+                'energy': 'Energy', 'ere': 'Energy', 'mpe': 'Energy',
+                'chemical': 'Chemical', 'cpe': 'Chemical',
+                'electrical': 'Electrical', 'epe': 'Electrical',
+                'environmental': 'Environmental', 'env': 'Environmental',
+                'biomedical': 'Biomedical', 'mie': 'Biomedical',
+                'electronics': 'Electronics', 'ece': 'Electronics',
+                'accounting': 'Accounting', 'business': 'Business',
+                'architecture': 'Architecture', 'art': 'Art & Design',
+            }
+            for kw, dept_kw in dept_keywords.items():
+                if kw in p_lower:
+                    for _, row in profs_df.iterrows():
+                        dept_val = str(row.get('Department', '')).lower()
+                        faculty_val = str(row.get('Faculty', '')).lower()
+                        if dept_kw.lower() in dept_val or dept_kw.lower() in faculty_val:
+                            matched_rows.append(row)
+                    break
+
+        if matched_rows:
+            parts = []
+            for row in matched_rows:
+                name     = row.get('Name', 'Unknown')
+                title    = row.get('Job Title', 'N/A')
+                dept     = row.get('Department', 'N/A')
+                faculty  = row.get('Faculty', 'N/A')
+                office   = row.get('Office Location', 'N/A')
+                email    = row.get('Email', 'N/A')
+                research = row.get('Research Fields', 'N/A')
+                parts.append(
+                    f"• {name} | {title}\n"
+                    f"  Department: {dept} | Faculty: {faculty}\n"
+                    f"  Office: {office} | Email: {email}\n"
+                    f"  Research: {research}"
+                )
+            prof_ctx = "[PROFESSOR DATA]\n" + "\n\n".join(parts)
+
+        elif asks_prof:
+            rows = []
             for _, row in profs_df.iterrows():
-                pname = str(row.get('Name', '')).lower()
-                pname_parts = [p for p in pname.split() if len(p) > 2]
-                score = 0
-                # Score: how many query words appear in professor name
-                score += sum(1 for qw in query_words if qw in pname) * 2
-                # Score: how many professor name parts appear in query
-                score += sum(1 for pp in pname_parts if pp in p_lower)
-                if score > 0:
-                    scored.append((score, row))
+                name   = row.get('Name', 'Unknown')
+                title  = row.get('Job Title', 'N/A')
+                dept   = row.get('Department', 'N/A')
+                email  = row.get('Email', 'N/A')
+                rows.append(f"  • {name} | {title} | Dept: {dept} | {email}")
+            prof_ctx = "[ALL PROFESSORS]\n" + "\n".join(rows)
 
-            if scored:
-                # Sort by score descending
-                scored.sort(key=lambda x: x[0], reverse=True)
-                top_score = scored[0][0]
-                # Only keep rows within 1 point of the best score
-                matched_rows = [row for s, row in scored if s >= top_score - 1]
-                # Cap at 5 results to avoid flooding
-                matched_rows = matched_rows[:5]
-
-            # ── Try to match by department ────────────────────────────────
-            if not matched_rows:
-                dept_keywords = {
-                    'computer': 'Computer', 'cse': 'Computer',
-                    'mechatronics': 'Mechatronics', 'mtr': 'Mechatronics', 'robotics': 'Mechatronics',
-                    'aerospace': 'Aerospace', 'ase': 'Aerospace',
-                    'materials': 'Materials', 'mse': 'Materials',
-                    'industrial': 'Industrial', 'manufacturing': 'Industrial', 'ime': 'Industrial',
-                    'energy': 'Energy', 'ere': 'Energy', 'mpe': 'Energy',
-                    'chemical': 'Chemical', 'cpe': 'Chemical',
-                    'electrical': 'Electrical', 'epe': 'Electrical',
-                    'environmental': 'Environmental', 'env': 'Environmental',
-                    'biomedical': 'Biomedical', 'mie': 'Biomedical',
-                    'electronics': 'Electronics', 'ece': 'Electronics',
-                    'accounting': 'Accounting', 'business': 'Business',
-                    'architecture': 'Architecture', 'art': 'Art & Design',
-                }
-                for kw, dept_kw in dept_keywords.items():
-                    if kw in p_lower:
-                        for _, row in profs_df.iterrows():
-                            dept_val = str(row.get('Department', '')).lower()
-                            faculty_val = str(row.get('Faculty', '')).lower()
-                            if dept_kw.lower() in dept_val or dept_kw.lower() in faculty_val:
-                                matched_rows.append(row)
-                        break
-                for _, row in profs_df.iterrows():
-                    pname = str(row.get('Name', '')).lower()
-                    similarity_score = fuzz.token_set_ratio(p_lower, pname)
-                    if similarity_score > 70:
-                        scored.append((similarity_score, row))
-
-            if matched_rows:
-                # Format matched professors
-                parts = []
-                for row in matched_rows:
-                    name     = row.get('Name', 'Unknown')
-                    title    = row.get('Job Title', 'N/A')
-                    dept     = row.get('Department', 'N/A')
-                    faculty  = row.get('Faculty', 'N/A')
-                    office   = row.get('Office Location', 'N/A')
-                    email    = row.get('Email', 'N/A')
-                    research = row.get('Research Fields', 'N/A')
-                    parts.append(
-                        f"• {name} | {title}\n"
-                        f"  Department: {dept} | Faculty: {faculty}\n"
-                        f"  Office: {office} | Email: {email}\n"
-                        f"  Research: {research}"
-                    )
-                prof_ctx = "[PROFESSOR DATA]\n" + "\n\n".join(parts)
-
-            elif asks_prof:
-                # General professor query — provide full list
-                rows = []
-                for _, row in profs_df.iterrows():
-                    name   = row.get('Name', 'Unknown')
-                    title  = row.get('Job Title', 'N/A')
-                    dept   = row.get('Department', 'N/A')
-                    email  = row.get('Email', 'N/A')
-                    rows.append(f"  • {name} | {title} | Dept: {dept} | {email}")
-                prof_ctx = "[ALL PROFESSORS]\n" + "\n".join(rows)
                 
 
         # ── F. MISSION DETECTION ──────────────────────────────────────────
